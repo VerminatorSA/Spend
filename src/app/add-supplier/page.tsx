@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/header';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -9,21 +9,41 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 
-// This is a mock. In a real app, you'd fetch this from your backend/settings.
-const configuredFields = [
-  { id: 'field-name', label: 'Supplier Name', required: true, checked: true },
-  { id: 'field-contact-name', label: 'Contact Name', required: true, checked: true },
-  { id: 'field-contact-email', label: 'Contact Email', required: true, checked: true },
-  { id: 'field-contact-phone', label: 'Contact Phone', required: true, checked: true },
-  { id: 'field-location', label: 'Location', required: false, checked: true },
-  { id: 'field-tax-id', label: 'Tax ID / VAT Number', required: false, checked: true },
-  { id: 'field-website', label: 'Website URL', required: false, checked: true },
-  { id: 'custom-1699302633433', label: 'Minimum Order Quantity', required: false, checked: true },
-];
+interface FormField {
+  id: string;
+  label: string;
+  required: boolean;
+  checked: boolean;
+  isCustom?: boolean;
+}
+
+const FORM_FIELDS_STORAGE_KEY = 'supplierFormFields';
 
 export default function AddSupplierPage() {
   const { toast } = useToast();
   const [formData, setFormData] = useState<Record<string, string>>({});
+  const [configuredFields, setConfiguredFields] = useState<FormField[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+        const storedFields = localStorage.getItem(FORM_FIELDS_STORAGE_KEY);
+        if (storedFields) {
+            setConfiguredFields(JSON.parse(storedFields));
+        } else {
+            // Fallback to some default fields if nothing is in storage
+            setConfiguredFields([
+                { id: 'field-name', label: 'Supplier Name', required: true, checked: true },
+                { id: 'field-contact-name', label: 'Contact Name', required: true, checked: true },
+                { id: 'field-contact-email', label: 'Contact Email', required: true, checked: true },
+                { id: 'field-contact-phone', label: 'Contact Phone', required: true, checked: true },
+            ]);
+        }
+    } catch (error) {
+        console.error("Failed to parse fields from localStorage", error);
+    }
+    setIsLoaded(true);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -34,7 +54,7 @@ export default function AddSupplierPage() {
     e.preventDefault();
     // Simple validation
     for (const field of configuredFields) {
-      if (field.required && !formData[field.id]) {
+      if (field.checked && field.required && !formData[field.id]) {
          toast({
           variant: 'destructive',
           title: 'Missing Required Field',
@@ -48,13 +68,25 @@ export default function AddSupplierPage() {
       title: 'Supplier Submitted',
       description: 'The new supplier has been successfully submitted for review.',
     });
-    setFormData({});
+    // Reset only the values for the fields that are currently configured
+    const resetData: Record<string, string> = {};
+    configuredFields.forEach(field => {
+        if(field.checked) {
+            resetData[field.id] = '';
+        }
+    });
+    setFormData(resetData);
   };
 
-  const contactFields = ['field-contact-name', 'field-contact-email', 'field-contact-phone'];
-  const mainFields = configuredFields.filter(f => f.checked && !contactFields.includes(f.id));
-  const customFields = configuredFields.filter(f => f.checked && !f.required && !contactFields.includes(f.id));
+  const contactFieldIds = ['field-contact-name', 'field-contact-email', 'field-contact-phone'];
+  
+  const mainFields = configuredFields.filter(f => f.checked && !contactFieldIds.includes(f.id) && f.id === 'field-name');
+  const contactFields = configuredFields.filter(f => f.checked && contactFieldIds.includes(f.id));
+  const additionalFields = configuredFields.filter(f => f.checked && !contactFieldIds.includes(f.id) && f.id !== 'field-name');
 
+  if (!isLoaded) {
+    return null; // Or a loading spinner
+  }
 
   return (
     <div className="flex h-full flex-col">
@@ -70,53 +102,55 @@ export default function AddSupplierPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="field-name">Supplier Name <span className="text-destructive">*</span></Label>
-                      <Input id="field-name" placeholder="e.g., Global Components Inc." onChange={handleInputChange} value={formData['field-name'] || ''} />
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
                 
-                <div>
-                  <h3 className="mb-4 text-lg font-medium">Contact Information</h3>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                     <div className="space-y-2">
-                        <Label htmlFor="field-contact-name">Contact Name <span className="text-destructive">*</span></Label>
-                        <Input id="field-contact-name" placeholder="e.g., Sarah Chen" onChange={handleInputChange} value={formData['field-contact-name'] || ''} />
-                      </div>
-                       <div className="space-y-2">
-                        <Label htmlFor="field-contact-email">Contact Email <span className="text-destructive">*</span></Label>
-                        <Input id="field-contact-email" type="email" placeholder="e.g., sarah.chen@globalcomp.com" onChange={handleInputChange} value={formData['field-contact-email'] || ''} />
-                      </div>
-                       <div className="space-y-2">
-                        <Label htmlFor="field-contact-phone">Contact Phone <span className="text-destructive">*</span></Label>
-                        <Input id="field-contact-phone" type="tel" placeholder="e.g., 1-800-555-0101" onChange={handleInputChange} value={formData['field-contact-phone'] || ''} />
-                      </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div>
-                  <h3 className="mb-4 text-lg font-medium">Additional Details</h3>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {customFields.map((field) => (
-                    <div key={field.id} className="space-y-2">
-                      <Label htmlFor={field.id}>{field.label}</Label>
-                      <Input
-                        id={field.id}
-                        placeholder={`Enter ${field.label}`}
-                        onChange={handleInputChange}
-                        value={formData[field.id] || ''}
-                      />
+                {mainFields.length > 0 && (
+                    <div className="space-y-4">
+                        {mainFields.map((field) => (
+                             <div key={field.id} className="space-y-2">
+                                <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                                <Input id={field.id} placeholder={`e.g., ${field.label}`} onChange={handleInputChange} value={formData[field.id] || ''} />
+                            </div>
+                        ))}
                     </div>
-                  ))}
-                  </div>
-                </div>
+                )}
+
+                {contactFields.length > 0 && <Separator />}
+                
+                {contactFields.length > 0 && (
+                    <div>
+                    <h3 className="mb-4 text-lg font-medium">Contact Information</h3>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        {contactFields.map(field => (
+                            <div key={field.id} className="space-y-2">
+                                <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                                <Input id={field.id} placeholder={`e.g., Jane Doe`} onChange={handleInputChange} value={formData[field.id] || ''} />
+                            </div>
+                        ))}
+                    </div>
+                    </div>
+                )}
+
+                {additionalFields.length > 0 && <Separator />}
+
+                {additionalFields.length > 0 && (
+                    <div>
+                    <h3 className="mb-4 text-lg font-medium">Additional Details</h3>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {additionalFields.map((field) => (
+                        <div key={field.id} className="space-y-2">
+                        <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                        <Input
+                            id={field.id}
+                            placeholder={`Enter ${field.label}`}
+                            onChange={handleInputChange}
+                            value={formData[field.id] || ''}
+                        />
+                        </div>
+                    ))}
+                    </div>
+                    </div>
+                )}
+
 
                 <div className="flex justify-end pt-4">
                   <Button type="submit">Add Supplier</Button>

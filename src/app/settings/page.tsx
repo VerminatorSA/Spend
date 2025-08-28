@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,17 +22,44 @@ interface FormField {
 }
 
 const initialFields: FormField[] = [
-  { id: 'field-name', label: 'Supplier Name', required: true, checked: true },
-  { id: 'field-contact', label: 'Contact Info', required: true, checked: true },
-  { id: 'field-location', label: 'Location', required: false, checked: true },
-  { id: 'field-tax-id', label: 'Tax ID / VAT Number', required: false, checked: false },
-  { id: 'field-website', label: 'Website URL', required: false, checked: false },
+    { id: 'field-name', label: 'Supplier Name', required: true, checked: true },
+    { id: 'field-contact-name', label: 'Contact Name', required: true, checked: true },
+    { id: 'field-contact-email', label: 'Contact Email', required: true, checked: true },
+    { id: 'field-contact-phone', label: 'Contact Phone', required: true, checked: true },
+    { id: 'field-location', label: 'Location', required: false, checked: true },
+    { id: 'field-tax-id', label: 'Tax ID / VAT Number', required: false, checked: true },
+    { id: 'field-website', label: 'Website URL', required: false, checked: true },
+    { id: 'custom-1699302633433', label: 'Minimum Order Quantity', required: false, checked: true, isCustom: true },
 ];
 
+const FORM_FIELDS_STORAGE_KEY = 'supplierFormFields';
+
 export default function SettingsPage() {
-  const [fields, setFields] = useState<FormField[]>(initialFields);
+  const [fields, setFields] = useState<FormField[]>([]);
   const [newFieldName, setNewFieldName] = useState('');
   const { toast } = useToast();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const storedFields = localStorage.getItem(FORM_FIELDS_STORAGE_KEY);
+      if (storedFields) {
+        setFields(JSON.parse(storedFields));
+      } else {
+        setFields(initialFields);
+      }
+    } catch (error) {
+      console.error("Failed to parse fields from localStorage", error);
+      setFields(initialFields);
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem(FORM_FIELDS_STORAGE_KEY, JSON.stringify(fields));
+    }
+  }, [fields, isLoaded]);
 
   const handleAddField = () => {
     if (newFieldName.trim() === '') {
@@ -62,12 +89,24 @@ export default function SettingsPage() {
     setFields(fields.map(field => field.id === id ? {...field, checked: !field.checked} : field));
   };
 
+  const handleSaveSettings = () => {
+    localStorage.setItem(FORM_FIELDS_STORAGE_KEY, JSON.stringify(fields));
+    toast({
+        title: 'Settings Saved',
+        description: 'Your form settings have been successfully saved.',
+    });
+  }
+
+  if (!isLoaded) {
+    return null; // Or a loading spinner
+  }
+
   return (
     <div className="flex h-full flex-col">
       <Header title="Settings" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
-          <Tabs defaultValue="profile">
+          <Tabs defaultValue="forms">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -216,7 +255,7 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="flex justify-end pt-4">
-                    <Button>Save Form Settings</Button>
+                    <Button onClick={handleSaveSettings}>Save Form Settings</Button>
                   </div>
                 </CardContent>
               </Card>
