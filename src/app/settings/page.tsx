@@ -257,8 +257,8 @@ export default function SettingsPage() {
             <TabsContent value="profile" className="pt-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Profile</CardTitle>
-                  <CardDescription>Manage your personal and contact information.</CardDescription>
+                  <CardTitle>My Profile</CardTitle>
+                  <CardDescription>Manage your personal information and application preferences.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
