@@ -34,8 +34,8 @@ const initialSupplierFields: FormField[] = [
     { id: 'field-website', label: 'Website URL', required: false, checked: false },
 ];
 
-const initialProductFields: FormField[] = [
-    { id: 'field-product-name', label: 'Product Name', required: true, checked: true },
+const initialItemFields: FormField[] = [
+    { id: 'field-item-name', label: 'Item Name', required: true, checked: true },
     { id: 'field-price', label: 'Price', required: true, checked: true },
     { id: 'field-category', label: 'Category', required: true, checked: true },
     { id: 'field-supplier', label: 'Supplier', required: true, checked: true },
@@ -52,7 +52,7 @@ const initialContactFields: FormField[] = [
 ];
 
 const SUPPLIER_FIELDS_STORAGE_KEY = 'supplierFormFields';
-const PRODUCT_FIELDS_STORAGE_KEY = 'productFormFields';
+const ITEM_FIELDS_STORAGE_KEY = 'itemFormFields';
 const CONTACT_FIELDS_STORAGE_KEY = 'contactFormFields';
 
 function FormSettingsSection({
@@ -166,7 +166,7 @@ function FormSettingsSection({
 
 export default function SettingsPage() {
   const [supplierFields, setSupplierFields] = useState<FormField[]>([]);
-  const [productFields, setProductFields] = useState<FormField[]>([]);
+  const [itemFields, setItemFields] = useState<FormField[]>([]);
   const [contactFields, setContactFields] = useState<FormField[]>([]);
   const { toast } = useToast();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -176,8 +176,8 @@ export default function SettingsPage() {
       const storedSupplierFields = localStorage.getItem(SUPPLIER_FIELDS_STORAGE_KEY);
       setSupplierFields(storedSupplierFields ? JSON.parse(storedSupplierFields) : initialSupplierFields);
 
-      const storedProductFields = localStorage.getItem(PRODUCT_FIELDS_STORAGE_KEY);
-      setProductFields(storedProductFields ? JSON.parse(storedProductFields) : initialProductFields);
+      const storedItemFields = localStorage.getItem(ITEM_FIELDS_STORAGE_KEY);
+      setItemFields(storedItemFields ? JSON.parse(storedItemFields) : initialItemFields);
 
       const storedContactFields = localStorage.getItem(CONTACT_FIELDS_STORAGE_KEY);
       setContactFields(storedContactFields ? JSON.parse(storedContactFields) : initialContactFields);
@@ -185,7 +185,7 @@ export default function SettingsPage() {
     } catch (error) {
       console.error("Failed to parse fields from localStorage", error);
       setSupplierFields(initialSupplierFields);
-      setProductFields(initialProductFields);
+      setItemFields(initialItemFields);
       setContactFields(initialContactFields);
     }
     setIsLoaded(true);
@@ -193,7 +193,7 @@ export default function SettingsPage() {
 
   const handleSaveSettings = () => {
     localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
-    localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
+    localStorage.setItem(ITEM_FIELDS_STORAGE_KEY, JSON.stringify(itemFields));
     localStorage.setItem(CONTACT_FIELDS_STORAGE_KEY, JSON.stringify(contactFields));
     toast({
         title: 'Settings Saved',
@@ -204,10 +204,10 @@ export default function SettingsPage() {
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
-      localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
+      localStorage.setItem(ITEM_FIELDS_STORAGE_KEY, JSON.stringify(itemFields));
       localStorage.setItem(CONTACT_FIELDS_STORAGE_KEY, JSON.stringify(contactFields));
     }
-  }, [supplierFields, productFields, contactFields, isLoaded]);
+  }, [supplierFields, itemFields, contactFields, isLoaded]);
 
   if (!isLoaded) {
     return null;
@@ -269,7 +269,7 @@ export default function SettingsPage() {
                     <Label htmlFor="email-notifications" className="flex flex-col space-y-1">
                       <span>Email Notifications</span>
                       <span className="font-normal leading-snug text-muted-foreground">
-                        Receive updates about new products and supplier messages.
+                        Receive updates about new items and supplier messages.
                       </span>
                     </Label>
                     <Switch id="email-notifications" defaultChecked />
@@ -327,7 +327,7 @@ export default function SettingsPage() {
                     <Tabs defaultValue="supplier-form">
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="supplier-form">Supplier</TabsTrigger>
-                            <TabsTrigger value="product-form">Product</TabsTrigger>
+                            <TabsTrigger value="item-form">Item</TabsTrigger>
                             <TabsTrigger value="contact-form">Contact</TabsTrigger>
                         </TabsList>
                         <TabsContent value="supplier-form" className="py-6">
@@ -337,11 +337,11 @@ export default function SettingsPage() {
                                 setFields={setSupplierFields}
                             />
                         </TabsContent>
-                         <TabsContent value="product-form" className="py-6">
+                         <TabsContent value="item-form" className="py-6">
                             <FormSettingsSection 
-                                title='Product'
-                                fields={productFields}
-                                setFields={setProductFields}
+                                title='Item'
+                                fields={itemFields}
+                                setFields={setItemFields}
                             />
                         </TabsContent>
                          <TabsContent value="contact-form" className="py-6">
@@ -365,5 +365,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-    

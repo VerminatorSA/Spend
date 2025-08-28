@@ -23,7 +23,7 @@ export default function SuppliersPage() {
                       <span>{supplier.location}</span>
                     </div>
                   </div>
-                  <Badge variant="secondary">{supplier.productsOffered} Products</Badge>
+                  <Badge variant="secondary">{supplier.itemsOffered} Items</Badge>
                 </div>
               </CardHeader>
               <CardContent className="flex flex-1 flex-col justify-between">
@@ -44,7 +44,7 @@ export default function SuppliersPage() {
                     <span>{supplier.contact.phone}</span>
                   </div>
                 </div>
-                <Button className="mt-6 w-full" variant="outline">View Products</Button>
+                <Button className="mt-6 w-full" variant="outline">View Items</Button>
               </CardContent>
             </Card>
           ))}

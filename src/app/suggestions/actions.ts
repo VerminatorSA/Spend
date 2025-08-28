@@ -1,24 +1,24 @@
 'use server';
 
 import { z } from 'zod';
-import { getProductRecommendations, type ProductRecommendationOutput } from '@/ai/flows/product-recommendation';
+import { getItemRecommendations, type ItemRecommendationOutput } from '@/ai/flows/item-recommendation';
 
 const schema = z.object({
-  productSpecifications: z.string().min(20, { message: 'Please provide more detailed specifications (at least 20 characters).' }),
+  itemSpecifications: z.string().min(20, { message: 'Please provide more detailed specifications (at least 20 characters).' }),
 });
 
 type State = {
   message?: string | null;
   errors?: {
-    productSpecifications?: string[];
+    itemSpecifications?: string[];
   } | null;
-  data?: ProductRecommendationOutput | null;
+  data?: ItemRecommendationOutput | null;
 };
 
 export async function submitSpecifications(prevState: State, formData: FormData): Promise<State> {
   try {
     const validatedFields = schema.safeParse({
-      productSpecifications: formData.get('productSpecifications'),
+      itemSpecifications: formData.get('itemSpecifications'),
     });
 
     if (!validatedFields.success) {
@@ -29,7 +29,7 @@ export async function submitSpecifications(prevState: State, formData: FormData)
       };
     }
 
-    const result = await getProductRecommendations(validatedFields.data);
+    const result = await getItemRecommendations(validatedFields.data);
 
     return {
       message: 'Success',

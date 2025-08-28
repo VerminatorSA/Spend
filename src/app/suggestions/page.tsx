@@ -58,25 +58,25 @@ export default function SuggestionsPage() {
         <div className="mx-auto max-w-4xl">
           <Card>
             <CardHeader>
-              <CardTitle>AI-Powered Product Recommendations</CardTitle>
+              <CardTitle>AI-Powered Item Recommendations</CardTitle>
               <p className="text-muted-foreground">
-                Describe the specifications of the products you are manufacturing, and our AI will recommend suitable components and materials.
+                Describe the specifications of the items you are manufacturing, and our AI will recommend suitable components and materials.
               </p>
             </CardHeader>
             <CardContent>
               <form action={dispatch} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="productSpecifications">Product Specifications</Label>
+                  <Label htmlFor="itemSpecifications">Item Specifications</Label>
                   <Textarea
-                    id="productSpecifications"
-                    name="productSpecifications"
+                    id="itemSpecifications"
+                    name="itemSpecifications"
                     placeholder="e.g., 'We need a 5mm diameter, 20mm long, corrosion-resistant machine screw for an outdoor enclosure made of ABS plastic...'"
                     rows={6}
                     aria-describedby="spec-error"
                   />
-                  {state.errors?.productSpecifications && (
+                  {state.errors?.itemSpecifications && (
                     <p id="spec-error" className="text-sm text-destructive">
-                      {state.errors.productSpecifications.join(', ')}
+                      {state.errors.itemSpecifications.join(', ')}
                     </p>
                   )}
                 </div>
@@ -91,11 +91,11 @@ export default function SuggestionsPage() {
             <div className="mt-8 space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Recommended Products</CardTitle>
+                  <CardTitle>Recommended Items</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <pre className="whitespace-pre-wrap rounded-md bg-muted p-4 font-sans text-sm text-muted-foreground">
-                    {state.data.recommendedProducts}
+                    {state.data.recommendedItems}
                   </pre>
                 </CardContent>
               </Card>

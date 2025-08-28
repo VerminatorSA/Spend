@@ -17,9 +17,9 @@ interface FormField {
   isCustom?: boolean;
 }
 
-const FORM_FIELDS_STORAGE_KEY = 'productFormFields';
+const FORM_FIELDS_STORAGE_KEY = 'itemFormFields';
 
-export default function AddProductPage() {
+export default function AddItemPage() {
   const { toast } = useToast();
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [configuredFields, setConfiguredFields] = useState<FormField[]>([]);
@@ -33,7 +33,7 @@ export default function AddProductPage() {
         } else {
             // Fallback to some default fields if nothing is in storage
             setConfiguredFields([
-                { id: 'field-product-name', label: 'Product Name', required: true, checked: true },
+                { id: 'field-item-name', label: 'Item Name', required: true, checked: true },
                 { id: 'field-price', label: 'Price', required: true, checked: true },
                 { id: 'field-category', label: 'Category', required: true, checked: true },
                 { id: 'field-supplier', label: 'Supplier', required: true, checked: true },
@@ -62,10 +62,10 @@ export default function AddProductPage() {
         return;
       }
     }
-    console.log('Product Form Submitted:', formData);
+    console.log('Item Form Submitted:', formData);
     toast({
-      title: 'Product Submitted',
-      description: 'The new product has been successfully submitted.',
+      title: 'Item Submitted',
+      description: 'The new item has been successfully submitted.',
     });
     
     const resetData: Record<string, string> = {};
@@ -85,14 +85,14 @@ export default function AddProductPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <Header title="Add New Product" />
+      <Header title="Add New Item" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
           <Card>
             <CardHeader>
-              <CardTitle>New Product Details</CardTitle>
+              <CardTitle>New Item Details</CardTitle>
               <CardDescription>
-                Fill out the form below to add a new product to the catalog. Required fields are marked with an asterisk (*).
+                Fill out the form below to add a new item to the catalog. Required fields are marked with an asterisk (*).
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -117,7 +117,7 @@ export default function AddProductPage() {
                 )}
 
                 <div className="flex justify-end pt-4">
-                  <Button type="submit">Add Product</Button>
+                  <Button type="submit">Add Item</Button>
                 </div>
               </form>
             </CardContent>

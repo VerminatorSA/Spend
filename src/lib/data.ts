@@ -6,11 +6,11 @@ export type Supplier = {
     email: string;
     phone: string;
   };
-  productsOffered: number;
+  itemsOffered: number;
   location: string;
 };
 
-export type Product = {
+export type Item = {
   id: string;
   name: string;
   supplier: string;
@@ -29,7 +29,7 @@ export const suppliers: Supplier[] = [
       email: 'sarah.chen@globalcomp.com',
       phone: '1-800-555-0101',
     },
-    productsOffered: 150,
+    itemsOffered: 150,
     location: 'Shenzhen, China',
   },
   {
@@ -40,7 +40,7 @@ export const suppliers: Supplier[] = [
       email: 'david.r@precisionparts.com',
       phone: '1-800-555-0102',
     },
-    productsOffered: 230,
+    itemsOffered: 230,
     location: 'Stuttgart, Germany',
   },
   {
@@ -51,7 +51,7 @@ export const suppliers: Supplier[] = [
       email: 'jmiller@americanmetals.com',
       phone: '1-800-555-0103',
     },
-    productsOffered: 85,
+    itemsOffered: 85,
     location: 'Pittsburgh, USA',
   },
   {
@@ -62,7 +62,7 @@ export const suppliers: Supplier[] = [
       email: 'y.tanaka@advancedpolymers.jp',
       phone: '1-800-555-0104',
     },
-    productsOffered: 300,
+    itemsOffered: 300,
     location: 'Osaka, Japan',
   },
   {
@@ -73,7 +73,7 @@ export const suppliers: Supplier[] = [
       email: 'emily.w@techfasteners.co.uk',
       phone: '1-800-555-0105',
     },
-    productsOffered: 500,
+    itemsOffered: 500,
     location: 'Manchester, UK',
   },
   {
@@ -84,14 +84,14 @@ export const suppliers: Supplier[] = [
         email: 'mbrown@svcircuits.com',
         phone: '1-800-555-0106',
     },
-    productsOffered: 120,
+    itemsOffered: 120,
     location: 'San Jose, USA',
   },
 ];
 
-export const products: Product[] = [
+export const items: Item[] = [
   {
-    id: 'prod-001',
+    id: 'item-001',
     name: 'High-Grade Steel Screws (Box of 1000)',
     supplier: 'TechFasteners Ltd.',
     description: 'M4x10mm self-tapping screws, zinc-plated for corrosion resistance.',
@@ -100,7 +100,7 @@ export const products: Product[] = [
     category: 'Fasteners',
   },
   {
-    id: 'prod-002',
+    id: 'item-002',
     name: 'ABS Polymer Pellets (10kg Bag)',
     supplier: 'Advanced Polymers',
     description: 'High-impact strength ABS thermoplastic pellets, ideal for injection molding.',
@@ -109,7 +109,7 @@ export const products: Product[] = [
     category: 'Polymers',
   },
   {
-    id: 'prod-003',
+    id: 'item-003',
     name: 'ATmega328P Microcontroller',
     supplier: 'Global Components Inc.',
     description: '8-bit AVR microcontroller, widely used in electronics and robotics.',
@@ -118,7 +118,7 @@ export const products: Product[] = [
     category: 'Electronics',
   },
   {
-    id: 'prod-004',
+    id: 'item-004',
     name: 'Aluminum Sheet 6061 (48"x96")',
     supplier: 'American Metals LLC',
     description: 'T6 temper aluminum sheet, 1/8" thickness. Versatile and lightweight.',
@@ -127,7 +127,7 @@ export const products: Product[] = [
     category: 'Metals',
   },
   {
-    id: 'prod-005',
+    id: 'item-005',
     name: 'CNC-Milled Gear Set',
     supplier: 'Precision Parts Co.',
     description: 'Hardened steel 20-tooth and 40-tooth gear set for high-torque applications.',
@@ -136,7 +136,7 @@ export const products: Product[] = [
     category: 'Mechanical Parts',
   },
   {
-    id: 'prod-006',
+    id: 'item-006',
     name: '4-Layer PCB Prototype Board',
     supplier: 'Silicon Valley Circuits',
     description: '10x10cm 4-layer printed circuit board with ENIG finish.',
@@ -145,7 +145,7 @@ export const products: Product[] = [
     category: 'Electronics',
   },
   {
-    id: 'prod-007',
+    id: 'item-007',
     name: 'Carbon Fiber Weave (1 sq meter)',
     supplier: 'Advanced Polymers',
     description: '2x2 twill weave carbon fiber cloth for high-strength composite parts.',
@@ -154,7 +154,7 @@ export const products: Product[] = [
     category: 'Composites',
   },
   {
-    id: 'prod-008',
+    id: 'item-008',
     name: 'Titanium Rod Grade 5 (1m)',
     supplier: 'American Metals LLC',
     description: '10mm diameter Grade 5 (Ti-6Al-4V) titanium rod. High strength-to-weight ratio.',
