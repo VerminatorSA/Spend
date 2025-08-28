@@ -65,11 +65,9 @@ const PRODUCT_FIELDS_STORAGE_KEY = 'productFormFields';
 const CONTACT_FIELDS_STORAGE_KEY = 'contactFormFields';
 
 function FormSettingsSection({
-  title,
   fields,
   setFields,
 }: {
-  title: string;
   fields: FormField[];
   setFields: React.Dispatch<React.SetStateAction<FormField[]>>;
 }) {
@@ -340,6 +338,20 @@ export default function SettingsPage() {
                       </SelectContent>
                     </Select>
                   </div>
+                   <div className="space-y-2">
+                    <Label>Primary Color</Label>
+                    <div className="flex items-center gap-2">
+                        <Input type="color" defaultValue="#4A8FE7" className="h-10 w-14 p-1"/>
+                        <Input value="#4A8FE7" readOnly/>
+                    </div>
+                   </div>
+                   <div className="space-y-2">
+                    <Label>Accent Color</Label>
+                    <div className="flex items-center gap-2">
+                        <Input type="color" defaultValue="#2ECC71" className="h-10 w-14 p-1"/>
+                        <Input value="#2ECC71" readOnly/>
+                    </div>
+                   </div>
                    <div className="flex justify-end pt-4">
                     <Button>Apply Theme</Button>
                   </div>
@@ -363,28 +375,24 @@ export default function SettingsPage() {
                         </TabsList>
                         <TabsContent value="supplier-form" className="py-6">
                              <FormSettingsSection 
-                                title='Supplier'
                                 fields={supplierFields}
                                 setFields={setSupplierFields}
                             />
                         </TabsContent>
                          <TabsContent value="item-form" className="py-6">
                             <FormSettingsSection 
-                                title='Item'
                                 fields={itemFields}
                                 setFields={setItemFields}
                             />
                         </TabsContent>
                          <TabsContent value="product-form" className="py-6">
                             <FormSettingsSection 
-                                title='Product'
                                 fields={productFields}
                                 setFields={setProductFields}
                             />
                         </TabsContent>
                          <TabsContent value="contact-form" className="py-6">
                             <FormSettingsSection 
-                                title='Contact'
                                 fields={contactFields}
                                 setFields={setContactFields}
                             />
