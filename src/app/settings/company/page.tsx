@@ -1,0 +1,137 @@
+
+'use client';
+
+import { Header } from '@/components/header';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
+
+export default function CompanySettingsPage() {
+    const { toast } = useToast();
+
+    const handleSave = () => {
+        toast({
+            title: 'Settings Saved',
+            description: 'Company settings have been successfully saved.',
+        });
+    }
+
+    return (
+        <div className="flex h-full flex-col">
+            <Header title="Company Settings" />
+            <main className="flex-1 overflow-auto p-4 md:p-6">
+                <div className="mx-auto max-w-4xl">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Company Profile</CardTitle>
+                            <CardDescription>Manage your organization's details and branding.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="companyName">Company Name</Label>
+                                <Input id="companyName" defaultValue="Spend Inc." />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="companyWebsite">Website</Label>
+                                <Input id="companyWebsite" defaultValue="https://spend.com" />
+                            </div>
+                            <Separator />
+                            <div className="space-y-4">
+                                <Label>Company Address</Label>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    <div className="sm:col-span-2 space-y-2">
+                                        <Label htmlFor="address1" className="text-xs text-muted-foreground">Address Line 1</Label>
+                                        <Input id="address1" placeholder="e.g., 123 Main St" />
+                                    </div>
+                                    <div className="sm:col-span-2 space-y-2">
+                                        <Label htmlFor="address2" className="text-xs text-muted-foreground">Address Line 2 (Optional)</Label>
+                                        <Input id="address2" placeholder="e.g., Suite 400" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="city" className="text-xs text-muted-foreground">City</Label>
+                                        <Input id="city" placeholder="e.g., San Francisco" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="state" className="text-xs text-muted-foreground">State / Province</Label>
+                                        <Input id="state" placeholder="e.g., CA" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="postalCode" className="text-xs text-muted-foreground">Postal Code</Label>
+                                        <Input id="postalCode" placeholder="e.g., 94103" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="companyCountry" className="text-xs text-muted-foreground">Country</Label>
+                                        <Select>
+                                            <SelectTrigger id="companyCountry">
+                                                <SelectValue placeholder="Select country" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="US">United States</SelectItem>
+                                                <SelectItem value="CA">Canada</SelectItem>
+                                                <SelectItem value="GB">United Kingdom</SelectItem>
+                                                <SelectItem value="AU">Australia</SelectItem>
+                                                <SelectItem value="ZA">South Africa</SelectItem>
+                                                <SelectItem value="DE">Germany</SelectItem>
+                                                <SelectItem value="JP">Japan</SelectItem>
+                                                <SelectItem value="CN">China</SelectItem>
+                                                <SelectItem value="BR">Brazil</SelectItem>
+                                                <SelectItem value="IN">India</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+                            <Separator />
+                            <div>
+                                <h3 className="mb-4 text-lg font-medium">Localization Defaults</h3>
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="currency">Currency</Label>
+                                            <Select defaultValue="USD">
+                                                <SelectTrigger id="currency">
+                                                    <SelectValue placeholder="Select currency" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="USD">USD ($)</SelectItem>
+                                                    <SelectItem value="CAD">CAD (C$)</SelectItem>
+                                                    <SelectItem value="EUR">EUR (€)</SelectItem>
+                                                    <SelectItem value="GBP">GBP (£)</SelectItem>
+                                                    <SelectItem value="AUD">AUD (A$)</SelectItem>
+                                                    <SelectItem value="JPY">JPY (¥)</SelectItem>
+                                                    <SelectItem value="ZAR">ZAR (R)</SelectItem>
+                                                    <SelectItem value="BRL">BRL (R$)</SelectItem>
+                                                    <SelectItem value="INR">INR (₹)</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="dateFormat">Date Format</Label>
+                                        <Select defaultValue="mm-dd-yyyy">
+                                            <SelectTrigger id="dateFormat">
+                                                <SelectValue placeholder="Select date format" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
+                                                <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
+                                                <SelectItem value="yyyy-mm-dd">YYYY-MM-DD</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                     <div className="mt-8 flex justify-end">
+                        <Button onClick={handleSave}>Save Company Settings</Button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
