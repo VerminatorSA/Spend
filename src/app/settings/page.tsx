@@ -280,61 +280,6 @@ export default function SettingsPage() {
                     <Label htmlFor="title">Job Title</Label>
                     <Input id="title" defaultValue="Purchasing Manager" />
                   </div>
-                  <Separator />
-                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                     <div className="space-y-2">
-                      <Label htmlFor="country">Country</Label>
-                      <Select defaultValue="US">
-                        <SelectTrigger id="country">
-                          <SelectValue placeholder="Select country" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="US">United States</SelectItem>
-                          <SelectItem value="CA">Canada</SelectItem>
-                          <SelectItem value="GB">United Kingdom</SelectItem>
-                          <SelectItem value="AU">Australia</SelectItem>
-                          <SelectItem value="ZA">South Africa</SelectItem>
-                          <SelectItem value="DE">Germany</SelectItem>
-                          <SelectItem value="JP">Japan</SelectItem>
-                          <SelectItem value="CN">China</SelectItem>
-                          <SelectItem value="BR">Brazil</SelectItem>
-                          <SelectItem value="IN">India</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="currency">Currency</Label>
-                      <Select defaultValue="USD">
-                        <SelectTrigger id="currency">
-                          <SelectValue placeholder="Select currency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="USD">USD ($)</SelectItem>
-                          <SelectItem value="CAD">CAD (C$)</SelectItem>
-                          <SelectItem value="EUR">EUR (€)</SelectItem>
-                          <SelectItem value="GBP">GBP (£)</SelectItem>
-                          <SelectItem value="AUD">AUD (A$)</SelectItem>
-                          <SelectItem value="JPY">JPY (¥)</SelectItem>
-                          <SelectItem value="ZAR">ZAR (R)</SelectItem>
-                          <SelectItem value="BRL">BRL (R$)</SelectItem>
-                          <SelectItem value="INR">INR (₹)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="dateFormat">Date Format</Label>
-                    <Select defaultValue="mm-dd-yyyy">
-                      <SelectTrigger id="dateFormat">
-                        <SelectValue placeholder="Select date format" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
-                        <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
-                        <SelectItem value="yyyy-mm-dd">YYYY-MM-DD</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                 </CardContent>
                 <CardFooter className="border-t px-6 py-4">
                    <div className="flex justify-end">
@@ -400,6 +345,46 @@ export default function SettingsPage() {
                             <SelectItem value="CN">China</SelectItem>
                             <SelectItem value="BR">Brazil</SelectItem>
                             <SelectItem value="IN">India</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                   <Separator />
+                  <div>
+                    <h3 className="mb-4 text-lg font-medium">Localization Defaults</h3>
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label htmlFor="currency">Currency</Label>
+                          <Select defaultValue="USD">
+                            <SelectTrigger id="currency">
+                              <SelectValue placeholder="Select currency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="USD">USD ($)</SelectItem>
+                              <SelectItem value="CAD">CAD (C$)</SelectItem>
+                              <SelectItem value="EUR">EUR (€)</SelectItem>
+                              <SelectItem value="GBP">GBP (£)</SelectItem>
+                              <SelectItem value="AUD">AUD (A$)</SelectItem>
+                              <SelectItem value="JPY">JPY (¥)</SelectItem>
+                              <SelectItem value="ZAR">ZAR (R)</SelectItem>
+                              <SelectItem value="BRL">BRL (R$)</SelectItem>
+                              <SelectItem value="INR">INR (₹)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="dateFormat">Date Format</Label>
+                        <Select defaultValue="mm-dd-yyyy">
+                          <SelectTrigger id="dateFormat">
+                            <SelectValue placeholder="Select date format" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
+                            <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
+                            <SelectItem value="yyyy-mm-dd">YYYY-MM-DD</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
