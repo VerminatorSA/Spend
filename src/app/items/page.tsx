@@ -34,7 +34,12 @@ export default function ItemsPage() {
                   />
                 </div>
                 <div className="p-6 pb-2">
-                  <Badge variant="outline">{item.category}</Badge>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline">{item.category}</Badge>
+                    <Badge variant={item.stock > 0 ? 'secondary' : 'destructive'}>
+                        {item.stock > 0 ? `${item.stock} in Stock` : 'Out of Stock'}
+                    </Badge>
+                  </div>
                   <CardTitle className="mt-2 text-lg">{item.name}</CardTitle>
                 </div>
               </CardHeader>
@@ -46,7 +51,7 @@ export default function ItemsPage() {
               </CardContent>
               <CardFooter className="flex items-center justify-between">
                 <p className="text-xl font-bold">${item.price.toFixed(2)} <span className="text-sm font-normal text-muted-foreground">/ unit</span></p>
-                <Button>Add to Cart</Button>
+                <Button disabled={item.stock === 0}>Add to Cart</Button>
               </CardFooter>
             </Card>
           ))}

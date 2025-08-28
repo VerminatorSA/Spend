@@ -35,6 +35,7 @@ export default function AddItemPage() {
                 { id: 'field-price', label: 'Price', required: true, checked: true },
                 { id: 'field-category', label: 'Category', required: true, checked: true },
                 { id: 'field-supplier', label: 'Supplier', required: true, checked: true },
+                { id: 'field-stock', label: 'Stock Quantity', required: false, checked: true },
             ]);
         }
     } catch (error) {
@@ -104,7 +105,8 @@ export default function AddItemPage() {
                                             id={field.id} 
                                             placeholder={`Enter ${field.label}`} 
                                             onChange={handleInputChange} 
-                                            value={formData[field.id] || ''} 
+                                            value={formData[field.id] || ''}
+                                            type={field.id.includes('price') || field.id.includes('stock') ? 'number' : 'text'}
                                         />
                                     </div>
                                 ))}

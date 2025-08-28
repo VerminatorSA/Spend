@@ -32,7 +32,7 @@ const initialItemFields: FormField[] = [
     { id: 'field-supplier', label: 'Supplier', required: true, checked: true, type: 'text' },
     { id: 'field-description', label: 'Description', required: false, checked: true, type: 'textarea' },
     { id: 'field-sku', label: 'SKU', required: false, checked: false, type: 'text' },
-    { id: 'field-stock', label: 'Stock Quantity', required: false, checked: false, type: 'number' },
+    { id: 'field-stock', label: 'Stock Quantity', required: false, checked: true, type: 'number' },
 ];
 
 const ITEM_FIELDS_STORAGE_KEY = 'itemFormFields';

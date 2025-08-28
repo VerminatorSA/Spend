@@ -19,6 +19,7 @@ export type Item = {
   price: number;
   imageUrl: string;
   category: string;
+  stock: number;
 };
 
 export type Product = {
@@ -110,6 +111,7 @@ export const items: Item[] = [
     price: 45.0,
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Fasteners',
+    stock: 500,
   },
   {
     id: 'item-002',
@@ -119,6 +121,7 @@ export const items: Item[] = [
     price: 120.5,
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Polymers',
+    stock: 120,
   },
   {
     id: 'item-003',
@@ -128,6 +131,7 @@ export const items: Item[] = [
     price: 2.5,
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Electronics',
+    stock: 2500,
   },
   {
     id: 'item-004',
@@ -137,6 +141,7 @@ export const items: Item[] = [
     price: 250.0,
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Metals',
+    stock: 40,
   },
   {
     id: 'item-005',
@@ -146,6 +151,7 @@ export const items: Item[] = [
     price: 85.75,
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Mechanical Parts',
+    stock: 0,
   },
   {
     id: 'item-006',
@@ -155,6 +161,7 @@ export const items: Item[] = [
     price: 15.0,
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Electronics',
+    stock: 300,
   },
   {
     id: 'item-007',
@@ -164,6 +171,7 @@ export const items: Item[] = [
     price: 75.0,
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Composites',
+    stock: 75,
   },
   {
     id: 'item-008',
@@ -173,6 +181,7 @@ export const items: Item[] = [
     price: 180.0,
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Metals',
+    stock: 25,
   },
 ];
 
