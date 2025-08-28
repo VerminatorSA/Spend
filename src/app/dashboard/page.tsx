@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { PlusCircle, ChevronDown } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { suppliers, items, products } from '@/lib/data';
 
 export default function DashboardPage() {
@@ -38,34 +37,22 @@ export default function DashboardPage() {
         </DropdownMenu>
       </Header>
       <main className="flex-1 overflow-auto p-4 md:p-6">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Total Suppliers</CardTitle>
-              <CardDescription>The total number of suppliers in your directory.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-4xl font-bold">{suppliers.length}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Total Items</CardTitle>
-              <CardDescription>The total number of items in your catalog.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-4xl font-bold">{items.length}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Total Products</CardTitle>
-              <CardDescription>The total number of products you have configured.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-4xl font-bold">{products.length}</p>
-            </CardContent>
-          </Card>
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col">
+              <h3 className="text-lg font-medium text-muted-foreground">Total Suppliers</h3>
+              <p className="text-5xl font-bold tracking-tight">{suppliers.length}</p>
+              <p className="text-sm text-muted-foreground">The total number of suppliers in your directory.</p>
+          </div>
+          <div className="flex flex-col">
+              <h3 className="text-lg font-medium text-muted-foreground">Total Items</h3>
+              <p className="text-5xl font-bold tracking-tight">{items.length}</p>
+              <p className="text-sm text-muted-foreground">The total number of items in your catalog.</p>
+          </div>
+          <div className="flex flex-col">
+              <h3 className="text-lg font-medium text-muted-foreground">Total Products</h3>
+              <p className="text-5xl font-bold tracking-tight">{products.length}</p>
+              <p className="text-sm text-muted-foreground">The total number of products you have configured.</p>
+          </div>
         </div>
       </main>
     </div>
