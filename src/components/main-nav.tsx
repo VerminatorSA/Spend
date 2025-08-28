@@ -3,10 +3,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Package, Lightbulb, Mail, Settings as SettingsIcon, ShoppingCart } from 'lucide-react';
+import { Users, Package, Lightbulb, Mail, Settings as SettingsIcon, ShoppingCart, LayoutDashboard } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const navItems = [
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, tooltip: "Dashboard"},
   { href: '/suppliers', label: 'Suppliers', icon: Users, tooltip: "Supplier Directory"},
   { href: '/items', label: 'Items', icon: Package, tooltip: "Item Management"},
   { href: '/products', label: 'Products', icon: ShoppingCart, tooltip: "Product Management"},
