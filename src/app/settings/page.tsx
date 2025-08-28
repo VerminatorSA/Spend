@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -304,9 +305,9 @@ export default function SettingsPage() {
                 <CardContent>
                     <Tabs defaultValue="supplier-form">
                         <TabsList className="grid w-full grid-cols-3">
-                            <TabsTrigger value="supplier-form">"Add Supplier" Form</TabsTrigger>
-                            <TabsTrigger value="product-form">"Add Product" Form</TabsTrigger>
-                            <TabsTrigger value="contact-form">"Contact Supplier" Form</TabsTrigger>
+                            <TabsTrigger value="supplier-form">Supplier</TabsTrigger>
+                            <TabsTrigger value="product-form">Product</TabsTrigger>
+                            <TabsTrigger value="contact-form">Contact</TabsTrigger>
                         </TabsList>
                         <TabsContent value="supplier-form" className="py-6">
                              <FormSettingsSection 
