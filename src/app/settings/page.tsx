@@ -21,45 +21,43 @@ interface FormField {
   isCustom?: boolean;
 }
 
-const initialFields: FormField[] = [
+const initialSupplierFields: FormField[] = [
     { id: 'field-name', label: 'Supplier Name', required: true, checked: true },
     { id: 'field-contact-name', label: 'Contact Name', required: true, checked: true },
     { id: 'field-contact-email', label: 'Contact Email', required: true, checked: true },
-    { id: 'field-contact-phone', label: 'Contact Phone', required: true, checked: true },
+    { id: 'field-contact-phone', label: 'Contact Phone', required: false, checked: true },
     { id: 'field-location', label: 'Location', required: false, checked: true },
-    { id: 'field-tax-id', label: 'Tax ID / VAT Number', required: false, checked: true },
-    { id: 'field-website', label: 'Website URL', required: false, checked: true },
-    { id: 'custom-1699302633433', label: 'Minimum Order Quantity', required: false, checked: true, isCustom: true },
+    { id: 'field-tax-id', label: 'Tax ID / VAT Number', required: false, checked: false },
+    { id: 'field-website', label: 'Website URL', required: false, checked: false },
 ];
 
-const FORM_FIELDS_STORAGE_KEY = 'supplierFormFields';
+const initialProductFields: FormField[] = [
+    { id: 'field-product-name', label: 'Product Name', required: true, checked: true },
+    { id: 'field-price', label: 'Price', required: true, checked: true },
+    { id: 'field-category', label: 'Category', required: true, checked: true },
+    { id: 'field-supplier', label: 'Supplier', required: true, checked: true },
+    { id: 'field-description', label: 'Description', required: false, checked: true },
+    { id: 'field-sku', label: 'SKU', required: false, checked: false },
+    { id: 'field-stock', label: 'Stock Quantity', required: false, checked: false },
+];
 
-export default function SettingsPage() {
-  const [fields, setFields] = useState<FormField[]>([]);
+
+const SUPPLIER_FIELDS_STORAGE_KEY = 'supplierFormFields';
+const PRODUCT_FIELDS_STORAGE_KEY = 'productFormFields';
+
+function FormSettingsSection({
+  title,
+  fields,
+  setFields,
+  storageKey,
+}: {
+  title: string;
+  fields: FormField[];
+  setFields: React.Dispatch<React.SetStateAction<FormField[]>>;
+  storageKey: string;
+}) {
   const [newFieldName, setNewFieldName] = useState('');
   const { toast } = useToast();
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    try {
-      const storedFields = localStorage.getItem(FORM_FIELDS_STORAGE_KEY);
-      if (storedFields) {
-        setFields(JSON.parse(storedFields));
-      } else {
-        setFields(initialFields);
-      }
-    } catch (error) {
-      console.error("Failed to parse fields from localStorage", error);
-      setFields(initialFields);
-    }
-    setIsLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(FORM_FIELDS_STORAGE_KEY, JSON.stringify(fields));
-    }
-  }, [fields, isLoaded]);
 
   const handleAddField = () => {
     if (newFieldName.trim() === '') {
@@ -89,8 +87,93 @@ export default function SettingsPage() {
     setFields(fields.map(field => field.id === id ? {...field, checked: !field.checked} : field));
   };
 
+  return (
+      <div className="space-y-6">
+          <div>
+              <h3 className="mb-4 font-medium">{title}</h3>
+              <div className="space-y-3">
+              {fields.map((field) => (
+                  <div key={field.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                      <Checkbox 
+                      id={field.id} 
+                      checked={field.checked} 
+                      disabled={field.required}
+                      onCheckedChange={() => handleToggleField(field.id)}
+                      />
+                      <Label htmlFor={field.id} className={field.required ? 'text-muted-foreground' : ''}>
+                      {field.label} {field.required && '(Required)'}
+                      </Label>
+                  </div>
+                  {field.isCustom && (
+                      <Button variant="ghost" size="icon" onClick={() => handleRemoveField(field.id)}>
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                  )}
+                  </div>
+              ))}
+              </div>
+          </div>
+
+          <div className="rounded-lg border bg-muted/50 p-4">
+              <h4 className="mb-2 font-medium">Add New Field</h4>
+              <div className="flex items-center gap-2">
+              <Input 
+                  placeholder="e.g., 'Minimum Order Quantity'" 
+                  value={newFieldName}
+                  onChange={(e) => setNewFieldName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddField()}
+              />
+              <Button onClick={handleAddField}>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Add Field
+              </Button>
+              </div>
+          </div>
+      </div>
+  );
+}
+
+
+export default function SettingsPage() {
+  const [supplierFields, setSupplierFields] = useState<FormField[]>([]);
+  const [productFields, setProductFields] = useState<FormField[]>([]);
+  const { toast } = useToast();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const storedSupplierFields = localStorage.getItem(SUPPLIER_FIELDS_STORAGE_KEY);
+      if (storedSupplierFields) {
+        setSupplierFields(JSON.parse(storedSupplierFields));
+      } else {
+        setSupplierFields(initialSupplierFields);
+      }
+
+      const storedProductFields = localStorage.getItem(PRODUCT_FIELDS_STORAGE_KEY);
+      if (storedProductFields) {
+        setProductFields(JSON.parse(storedProductFields));
+      } else {
+        setProductFields(initialProductFields);
+      }
+    } catch (error) {
+      console.error("Failed to parse fields from localStorage", error);
+      setSupplierFields(initialSupplierFields);
+      setProductFields(initialProductFields);
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
+      localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
+    }
+  }, [supplierFields, productFields, isLoaded]);
+
   const handleSaveSettings = () => {
-    localStorage.setItem(FORM_FIELDS_STORAGE_KEY, JSON.stringify(fields));
+    localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
+    localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
     toast({
         title: 'Settings Saved',
         description: 'Your form settings have been successfully saved.',
@@ -98,7 +181,7 @@ export default function SettingsPage() {
   }
 
   if (!isLoaded) {
-    return null; // Or a loading spinner
+    return null;
   }
 
   return (
@@ -209,53 +292,23 @@ export default function SettingsPage() {
                <Card>
                 <CardHeader>
                   <CardTitle>Form Settings</CardTitle>
-                  <CardDescription>Add or remove fields from various forms in the app.</CardDescription>
+                  <CardDescription>Add, remove, or toggle fields for the app's forms.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <h3 className="mb-4 font-medium">"Add Supplier" Form Fields</h3>
-                    <div className="space-y-3">
-                      {fields.map((field) => (
-                        <div key={field.id} className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox 
-                              id={field.id} 
-                              checked={field.checked} 
-                              disabled={field.required}
-                              onCheckedChange={() => handleToggleField(field.id)}
-                            />
-                            <Label htmlFor={field.id} className={field.required ? 'text-muted-foreground' : ''}>
-                              {field.label} {field.required && '(Required)'}
-                            </Label>
-                          </div>
-                          {field.isCustom && (
-                            <Button variant="ghost" size="icon" onClick={() => handleRemoveField(field.id)}>
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border bg-muted/50 p-4">
-                    <h4 className="mb-2 font-medium">Add New Field</h4>
-                    <div className="flex items-center gap-2">
-                      <Input 
-                        placeholder="e.g., 'Minimum Order Quantity'" 
-                        value={newFieldName}
-                        onChange={(e) => setNewFieldName(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleAddField()}
-                      />
-                      <Button onClick={handleAddField}>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Add Field
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end pt-4">
-                    <Button onClick={handleSaveSettings}>Save Form Settings</Button>
+                <CardContent className="space-y-8">
+                  <FormSettingsSection 
+                    title='"Add Supplier" Form Fields'
+                    fields={supplierFields}
+                    setFields={setSupplierFields}
+                    storageKey={SUPPLIER_FIELDS_STORAGE_KEY}
+                  />
+                   <FormSettingsSection 
+                    title='"Add Product" Form Fields'
+                    fields={productFields}
+                    setFields={setProductFields}
+                    storageKey={PRODUCT_FIELDS_STORAGE_KEY}
+                  />
+                  <div className="flex justify-end border-t pt-6">
+                    <Button onClick={handleSaveSettings}>Save All Form Settings</Button>
                   </div>
                 </CardContent>
               </Card>
