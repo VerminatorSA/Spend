@@ -224,7 +224,7 @@ export default function SettingsPage() {
     localStorage.setItem(CONTACT_FIELDS_STORAGE_KEY, JSON.stringify(contactFields));
     toast({
         title: 'Settings Saved',
-        description: 'Your form settings have been successfully saved.',
+        description: 'Your settings have been successfully saved.',
     });
   }
 
@@ -281,11 +281,6 @@ export default function SettingsPage() {
                     <Input id="title" defaultValue="Purchasing Manager" />
                   </div>
                 </CardContent>
-                <CardFooter className="border-t px-6 py-4">
-                   <div className="flex justify-end">
-                    <Button>Save Changes</Button>
-                  </div>
-                </CardFooter>
               </Card>
             </TabsContent>
 
@@ -391,11 +386,6 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter className="border-t px-6 py-4">
-                   <div className="flex justify-end">
-                    <Button>Save Changes</Button>
-                  </div>
-                </CardFooter>
               </Card>
             </TabsContent>
 
@@ -425,11 +415,6 @@ export default function SettingsPage() {
                     <Switch id="push-notifications" />
                   </div>
                 </CardContent>
-                 <CardFooter className="border-t px-6 py-4">
-                   <div className="flex justify-end">
-                    <Button>Save Preferences</Button>
-                  </div>
-                </CardFooter>
               </Card>
             </TabsContent>
 
@@ -468,11 +453,6 @@ export default function SettingsPage() {
                     </div>
                    </div>
                 </CardContent>
-                 <CardFooter className="border-t px-6 py-4">
-                   <div className="flex justify-end">
-                    <Button>Apply Theme</Button>
-                  </div>
-                </CardFooter>
               </Card>
             </TabsContent>
             
@@ -516,15 +496,13 @@ export default function SettingsPage() {
                         </TabsContent>
                     </Tabs>
                 </CardContent>
-                <CardFooter className="border-t px-6 py-4">
-                    <div className="flex justify-end">
-                        <Button onClick={handleSaveSettings}>Save All Form Settings</Button>
-                    </div>
-                </CardFooter>
               </Card>
             </TabsContent>
 
           </Tabs>
+           <div className="mt-8 flex justify-end">
+              <Button onClick={handleSaveSettings}>Save All Settings</Button>
+            </div>
         </div>
       </main>
     </div>
