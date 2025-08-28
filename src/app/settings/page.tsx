@@ -44,6 +44,11 @@ const initialItemFields: FormField[] = [
     { id: 'field-stock', label: 'Stock Quantity', required: false, checked: false },
 ];
 
+const initialProductFields: FormField[] = [
+    { id: 'field-product-name', label: 'Product Name', required: true, checked: true },
+    { id: 'field-product-description', label: 'Description', required: false, checked: true },
+];
+
 const initialContactFields: FormField[] = [
     { id: 'field-your-name', label: 'Your Name', required: true, checked: true, type: 'text' },
     { id: 'field-your-email', label: 'Your Email', required: true, checked: true, type: 'text' },
@@ -53,6 +58,7 @@ const initialContactFields: FormField[] = [
 
 const SUPPLIER_FIELDS_STORAGE_KEY = 'supplierFormFields';
 const ITEM_FIELDS_STORAGE_KEY = 'itemFormFields';
+const PRODUCT_FIELDS_STORAGE_KEY = 'productFormFields';
 const CONTACT_FIELDS_STORAGE_KEY = 'contactFormFields';
 
 function FormSettingsSection({
@@ -167,6 +173,7 @@ function FormSettingsSection({
 export default function SettingsPage() {
   const [supplierFields, setSupplierFields] = useState<FormField[]>([]);
   const [itemFields, setItemFields] = useState<FormField[]>([]);
+  const [productFields, setProductFields] = useState<FormField[]>([]);
   const [contactFields, setContactFields] = useState<FormField[]>([]);
   const { toast } = useToast();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -178,6 +185,9 @@ export default function SettingsPage() {
 
       const storedItemFields = localStorage.getItem(ITEM_FIELDS_STORAGE_KEY);
       setItemFields(storedItemFields ? JSON.parse(storedItemFields) : initialItemFields);
+      
+      const storedProductFields = localStorage.getItem(PRODUCT_FIELDS_STORAGE_KEY);
+      setProductFields(storedProductFields ? JSON.parse(storedProductFields) : initialProductFields);
 
       const storedContactFields = localStorage.getItem(CONTACT_FIELDS_STORAGE_KEY);
       setContactFields(storedContactFields ? JSON.parse(storedContactFields) : initialContactFields);
@@ -186,6 +196,7 @@ export default function SettingsPage() {
       console.error("Failed to parse fields from localStorage", error);
       setSupplierFields(initialSupplierFields);
       setItemFields(initialItemFields);
+      setProductFields(initialProductFields);
       setContactFields(initialContactFields);
     }
     setIsLoaded(true);
@@ -194,6 +205,7 @@ export default function SettingsPage() {
   const handleSaveSettings = () => {
     localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
     localStorage.setItem(ITEM_FIELDS_STORAGE_KEY, JSON.stringify(itemFields));
+    localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
     localStorage.setItem(CONTACT_FIELDS_STORAGE_KEY, JSON.stringify(contactFields));
     toast({
         title: 'Settings Saved',
@@ -205,9 +217,10 @@ export default function SettingsPage() {
     if (isLoaded) {
       localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
       localStorage.setItem(ITEM_FIELDS_STORAGE_KEY, JSON.stringify(itemFields));
+      localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
       localStorage.setItem(CONTACT_FIELDS_STORAGE_KEY, JSON.stringify(contactFields));
     }
-  }, [supplierFields, itemFields, contactFields, isLoaded]);
+  }, [supplierFields, itemFields, productFields, contactFields, isLoaded]);
 
   if (!isLoaded) {
     return null;
@@ -325,9 +338,10 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="supplier-form">
-                        <TabsList className="grid w-full grid-cols-3">
+                        <TabsList className="grid w-full grid-cols-4">
                             <TabsTrigger value="supplier-form">Supplier</TabsTrigger>
                             <TabsTrigger value="item-form">Item</TabsTrigger>
+                            <TabsTrigger value="product-form">Product</TabsTrigger>
                             <TabsTrigger value="contact-form">Contact</TabsTrigger>
                         </TabsList>
                         <TabsContent value="supplier-form" className="py-6">
@@ -342,6 +356,13 @@ export default function SettingsPage() {
                                 title='Item'
                                 fields={itemFields}
                                 setFields={setItemFields}
+                            />
+                        </TabsContent>
+                         <TabsContent value="product-form" className="py-6">
+                            <FormSettingsSection 
+                                title='Product'
+                                fields={productFields}
+                                setFields={setProductFields}
                             />
                         </TabsContent>
                          <TabsContent value="contact-form" className="py-6">

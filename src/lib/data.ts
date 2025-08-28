@@ -1,3 +1,4 @@
+
 export type Supplier = {
   id: string;
   name: string;
@@ -18,6 +19,17 @@ export type Item = {
   price: number;
   imageUrl: string;
   category: string;
+};
+
+export type Product = {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  bom: {
+    itemId: string;
+    quantity: number;
+  }[];
 };
 
 export const suppliers: Supplier[] = [
@@ -162,4 +174,31 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Metals',
   },
+];
+
+export const products: Product[] = [
+    {
+        id: 'prod-001',
+        name: 'Standard Drone Kit',
+        description: 'A complete DIY drone kit with all necessary components for assembly.',
+        imageUrl: 'https://picsum.photos/600/400',
+        bom: [
+            { itemId: 'item-003', quantity: 1 },
+            { itemId: 'item-006', quantity: 1 },
+            { itemId: 'item-001', quantity: 20 },
+            { itemId: 'item-002', quantity: 1 },
+        ],
+    },
+    {
+        id: 'prod-002',
+        name: 'Robotic Arm Assembly',
+        description: 'A 5-axis robotic arm assembly kit for hobbyists and educational purposes.',
+        imageUrl: 'https://picsum.photos/600/400',
+        bom: [
+            { itemId: 'item-005', quantity: 4 },
+            { itemId: 'item-003', quantity: 2 },
+            { itemId: 'item-004', quantity: 1 },
+            { itemId: 'item-001', quantity: 50 },
+        ],
+    }
 ];
