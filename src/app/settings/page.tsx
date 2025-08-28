@@ -279,6 +279,51 @@ export default function SettingsPage() {
                     <Label htmlFor="title">Job Title</Label>
                     <Input id="title" defaultValue="Purchasing Manager" />
                   </div>
+                  <Separator />
+                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                     <div className="space-y-2">
+                      <Label htmlFor="country">Country</Label>
+                      <Select defaultValue="US">
+                        <SelectTrigger id="country">
+                          <SelectValue placeholder="Select country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="US">United States</SelectItem>
+                          <SelectItem value="GB">United Kingdom</SelectItem>
+                          <SelectItem value="DE">Germany</SelectItem>
+                          <SelectItem value="JP">Japan</SelectItem>
+                          <SelectItem value="CN">China</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="currency">Currency</Label>
+                      <Select defaultValue="USD">
+                        <SelectTrigger id="currency">
+                          <SelectValue placeholder="Select currency" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="USD">USD ($)</SelectItem>
+                          <SelectItem value="EUR">EUR (€)</SelectItem>
+                          <SelectItem value="GBP">GBP (£)</SelectItem>
+                          <SelectItem value="JPY">JPY (¥)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dateFormat">Date Format</Label>
+                    <Select defaultValue="mm-dd-yyyy">
+                      <SelectTrigger id="dateFormat">
+                        <SelectValue placeholder="Select date format" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
+                        <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
+                        <SelectItem value="yyyy-mm-dd">YYYY-MM-DD</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div className="flex justify-end pt-4">
                     <Button>Save Changes</Button>
                   </div>
@@ -411,5 +456,7 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
 
     
