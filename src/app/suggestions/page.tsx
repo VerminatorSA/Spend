@@ -1,7 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,7 +33,7 @@ function SubmitButton() {
 
 export default function SuggestionsPage() {
   const initialState = { message: null, errors: {}, data: null };
-  const [state, dispatch] = useFormState(submitSpecifications, initialState);
+  const [state, dispatch] = useActionState(submitSpecifications, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
