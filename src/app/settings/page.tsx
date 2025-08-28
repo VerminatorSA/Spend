@@ -12,6 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PlusCircle, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
 
 interface FormField {
   id: string;
@@ -19,6 +20,7 @@ interface FormField {
   required: boolean;
   checked: boolean;
   isCustom?: boolean;
+  type?: 'text' | 'textarea' | 'select';
 }
 
 const initialSupplierFields: FormField[] = [
@@ -41,20 +43,25 @@ const initialProductFields: FormField[] = [
     { id: 'field-stock', label: 'Stock Quantity', required: false, checked: false },
 ];
 
+const initialContactFields: FormField[] = [
+    { id: 'field-your-name', label: 'Your Name', required: true, checked: true, type: 'text' },
+    { id: 'field-your-email', label: 'Your Email', required: true, checked: true, type: 'text' },
+    { id: 'field-subject', label: 'Subject', required: true, checked: true, type: 'text' },
+    { id: 'field-message', label: 'Message', required: true, checked: true, type: 'textarea' },
+];
 
 const SUPPLIER_FIELDS_STORAGE_KEY = 'supplierFormFields';
 const PRODUCT_FIELDS_STORAGE_KEY = 'productFormFields';
+const CONTACT_FIELDS_STORAGE_KEY = 'contactFormFields';
 
 function FormSettingsSection({
   title,
   fields,
   setFields,
-  storageKey,
 }: {
   title: string;
   fields: FormField[];
   setFields: React.Dispatch<React.SetStateAction<FormField[]>>;
-  storageKey: string;
 }) {
   const [newFieldName, setNewFieldName] = useState('');
   const { toast } = useToast();
@@ -74,6 +81,7 @@ function FormSettingsSection({
       required: false,
       checked: true,
       isCustom: true,
+      type: 'text',
     };
     setFields([...fields, newField]);
     setNewFieldName('');
@@ -96,13 +104,13 @@ function FormSettingsSection({
                   <div key={field.id} className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                       <Checkbox 
-                      id={field.id} 
-                      checked={field.checked} 
-                      disabled={field.required}
-                      onCheckedChange={() => handleToggleField(field.id)}
+                        id={field.id} 
+                        checked={field.checked} 
+                        disabled={field.required}
+                        onCheckedChange={() => handleToggleField(field.id)}
                       />
                       <Label htmlFor={field.id} className={field.required ? 'text-muted-foreground' : ''}>
-                      {field.label} {field.required && '(Required)'}
+                        {field.label} {field.required && '(Required)'}
                       </Label>
                   </div>
                   {field.isCustom && (
@@ -138,47 +146,47 @@ function FormSettingsSection({
 export default function SettingsPage() {
   const [supplierFields, setSupplierFields] = useState<FormField[]>([]);
   const [productFields, setProductFields] = useState<FormField[]>([]);
+  const [contactFields, setContactFields] = useState<FormField[]>([]);
   const { toast } = useToast();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     try {
       const storedSupplierFields = localStorage.getItem(SUPPLIER_FIELDS_STORAGE_KEY);
-      if (storedSupplierFields) {
-        setSupplierFields(JSON.parse(storedSupplierFields));
-      } else {
-        setSupplierFields(initialSupplierFields);
-      }
+      setSupplierFields(storedSupplierFields ? JSON.parse(storedSupplierFields) : initialSupplierFields);
 
       const storedProductFields = localStorage.getItem(PRODUCT_FIELDS_STORAGE_KEY);
-      if (storedProductFields) {
-        setProductFields(JSON.parse(storedProductFields));
-      } else {
-        setProductFields(initialProductFields);
-      }
+      setProductFields(storedProductFields ? JSON.parse(storedProductFields) : initialProductFields);
+
+      const storedContactFields = localStorage.getItem(CONTACT_FIELDS_STORAGE_KEY);
+      setContactFields(storedContactFields ? JSON.parse(storedContactFields) : initialContactFields);
+
     } catch (error) {
       console.error("Failed to parse fields from localStorage", error);
       setSupplierFields(initialSupplierFields);
       setProductFields(initialProductFields);
+      setContactFields(initialContactFields);
     }
     setIsLoaded(true);
   }, []);
 
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
-      localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
-    }
-  }, [supplierFields, productFields, isLoaded]);
-
   const handleSaveSettings = () => {
     localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
     localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
+    localStorage.setItem(CONTACT_FIELDS_STORAGE_KEY, JSON.stringify(contactFields));
     toast({
         title: 'Settings Saved',
         description: 'Your form settings have been successfully saved.',
     });
   }
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem(SUPPLIER_FIELDS_STORAGE_KEY, JSON.stringify(supplierFields));
+      localStorage.setItem(PRODUCT_FIELDS_STORAGE_KEY, JSON.stringify(productFields));
+      localStorage.setItem(CONTACT_FIELDS_STORAGE_KEY, JSON.stringify(contactFields));
+    }
+  }, [supplierFields, productFields, contactFields, isLoaded]);
 
   if (!isLoaded) {
     return null;
@@ -299,13 +307,18 @@ export default function SettingsPage() {
                     title='"Add Supplier" Form Fields'
                     fields={supplierFields}
                     setFields={setSupplierFields}
-                    storageKey={SUPPLIER_FIELDS_STORAGE_KEY}
                   />
+                  <Separator />
                    <FormSettingsSection 
                     title='"Add Product" Form Fields'
                     fields={productFields}
                     setFields={setProductFields}
-                    storageKey={PRODUCT_FIELDS_STORAGE_KEY}
+                  />
+                  <Separator />
+                   <FormSettingsSection 
+                    title='"Contact Supplier" Form Fields'
+                    fields={contactFields}
+                    setFields={setContactFields}
                   />
                   <div className="flex justify-end border-t pt-6">
                     <Button onClick={handleSaveSettings}>Save All Form Settings</Button>
