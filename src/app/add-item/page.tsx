@@ -2,12 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/header';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Separator } from '@/components/ui/separator';
 
 interface FormField {
   id: string;
@@ -88,40 +86,37 @@ export default function AddItemPage() {
       <Header title="Add New Item" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
-          <Card>
-            <CardHeader>
-              <CardTitle>New Item Details</CardTitle>
-              <CardDescription>
-                Fill out the form below to add a new item to the catalog. Required fields are marked with an asterisk (*).
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                
-                {visibleFields.length > 0 && (
-                    <div className="space-y-4">
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                            {visibleFields.map((field) => (
-                                <div key={field.id} className="space-y-2">
-                                    <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
-                                    <Input 
-                                        id={field.id} 
-                                        placeholder={`Enter ${field.label}`} 
-                                        onChange={handleInputChange} 
-                                        value={formData[field.id] || ''} 
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                <div className="flex justify-end pt-4">
-                  <Button type="submit">Add Item</Button>
+            <div className="space-y-4">
+                <div>
+                    <h2 className="text-2xl font-bold">New Item Details</h2>
+                    <p className="text-muted-foreground">
+                        Fill out the form below to add a new item to the catalog. Required fields are marked with an asterisk (*).
+                    </p>
                 </div>
-              </form>
-            </CardContent>
-          </Card>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {visibleFields.length > 0 && (
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                {visibleFields.map((field) => (
+                                    <div key={field.id} className="space-y-2">
+                                        <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                                        <Input 
+                                            id={field.id} 
+                                            placeholder={`Enter ${field.label}`} 
+                                            onChange={handleInputChange} 
+                                            value={formData[field.id] || ''} 
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="flex justify-end pt-4">
+                    <Button type="submit">Add Item</Button>
+                    </div>
+                </form>
+            </div>
         </div>
       </main>
     </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/header';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -93,71 +92,69 @@ export default function AddSupplierPage() {
       <Header title="Add New Supplier" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
-          <Card>
-            <CardHeader>
-              <CardTitle>New Supplier Details</CardTitle>
-              <CardDescription>
-                Fill out the form below to add a new supplier to the directory. Required fields are marked with an asterisk (*).
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                
-                {mainFields.length > 0 && (
-                    <div className="space-y-4">
-                        {mainFields.map((field) => (
-                             <div key={field.id} className="space-y-2">
-                                <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
-                                <Input id={field.id} placeholder={`e.g., ${field.label}`} onChange={handleInputChange} value={formData[field.id] || ''} />
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {contactFields.length > 0 && <Separator />}
-                
-                {contactFields.length > 0 && (
-                    <div>
-                    <h3 className="mb-4 text-lg font-medium">Contact Information</h3>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {contactFields.map(field => (
-                            <div key={field.id} className="space-y-2">
-                                <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
-                                <Input id={field.id} placeholder={`e.g., Jane Doe`} onChange={handleInputChange} value={formData[field.id] || ''} />
-                            </div>
-                        ))}
-                    </div>
-                    </div>
-                )}
-
-                {additionalFields.length > 0 && <Separator />}
-
-                {additionalFields.length > 0 && (
-                    <div>
-                    <h3 className="mb-4 text-lg font-medium">Additional Details</h3>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {additionalFields.map((field) => (
-                        <div key={field.id} className="space-y-2">
-                        <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
-                        <Input
-                            id={field.id}
-                            placeholder={`Enter ${field.label}`}
-                            onChange={handleInputChange}
-                            value={formData[field.id] || ''}
-                        />
-                        </div>
-                    ))}
-                    </div>
-                    </div>
-                )}
-
-
-                <div className="flex justify-end pt-4">
-                  <Button type="submit">Add Supplier</Button>
+            <div className="space-y-4">
+                <div>
+                    <h2 className="text-2xl font-bold">New Supplier Details</h2>
+                    <p className="text-muted-foreground">
+                        Fill out the form below to add a new supplier to the directory. Required fields are marked with an asterisk (*).
+                    </p>
                 </div>
-              </form>
-            </CardContent>
-          </Card>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    
+                    {mainFields.length > 0 && (
+                        <div className="space-y-4">
+                            {mainFields.map((field) => (
+                                <div key={field.id} className="space-y-2">
+                                    <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                                    <Input id={field.id} placeholder={`e.g., ${field.label}`} onChange={handleInputChange} value={formData[field.id] || ''} />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {contactFields.length > 0 && <Separator />}
+                    
+                    {contactFields.length > 0 && (
+                        <div>
+                        <h3 className="mb-4 text-lg font-medium">Contact Information</h3>
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            {contactFields.map(field => (
+                                <div key={field.id} className="space-y-2">
+                                    <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                                    <Input id={field.id} placeholder={`e.g., Jane Doe`} onChange={handleInputChange} value={formData[field.id] || ''} />
+                                </div>
+                            ))}
+                        </div>
+                        </div>
+                    )}
+
+                    {additionalFields.length > 0 && <Separator />}
+
+                    {additionalFields.length > 0 && (
+                        <div>
+                        <h3 className="mb-4 text-lg font-medium">Additional Details</h3>
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        {additionalFields.map((field) => (
+                            <div key={field.id} className="space-y-2">
+                            <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                            <Input
+                                id={field.id}
+                                placeholder={`Enter ${field.label}`}
+                                onChange={handleInputChange}
+                                value={formData[field.id] || ''}
+                            />
+                            </div>
+                        ))}
+                        </div>
+                        </div>
+                    )}
+
+
+                    <div className="flex justify-end pt-4">
+                    <Button type="submit">Add Supplier</Button>
+                    </div>
+                </form>
+            </div>
         </div>
       </main>
     </div>

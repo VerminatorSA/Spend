@@ -55,37 +55,34 @@ export default function SuggestionsPage() {
     <div className="flex h-full flex-col">
       <Header title="Smart Suggestions" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
-        <div className="mx-auto max-w-4xl">
-          <Card>
-            <CardHeader>
-              <CardTitle>AI-Powered Item Recommendations</CardTitle>
-              <p className="text-muted-foreground">
-                Describe the specifications of the items you are manufacturing, and our AI will recommend suitable components and materials.
-              </p>
-            </CardHeader>
-            <CardContent>
-              <form action={dispatch} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="itemSpecifications">Item Specifications</Label>
-                  <Textarea
-                    id="itemSpecifications"
-                    name="itemSpecifications"
-                    placeholder="e.g., 'We need a 5mm diameter, 20mm long, corrosion-resistant machine screw for an outdoor enclosure made of ABS plastic...'"
-                    rows={6}
-                    aria-describedby="spec-error"
-                  />
-                  {state.errors?.itemSpecifications && (
-                    <p id="spec-error" className="text-sm text-destructive">
-                      {state.errors.itemSpecifications.join(', ')}
-                    </p>
-                  )}
-                </div>
-                <div className="flex justify-end">
-                  <SubmitButton />
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+        <div className="mx-auto max-w-4xl space-y-8">
+          <div>
+            <h2 className="text-2xl font-bold">AI-Powered Item Recommendations</h2>
+            <p className="text-muted-foreground">
+              Describe the specifications of the items you are manufacturing, and our AI will recommend suitable components and materials.
+            </p>
+          </div>
+          
+          <form action={dispatch} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="itemSpecifications">Item Specifications</Label>
+              <Textarea
+                id="itemSpecifications"
+                name="itemSpecifications"
+                placeholder="e.g., 'We need a 5mm diameter, 20mm long, corrosion-resistant machine screw for an outdoor enclosure made of ABS plastic...'"
+                rows={6}
+                aria-describedby="spec-error"
+              />
+              {state.errors?.itemSpecifications && (
+                <p id="spec-error" className="text-sm text-destructive">
+                  {state.errors.itemSpecifications.join(', ')}
+                </p>
+              )}
+            </div>
+            <div className="flex justify-end">
+              <SubmitButton />
+            </div>
+          </form>
           
           {state.data && (
             <div className="mt-8 space-y-6">

@@ -1,9 +1,7 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/header';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -118,14 +116,13 @@ export default function AddProductPage() {
       <Header title="Add New Product" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
-          <Card>
-            <CardHeader>
-              <CardTitle>New Product Details</CardTitle>
-              <CardDescription>
-                Fill out the form below to create a new product. Required fields are marked with an asterisk (*).
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="space-y-4">
+              <div>
+                  <h2 className="text-2xl font-bold">New Product Details</h2>
+                  <p className="text-muted-foreground">
+                      Fill out the form below to create a new product. Required fields are marked with an asterisk (*).
+                  </p>
+              </div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 
                 {visibleFields.length > 0 && (
@@ -185,8 +182,7 @@ export default function AddProductPage() {
                   <Button type="submit">Create Product</Button>
                 </div>
               </form>
-            </CardContent>
-          </Card>
+          </div>
         </div>
       </main>
     </div>

@@ -1,10 +1,8 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -245,48 +243,46 @@ export default function FormsSettingsPage() {
     <div className="flex h-full flex-col">
       <Header title="Form Settings" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
-        <div className="mx-auto max-w-4xl">
-           <Card>
-            <CardHeader>
-              <CardTitle>Form Settings</CardTitle>
-              <CardDescription>Add, remove, or toggle fields for the app's forms.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Tabs defaultValue="supplier-form" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-                        <TabsTrigger value="supplier-form">Supplier</TabsTrigger>
-                        <TabsTrigger value="item-form">Item</TabsTrigger>
-                        <TabsTrigger value="product-form">Product</TabsTrigger>
-                        <TabsTrigger value="contact-form">Contact</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="supplier-form" className="py-6">
-                         <FormSettingsSection 
-                            fields={supplierFields}
-                            setFields={setSupplierFields}
-                        />
-                    </TabsContent>
-                     <TabsContent value="item-form" className="py-6">
-                        <FormSettingsSection 
-                            fields={itemFields}
-                            setFields={setItemFields}
-                        />
-                    </TabsContent>
-                     <TabsContent value="product-form" className="py-6">
-                        <FormSettingsSection 
-                            fields={productFields}
-                            setFields={setProductFields}
-                        />
-                    </TabsContent>
-                     <TabsContent value="contact-form" className="py-6">
-                        <FormSettingsSection 
-                            fields={contactFields}
-                            setFields={setContactFields}
-                        />
-                    </TabsContent>
-                </Tabs>
-            </CardContent>
-          </Card>
-           <div className="mt-8 flex justify-end">
+        <div className="mx-auto max-w-4xl space-y-8">
+           <div>
+              <h2 className="text-2xl font-bold">Form Settings</h2>
+              <p className="text-muted-foreground">Add, remove, or toggle fields for the app's forms.</p>
+            </div>
+            
+            <Tabs defaultValue="supplier-form" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
+                    <TabsTrigger value="supplier-form">Supplier</TabsTrigger>
+                    <TabsTrigger value="item-form">Item</TabsTrigger>
+                    <TabsTrigger value="product-form">Product</TabsTrigger>
+                    <TabsTrigger value="contact-form">Contact</TabsTrigger>
+                </TabsList>
+                <TabsContent value="supplier-form" className="py-6">
+                      <FormSettingsSection 
+                        fields={supplierFields}
+                        setFields={setSupplierFields}
+                    />
+                </TabsContent>
+                  <TabsContent value="item-form" className="py-6">
+                    <FormSettingsSection 
+                        fields={itemFields}
+                        setFields={setItemFields}
+                    />
+                </TabsContent>
+                  <TabsContent value="product-form" className="py-6">
+                    <FormSettingsSection 
+                        fields={productFields}
+                        setFields={setProductFields}
+                    />
+                </TabsContent>
+                  <TabsContent value="contact-form" className="py-6">
+                    <FormSettingsSection 
+                        fields={contactFields}
+                        setFields={setContactFields}
+                    />
+                </TabsContent>
+            </Tabs>
+
+           <div className="flex justify-end">
               <Button onClick={handleSaveSettings}>Save All Form Settings</Button>
             </div>
         </div>

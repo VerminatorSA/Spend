@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/header';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -103,14 +102,13 @@ export default function ContactPage() {
       <Header title="Contact Hub" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
-          <Card>
-            <CardHeader>
-              <CardTitle>Contact a Supplier</CardTitle>
-              <CardDescription>
-                Select a supplier and fill out the form to send them a message. Required fields are marked with an asterisk (*).
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="space-y-4">
+              <div>
+                  <h2 className="text-2xl font-bold">Contact a Supplier</h2>
+                  <p className="text-muted-foreground">
+                      Select a supplier and fill out the form to send them a message. Required fields are marked with an asterisk (*).
+                  </p>
+              </div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="field-supplier">Supplier <span className="text-destructive">*</span></Label>
@@ -159,8 +157,7 @@ export default function ContactPage() {
                   <Button type="submit">Send Message</Button>
                 </div>
               </form>
-            </CardContent>
-          </Card>
+          </div>
         </div>
       </main>
     </div>
