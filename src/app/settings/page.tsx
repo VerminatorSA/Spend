@@ -98,7 +98,6 @@ function FormSettingsSection({
   return (
       <div className="space-y-6">
           <div>
-              <h3 className="mb-4 font-medium">{title}</h3>
               <div className="space-y-3">
               {fields.map((field) => (
                   <div key={field.id} className="flex items-center justify-between">
@@ -302,24 +301,35 @@ export default function SettingsPage() {
                   <CardTitle>Form Settings</CardTitle>
                   <CardDescription>Add, remove, or toggle fields for the app's forms.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-8">
-                  <FormSettingsSection 
-                    title='"Add Supplier" Form Fields'
-                    fields={supplierFields}
-                    setFields={setSupplierFields}
-                  />
-                  <Separator />
-                   <FormSettingsSection 
-                    title='"Add Product" Form Fields'
-                    fields={productFields}
-                    setFields={setProductFields}
-                  />
-                  <Separator />
-                   <FormSettingsSection 
-                    title='"Contact Supplier" Form Fields'
-                    fields={contactFields}
-                    setFields={setContactFields}
-                  />
+                <CardContent>
+                    <Tabs defaultValue="supplier-form">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="supplier-form">"Add Supplier" Form</TabsTrigger>
+                            <TabsTrigger value="product-form">"Add Product" Form</TabsTrigger>
+                            <TabsTrigger value="contact-form">"Contact Supplier" Form</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="supplier-form" className="py-6">
+                             <FormSettingsSection 
+                                title='Fields for "Add Supplier"'
+                                fields={supplierFields}
+                                setFields={setSupplierFields}
+                            />
+                        </TabsContent>
+                         <TabsContent value="product-form" className="py-6">
+                            <FormSettingsSection 
+                                title='Fields for "Add Product"'
+                                fields={productFields}
+                                setFields={setProductFields}
+                            />
+                        </TabsContent>
+                         <TabsContent value="contact-form" className="py-6">
+                            <FormSettingsSection 
+                                title='Fields for "Contact Supplier"'
+                                fields={contactFields}
+                                setFields={setContactFields}
+                            />
+                        </TabsContent>
+                    </Tabs>
                   <div className="flex justify-end border-t pt-6">
                     <Button onClick={handleSaveSettings}>Save All Form Settings</Button>
                   </div>
