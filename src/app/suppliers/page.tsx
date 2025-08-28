@@ -1,15 +1,24 @@
+
 import Image from 'next/image';
+import Link from 'next/link';
 import { suppliers, type Supplier } from '@/lib/data';
 import { Header } from '@/components/header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Globe, Mail, Phone, User } from 'lucide-react';
+import { Globe, Mail, Phone, User, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function SuppliersPage() {
   return (
     <div className="flex h-full flex-col">
-      <Header title="Supplier Directory" />
+      <Header title="Supplier Directory">
+        <Button asChild>
+            <Link href="/add-supplier">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Supplier
+            </Link>
+        </Button>
+      </Header>
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {suppliers.map((supplier) => (

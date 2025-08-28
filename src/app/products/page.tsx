@@ -1,9 +1,9 @@
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { products, items, type Product } from '@/lib/data';
 import { Header } from '@/components/header';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { PlusCircle } from 'lucide-react';
 
 function calculateProductCost(product: Product) {
   return product.bom.reduce((total, bomItem) => {
@@ -24,7 +25,14 @@ function calculateProductCost(product: Product) {
 export default function ProductsPage() {
   return (
     <div className="flex h-full flex-col">
-      <Header title="Product Catalog" />
+      <Header title="Product Catalog">
+        <Button asChild>
+            <Link href="/add-product">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Product
+            </Link>
+        </Button>
+      </Header>
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
           {products.map((product) => (
