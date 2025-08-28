@@ -79,7 +79,7 @@ function FormSettingsSection({
     const newField: FormField = {
       id: `custom-${Date.now()}`,
       label: newFieldName.trim(),
-      required: false,
+      required: true,
       checked: true,
       isCustom: true,
       type: 'text',
@@ -95,29 +95,50 @@ function FormSettingsSection({
   const handleToggleField = (id: string) => {
     setFields(fields.map(field => field.id === id ? {...field, checked: !field.checked} : field));
   };
+  
+  const handleToggleRequired = (id: string) => {
+    setFields(
+      fields.map((field) =>
+        field.id === id ? { ...field, required: !field.required } : field
+      )
+    );
+  };
 
   return (
       <div className="space-y-6">
           <div>
               <div className="space-y-3">
               {fields.map((field) => (
-                  <div key={field.id} className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
+                  <div key={field.id} className="flex items-center justify-between rounded-lg border p-3">
+                    <div className="flex items-center space-x-3">
                       <Checkbox 
-                        id={field.id} 
+                        id={`checked-${field.id}`}
                         checked={field.checked} 
                         disabled={field.required}
                         onCheckedChange={() => handleToggleField(field.id)}
                       />
-                      <Label htmlFor={field.id} className={field.required ? 'text-muted-foreground' : ''}>
-                        {field.label} {field.required && '(Required)'}
+                      <Label htmlFor={`checked-${field.id}`} className={field.required ? 'font-semibold' : ''}>
+                        {field.label}
                       </Label>
-                  </div>
-                  {field.isCustom && (
-                      <Button variant="ghost" size="icon" onClick={() => handleRemoveField(field.id)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                  )}
+                    </div>
+                    <div className="flex items-center gap-4">
+                       <div className="flex items-center space-x-2">
+                        <Switch 
+                          id={`required-${field.id}`}
+                          checked={field.required}
+                          onCheckedChange={() => handleToggleRequired(field.id)}
+                          disabled={!field.isCustom && field.required}
+                        />
+                        <Label htmlFor={`required-${field.id}`} className="text-sm text-muted-foreground">
+                          Required
+                        </Label>
+                      </div>
+                      {field.isCustom && (
+                          <Button variant="ghost" size="icon" onClick={() => handleRemoveField(field.id)}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                      )}
+                    </div>
                   </div>
               ))}
               </div>
@@ -311,21 +332,21 @@ export default function SettingsPage() {
                         </TabsList>
                         <TabsContent value="supplier-form" className="py-6">
                              <FormSettingsSection 
-                                title='Fields for "Add Supplier"'
+                                title='Supplier'
                                 fields={supplierFields}
                                 setFields={setSupplierFields}
                             />
                         </TabsContent>
                          <TabsContent value="product-form" className="py-6">
                             <FormSettingsSection 
-                                title='Fields for "Add Product"'
+                                title='Product'
                                 fields={productFields}
                                 setFields={setProductFields}
                             />
                         </TabsContent>
                          <TabsContent value="contact-form" className="py-6">
                             <FormSettingsSection 
-                                title='Fields for "Contact Supplier"'
+                                title='Contact'
                                 fields={contactFields}
                                 setFields={setContactFields}
                             />
@@ -344,3 +365,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
