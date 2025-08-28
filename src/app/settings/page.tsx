@@ -15,43 +15,45 @@ import { PlusCircle, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 
+type FieldType = 'text' | 'textarea' | 'select' | 'email' | 'number' | 'date';
+
 interface FormField {
   id: string;
   label: string;
   required: boolean;
   checked: boolean;
   isCustom?: boolean;
-  type?: 'text' | 'textarea' | 'select';
+  type?: FieldType;
 }
 
 const initialSupplierFields: FormField[] = [
-    { id: 'field-name', label: 'Supplier Name', required: true, checked: true },
-    { id: 'field-contact-name', label: 'Contact Name', required: true, checked: true },
-    { id: 'field-contact-email', label: 'Contact Email', required: true, checked: true },
-    { id: 'field-contact-phone', label: 'Contact Phone', required: false, checked: true },
-    { id: 'field-location', label: 'Location', required: false, checked: true },
-    { id: 'field-tax-id', label: 'Tax ID / VAT Number', required: false, checked: false },
-    { id: 'field-website', label: 'Website URL', required: false, checked: false },
+    { id: 'field-name', label: 'Supplier Name', required: true, checked: true, type: 'text' },
+    { id: 'field-contact-name', label: 'Contact Name', required: true, checked: true, type: 'text' },
+    { id: 'field-contact-email', label: 'Contact Email', required: true, checked: true, type: 'email' },
+    { id: 'field-contact-phone', label: 'Contact Phone', required: false, checked: true, type: 'text' },
+    { id: 'field-location', label: 'Location', required: false, checked: true, type: 'text' },
+    { id: 'field-tax-id', label: 'Tax ID / VAT Number', required: false, checked: false, type: 'text' },
+    { id: 'field-website', label: 'Website URL', required: false, checked: false, type: 'text' },
 ];
 
 const initialItemFields: FormField[] = [
-    { id: 'field-item-name', label: 'Item Name', required: true, checked: true },
-    { id: 'field-price', label: 'Price', required: true, checked: true },
-    { id: 'field-category', label: 'Category', required: true, checked: true },
-    { id: 'field-supplier', label: 'Supplier', required: true, checked: true },
-    { id: 'field-description', label: 'Description', required: false, checked: true },
-    { id: 'field-sku', label: 'SKU', required: false, checked: false },
-    { id: 'field-stock', label: 'Stock Quantity', required: false, checked: false },
+    { id: 'field-item-name', label: 'Item Name', required: true, checked: true, type: 'text' },
+    { id: 'field-price', label: 'Price', required: true, checked: true, type: 'number' },
+    { id: 'field-category', label: 'Category', required: true, checked: true, type: 'text' },
+    { id: 'field-supplier', label: 'Supplier', required: true, checked: true, type: 'text' },
+    { id: 'field-description', label: 'Description', required: false, checked: true, type: 'textarea' },
+    { id: 'field-sku', label: 'SKU', required: false, checked: false, type: 'text' },
+    { id: 'field-stock', label: 'Stock Quantity', required: false, checked: false, type: 'number' },
 ];
 
 const initialProductFields: FormField[] = [
-    { id: 'field-product-name', label: 'Product Name', required: true, checked: true },
-    { id: 'field-product-description', label: 'Description', required: false, checked: true },
+    { id: 'field-product-name', label: 'Product Name', required: true, checked: true, type: 'text' },
+    { id: 'field-product-description', label: 'Description', required: false, checked: true, type: 'textarea' },
 ];
 
 const initialContactFields: FormField[] = [
     { id: 'field-your-name', label: 'Your Name', required: true, checked: true, type: 'text' },
-    { id: 'field-your-email', label: 'Your Email', required: true, checked: true, type: 'text' },
+    { id: 'field-your-email', label: 'Your Email', required: true, checked: true, type: 'email' },
     { id: 'field-subject', label: 'Subject', required: true, checked: true, type: 'text' },
     { id: 'field-message', label: 'Message', required: true, checked: true, type: 'textarea' },
 ];
@@ -71,6 +73,7 @@ function FormSettingsSection({
   setFields: React.Dispatch<React.SetStateAction<FormField[]>>;
 }) {
   const [newFieldName, setNewFieldName] = useState('');
+  const [newFieldType, setNewFieldType] = useState<FieldType>('text');
   const { toast } = useToast();
 
   const handleAddField = () => {
@@ -88,10 +91,11 @@ function FormSettingsSection({
       required: true,
       checked: true,
       isCustom: true,
-      type: 'text',
+      type: newFieldType,
     };
     setFields([...fields, newField]);
     setNewFieldName('');
+    setNewFieldType('text');
   };
 
   const handleRemoveField = (id: string) => {
@@ -120,10 +124,10 @@ function FormSettingsSection({
                       <Checkbox 
                         id={`checked-${field.id}`}
                         checked={field.checked} 
-                        disabled={field.required}
+                        disabled={field.required && !field.isCustom}
                         onCheckedChange={() => handleToggleField(field.id)}
                       />
-                      <Label htmlFor={`checked-${field.id}`} className={field.required ? 'font-semibold' : ''}>
+                      <Label htmlFor={`checked-${field.id}`} className={field.required && !field.isCustom ? 'font-semibold' : ''}>
                         {field.label}
                       </Label>
                     </div>
@@ -152,17 +156,29 @@ function FormSettingsSection({
 
           <div className="rounded-lg border bg-muted/50 p-4">
               <h4 className="mb-2 font-medium">Add New Field</h4>
-              <div className="flex items-center gap-2">
-              <Input 
-                  placeholder="e.g., 'Minimum Order Quantity'" 
-                  value={newFieldName}
-                  onChange={(e) => setNewFieldName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleAddField()}
-              />
-              <Button onClick={handleAddField}>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add Field
-              </Button>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <Input 
+                    placeholder="e.g., 'Minimum Order Quantity'" 
+                    value={newFieldName}
+                    onChange={(e) => setNewFieldName(e.target.value)}
+                    className="flex-grow"
+                />
+                 <Select value={newFieldType} onValueChange={(value) => setNewFieldType(value as FieldType)}>
+                    <SelectTrigger className="w-full sm:w-[180px]">
+                      <SelectValue placeholder="Select field type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="text">Text</SelectItem>
+                      <SelectItem value="textarea">Text Area</SelectItem>
+                      <SelectItem value="number">Number</SelectItem>
+                      <SelectItem value="email">Email</SelectItem>
+                      <SelectItem value="date">Date</SelectItem>
+                    </SelectContent>
+                  </Select>
+                <Button onClick={handleAddField} className="w-full sm:w-auto">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add Field
+                </Button>
               </div>
           </div>
       </div>
@@ -386,3 +402,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
