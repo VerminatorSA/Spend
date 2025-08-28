@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -289,10 +289,15 @@ export default function SettingsPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="US">United States</SelectItem>
+                          <SelectItem value="CA">Canada</SelectItem>
                           <SelectItem value="GB">United Kingdom</SelectItem>
+                          <SelectItem value="AU">Australia</SelectItem>
+                          <SelectItem value="ZA">South Africa</SelectItem>
                           <SelectItem value="DE">Germany</SelectItem>
                           <SelectItem value="JP">Japan</SelectItem>
                           <SelectItem value="CN">China</SelectItem>
+                          <SelectItem value="BR">Brazil</SelectItem>
+                          <SelectItem value="IN">India</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -304,9 +309,14 @@ export default function SettingsPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="USD">USD ($)</SelectItem>
+                          <SelectItem value="CAD">CAD (C$)</SelectItem>
                           <SelectItem value="EUR">EUR (€)</SelectItem>
                           <SelectItem value="GBP">GBP (£)</SelectItem>
+                          <SelectItem value="AUD">AUD (A$)</SelectItem>
                           <SelectItem value="JPY">JPY (¥)</SelectItem>
+                          <SelectItem value="ZAR">ZAR (R)</SelectItem>
+                          <SelectItem value="BRL">BRL (R$)</SelectItem>
+                          <SelectItem value="INR">INR (₹)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -325,11 +335,11 @@ export default function SettingsPage() {
                     </Select>
                   </div>
                 </CardContent>
-                <CardHeader className="border-t pt-6">
+                <CardFooter className="border-t px-6 py-4">
                    <div className="flex justify-end">
                     <Button>Save Changes</Button>
                   </div>
-                </CardHeader>
+                </CardFooter>
               </Card>
             </TabsContent>
 
@@ -359,11 +369,11 @@ export default function SettingsPage() {
                     <Switch id="push-notifications" />
                   </div>
                 </CardContent>
-                 <CardHeader className="border-t pt-6">
+                 <CardFooter className="border-t px-6 py-4">
                    <div className="flex justify-end">
                     <Button>Save Preferences</Button>
                   </div>
-                </CardHeader>
+                </CardFooter>
               </Card>
             </TabsContent>
 
@@ -402,11 +412,11 @@ export default function SettingsPage() {
                     </div>
                    </div>
                 </CardContent>
-                 <CardHeader className="border-t pt-6">
+                 <CardFooter className="border-t px-6 py-4">
                    <div className="flex justify-end">
                     <Button>Apply Theme</Button>
                   </div>
-                </CardHeader>
+                </CardFooter>
               </Card>
             </TabsContent>
             
@@ -450,11 +460,11 @@ export default function SettingsPage() {
                         </TabsContent>
                     </Tabs>
                 </CardContent>
-                <CardHeader className="border-t pt-6">
+                <CardFooter className="border-t px-6 py-4">
                     <div className="flex justify-end">
                         <Button onClick={handleSaveSettings}>Save All Form Settings</Button>
                     </div>
-                </CardHeader>
+                </CardFooter>
               </Card>
             </TabsContent>
 
