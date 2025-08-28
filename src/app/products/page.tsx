@@ -43,7 +43,7 @@ export default function ProductsPage() {
                     src={product.imageUrl}
                     alt={product.name}
                     fill
-                    className="rounded-t-lg object-cover"
+                    className="rounded-t-xl object-cover"
                     data-ai-hint="product image"
                   />
                 </div>

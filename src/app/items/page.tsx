@@ -29,7 +29,7 @@ export default function ItemsPage() {
                     src={item.imageUrl}
                     alt={item.name}
                     fill
-                    className="rounded-t-lg object-cover"
+                    className="rounded-t-xl object-cover"
                     data-ai-hint={`${item.category} component`}
                   />
                 </div>
