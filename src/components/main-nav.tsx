@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Package, Lightbulb, Mail, Settings as SettingsIcon } from 'lucide-react';
+import { Users, Package, Lightbulb, Mail, Settings as SettingsIcon, PlusCircle } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const navItems = [
   { href: '/suppliers', label: 'Suppliers', icon: Users, tooltip: "Supplier Directory"},
+  { href: '/add-supplier', label: 'Add Supplier', icon: PlusCircle, tooltip: "Add New Supplier"},
   { href: '/products', label: 'Products', icon: Package, tooltip: "Product Management"},
   { href: '/suggestions', label: 'Suggestions', icon: Lightbulb, tooltip: "Smart Suggestions"},
   { href: '/contact', label: 'Contact Hub', icon: Mail, tooltip: "Contact Hub"},

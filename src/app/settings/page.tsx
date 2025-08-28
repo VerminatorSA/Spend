@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,8 +10,58 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PlusCircle, Trash2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+
+interface FormField {
+  id: string;
+  label: string;
+  required: boolean;
+  checked: boolean;
+  isCustom?: boolean;
+}
+
+const initialFields: FormField[] = [
+  { id: 'field-name', label: 'Supplier Name', required: true, checked: true },
+  { id: 'field-contact', label: 'Contact Info', required: true, checked: true },
+  { id: 'field-location', label: 'Location', required: false, checked: true },
+  { id: 'field-tax-id', label: 'Tax ID / VAT Number', required: false, checked: false },
+  { id: 'field-website', label: 'Website URL', required: false, checked: false },
+];
 
 export default function SettingsPage() {
+  const [fields, setFields] = useState<FormField[]>(initialFields);
+  const [newFieldName, setNewFieldName] = useState('');
+  const { toast } = useToast();
+
+  const handleAddField = () => {
+    if (newFieldName.trim() === '') {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Field name cannot be empty.',
+      });
+      return;
+    }
+    const newField: FormField = {
+      id: `custom-${Date.now()}`,
+      label: newFieldName.trim(),
+      required: false,
+      checked: true,
+      isCustom: true,
+    };
+    setFields([...fields, newField]);
+    setNewFieldName('');
+  };
+
+  const handleRemoveField = (id: string) => {
+    setFields(fields.filter((field) => field.id !== id));
+  };
+  
+  const handleToggleField = (id: string) => {
+    setFields(fields.map(field => field.id === id ? {...field, checked: !field.checked} : field));
+  };
+
   return (
     <div className="flex h-full flex-col">
       <Header title="Settings" />
@@ -123,28 +176,45 @@ export default function SettingsPage() {
                   <div>
                     <h3 className="mb-4 font-medium">"Add Supplier" Form Fields</h3>
                     <div className="space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="field-name" defaultChecked disabled />
-                        <Label htmlFor="field-name">Supplier Name (Required)</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="field-contact" defaultChecked disabled />
-                        <Label htmlFor="field-contact">Contact Info (Required)</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="field-location" defaultChecked />
-                        <Label htmlFor="field-location">Location</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="field-tax-id" />
-                        <Label htmlFor="field-tax-id">Tax ID / VAT Number</Label>
-                      </div>
-                       <div className="flex items-center space-x-2">
-                        <Checkbox id="field-website" />
-                        <Label htmlFor="field-website">Website URL</Label>
-                      </div>
+                      {fields.map((field) => (
+                        <div key={field.id} className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox 
+                              id={field.id} 
+                              checked={field.checked} 
+                              disabled={field.required}
+                              onCheckedChange={() => handleToggleField(field.id)}
+                            />
+                            <Label htmlFor={field.id} className={field.required ? 'text-muted-foreground' : ''}>
+                              {field.label} {field.required && '(Required)'}
+                            </Label>
+                          </div>
+                          {field.isCustom && (
+                            <Button variant="ghost" size="icon" onClick={() => handleRemoveField(field.id)}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
+
+                  <div className="rounded-lg border bg-muted/50 p-4">
+                    <h4 className="mb-2 font-medium">Add New Field</h4>
+                    <div className="flex items-center gap-2">
+                      <Input 
+                        placeholder="e.g., 'Minimum Order Quantity'" 
+                        value={newFieldName}
+                        onChange={(e) => setNewFieldName(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddField()}
+                      />
+                      <Button onClick={handleAddField}>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Add Field
+                      </Button>
+                    </div>
+                  </div>
+
                   <div className="flex justify-end pt-4">
                     <Button>Save Form Settings</Button>
                   </div>
