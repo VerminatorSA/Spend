@@ -81,7 +81,7 @@ export default function ProductsPage() {
 
               </CardContent>
               <CardFooter className="flex items-center justify-between">
-                <p className="text-xl font-bold">${calculateProductCost(product).toFixed(2)}</p>
+                <p className="text-xl font-bold">Cost: ${calculateProductCost(product).toFixed(2)}</p>
                 <Button>Add to Quote</Button>
               </CardFooter>
             </Card>

@@ -45,7 +45,7 @@ export default function ItemsPage() {
                 </p>
               </CardContent>
               <CardFooter className="flex items-center justify-between">
-                <p className="text-xl font-bold">${item.price.toFixed(2)}</p>
+                <p className="text-xl font-bold">${item.price.toFixed(2)} <span className="text-sm font-normal text-muted-foreground">/ unit</span></p>
                 <Button>Add to Cart</Button>
               </CardFooter>
             </Card>

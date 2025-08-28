@@ -39,6 +39,7 @@ const initialSupplierFields: FormField[] = [
 const initialItemFields: FormField[] = [
     { id: 'field-item-name', label: 'Item Name', required: true, checked: true, type: 'text' },
     { id: 'field-price', label: 'Price', required: true, checked: true, type: 'number' },
+    { id: 'field-unit', label: 'Unit', required: true, checked: true, type: 'text' },
     { id: 'field-category', label: 'Category', required: true, checked: true, type: 'text' },
     { id: 'field-supplier', label: 'Supplier', required: true, checked: true, type: 'text' },
     { id: 'field-description', label: 'Description', required: false, checked: true, type: 'textarea' },
