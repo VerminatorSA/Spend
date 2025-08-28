@@ -118,7 +118,7 @@ function FormSettingsSection({
           <div>
               <div className="space-y-3">
               {fields.map((field) => (
-                  <div key={field.id} className="flex items-center justify-between rounded-lg border p-3">
+                  <div key={field.id} className="flex flex-col items-start gap-4 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center space-x-3">
                       <Checkbox 
                         id={`checked-${field.id}`}
@@ -130,7 +130,7 @@ function FormSettingsSection({
                         {field.label}
                       </Label>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex w-full items-center justify-between gap-4 sm:w-auto sm:justify-end">
                        <div className="flex items-center space-x-2">
                         <Switch 
                           id={`required-${field.id}`}
@@ -152,7 +152,7 @@ function FormSettingsSection({
               ))}
               </div>
           </div>
-
+          <Separator />
           <div className="rounded-lg border bg-muted/50 p-4">
               <h4 className="mb-2 font-medium">Add New Field</h4>
               <div className="flex flex-col gap-2 sm:flex-row">
@@ -246,21 +246,21 @@ export default function SettingsPage() {
       <Header title="Settings" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
-          <Tabs defaultValue="forms">
-            <TabsList className="grid w-full grid-cols-4">
+          <Tabs defaultValue="forms" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
               <TabsTrigger value="profile">Profile</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="appearance">Appearance</TabsTrigger>
               <TabsTrigger value="forms">Forms</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="profile">
+            <TabsContent value="profile" className="pt-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Profile</CardTitle>
                   <CardDescription>Manage your personal and contact information.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name</Label>
@@ -324,14 +324,16 @@ export default function SettingsPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex justify-end pt-4">
+                </CardContent>
+                <CardHeader className="border-t pt-6">
+                   <div className="flex justify-end">
                     <Button>Save Changes</Button>
                   </div>
-                </CardContent>
+                </CardHeader>
               </Card>
             </TabsContent>
 
-            <TabsContent value="notifications">
+            <TabsContent value="notifications" className="pt-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Notifications</CardTitle>
@@ -356,20 +358,22 @@ export default function SettingsPage() {
                     </Label>
                     <Switch id="push-notifications" />
                   </div>
-                  <div className="flex justify-end pt-4">
+                </CardContent>
+                 <CardHeader className="border-t pt-6">
+                   <div className="flex justify-end">
                     <Button>Save Preferences</Button>
                   </div>
-                </CardContent>
+                </CardHeader>
               </Card>
             </TabsContent>
 
-            <TabsContent value="appearance">
+            <TabsContent value="appearance" className="pt-6">
                <Card>
                 <CardHeader>
                   <CardTitle>Appearance</CardTitle>
                   <CardDescription>Customize the look and feel of the application.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div className="space-y-2">
                     <Label htmlFor="theme">Theme</Label>
                      <Select defaultValue="system">
@@ -397,22 +401,24 @@ export default function SettingsPage() {
                         <Input value="#2ECC71" readOnly/>
                     </div>
                    </div>
-                   <div className="flex justify-end pt-4">
+                </CardContent>
+                 <CardHeader className="border-t pt-6">
+                   <div className="flex justify-end">
                     <Button>Apply Theme</Button>
                   </div>
-                </CardContent>
+                </CardHeader>
               </Card>
             </TabsContent>
             
-            <TabsContent value="forms">
+            <TabsContent value="forms" className="pt-6">
                <Card>
                 <CardHeader>
                   <CardTitle>Form Settings</CardTitle>
                   <CardDescription>Add, remove, or toggle fields for the app's forms.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Tabs defaultValue="supplier-form">
-                        <TabsList className="grid w-full grid-cols-4">
+                    <Tabs defaultValue="supplier-form" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
                             <TabsTrigger value="supplier-form">Supplier</TabsTrigger>
                             <TabsTrigger value="item-form">Item</TabsTrigger>
                             <TabsTrigger value="product-form">Product</TabsTrigger>
@@ -443,10 +449,12 @@ export default function SettingsPage() {
                             />
                         </TabsContent>
                     </Tabs>
-                  <div className="flex justify-end border-t pt-6">
-                    <Button onClick={handleSaveSettings}>Save All Form Settings</Button>
-                  </div>
                 </CardContent>
+                <CardHeader className="border-t pt-6">
+                    <div className="flex justify-end">
+                        <Button onClick={handleSaveSettings}>Save All Form Settings</Button>
+                    </div>
+                </CardHeader>
               </Card>
             </TabsContent>
 
@@ -456,7 +464,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
-    
-
-    
