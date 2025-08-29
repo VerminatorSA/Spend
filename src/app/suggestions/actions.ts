@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from 'zod';
@@ -13,6 +14,7 @@ type State = {
     itemSpecifications?: string[];
   } | null;
   data?: ItemRecommendationOutput | null;
+  input?: string | null;
 };
 
 export async function submitSpecifications(prevState: State, formData: FormData): Promise<State> {
