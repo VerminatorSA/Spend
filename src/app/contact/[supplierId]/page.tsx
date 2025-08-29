@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -104,7 +105,7 @@ export default function ContactSupplierPage() {
     <div className="flex h-full flex-col">
       <Header title={`Contact ${supplier.name}`}>
         <Button asChild variant="outline">
-            <Link href="/contact">
+            <Link href="/suppliers">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Suppliers
             </Link>
