@@ -1,5 +1,7 @@
+
 'use client';
 
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Sparkles } from 'lucide-react';
 
 export function UserNav() {
   return (
@@ -42,6 +44,12 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href="/suggestions">
+              <Sparkles className="mr-2 h-4 w-4" />
+              <span>Turbo</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
