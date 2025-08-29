@@ -3,15 +3,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings as SettingsIcon, Warehouse, LayoutDashboard, Users, Sparkles } from 'lucide-react';
+import { Warehouse, LayoutDashboard, Users, Sparkles, Settings } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, tooltip: "Dashboard"},
   { href: '/inventory', label: 'Inventory', icon: Warehouse, tooltip: "Inventory"},
   { href: '/contacts', label: 'Contacts', icon: Users, tooltip: "Contacts"},
-  { href: '/suggestions', label: 'Turbo', icon: Sparkles, tooltip: "Turbo Suggestions"},
-  { href: '/settings', label: 'Settings', icon: SettingsIcon, tooltip: "Settings"},
 ];
 
 export function MainNav() {

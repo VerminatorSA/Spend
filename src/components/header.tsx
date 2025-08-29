@@ -1,6 +1,7 @@
 
 'use client';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { HeaderActions } from './header-actions';
 
 export function Header({ title, children }: { title: string, children?: React.ReactNode }) {
   return (
@@ -9,8 +10,9 @@ export function Header({ title, children }: { title: string, children?: React.Re
             <SidebarTrigger className="md:hidden" />
             <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
         </div>
-        <div>
+        <div className="flex items-center gap-2">
             {children}
+            <HeaderActions />
         </div>
     </header>
   );
