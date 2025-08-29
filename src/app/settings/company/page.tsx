@@ -1,5 +1,7 @@
+
 'use client';
 
+import { useState, useContext, useEffect } from 'react';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,11 +9,28 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { SettingsContext, type CompanySettings } from '@/contexts/settings-context';
 
 export default function CompanySettingsPage() {
+    const { settings, setSettings } = useContext(SettingsContext);
     const { toast } = useToast();
+    const [localSettings, setLocalSettings] = useState<CompanySettings>(settings);
+
+    useEffect(() => {
+        setLocalSettings(settings);
+    }, [settings]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setLocalSettings(prev => ({...prev, [id]: value}));
+    }
+
+    const handleSelectChange = (id: keyof CompanySettings, value: string) => {
+        setLocalSettings(prev => ({ ...prev, [id]: value }));
+    };
 
     const handleSave = () => {
+        setSettings(localSettings);
         toast({
             title: 'Settings Saved',
             description: 'Company settings have been successfully saved.',
@@ -33,11 +52,11 @@ export default function CompanySettingsPage() {
                     <div className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="companyName">Company Name</Label>
-                            <Input id="companyName" defaultValue="Spend Inc." className="max-w-lg" />
+                            <Input id="companyName" value={localSettings.companyName} onChange={handleInputChange} className="max-w-lg" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="companyWebsite">Website</Label>
-                            <Input id="companyWebsite" defaultValue="https://spend.com" className="max-w-lg" />
+                            <Input id="companyWebsite" value={localSettings.companyWebsite} onChange={handleInputChange} className="max-w-lg" />
                         </div>
                         <Separator />
                         <div className="space-y-4">
@@ -45,27 +64,27 @@ export default function CompanySettingsPage() {
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <div className="sm:col-span-2 space-y-2">
                                     <Label htmlFor="address1" className="text-xs text-muted-foreground">Address Line 1</Label>
-                                    <Input id="address1" placeholder="e.g., 123 Main St" />
+                                    <Input id="address1" placeholder="e.g., 123 Main St" value={localSettings.address1} onChange={handleInputChange} />
                                 </div>
                                 <div className="sm:col-span-2 space-y-2">
                                     <Label htmlFor="address2" className="text-xs text-muted-foreground">Address Line 2 (Optional)</Label>
-                                    <Input id="address2" placeholder="e.g., Suite 400" />
+                                    <Input id="address2" placeholder="e.g., Suite 400" value={localSettings.address2} onChange={handleInputChange} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="city" className="text-xs text-muted-foreground">City</Label>
-                                    <Input id="city" placeholder="e.g., San Francisco" />
+                                    <Input id="city" placeholder="e.g., San Francisco" value={localSettings.city} onChange={handleInputChange} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="state" className="text-xs text-muted-foreground">State / Province</Label>
-                                    <Input id="state" placeholder="e.g., CA" />
+                                    <Input id="state" placeholder="e.g., CA" value={localSettings.state} onChange={handleInputChange} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="postalCode" className="text-xs text-muted-foreground">Postal Code</Label>
-                                    <Input id="postalCode" placeholder="e.g., 94103" />
+                                    <Input id="postalCode" placeholder="e.g., 94103" value={localSettings.postalCode} onChange={handleInputChange} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="companyCountry" className="text-xs text-muted-foreground">Country</Label>
-                                    <Select>
+                                    <Select value={localSettings.country} onValueChange={(value) => handleSelectChange('country', value)}>
                                         <SelectTrigger id="companyCountry">
                                             <SelectValue placeholder="Select country" />
                                         </SelectTrigger>
@@ -92,7 +111,7 @@ export default function CompanySettingsPage() {
                                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     <div className="space-y-2">
                                         <Label htmlFor="currency">Currency</Label>
-                                        <Select defaultValue="USD">
+                                        <Select value={localSettings.currency} onValueChange={(value) => handleSelectChange('currency', value)}>
                                             <SelectTrigger id="currency">
                                                 <SelectValue placeholder="Select currency" />
                                             </SelectTrigger>
@@ -112,7 +131,7 @@ export default function CompanySettingsPage() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="dateFormat">Date Format</Label>
-                                    <Select defaultValue="mm-dd-yyyy">
+                                    <Select value={localSettings.dateFormat} onValueChange={(value) => handleSelectChange('dateFormat', value)}>
                                         <SelectTrigger id="dateFormat" className="max-w-xs">
                                             <SelectValue placeholder="Select date format" />
                                         </SelectTrigger>

@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useContext } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { products, items, suppliers, type Product, type Item } from '@/lib/data';
@@ -18,6 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
 import { PlusCircle } from 'lucide-react';
+import { SettingsContext, getCurrencySymbol } from '@/contexts/settings-context';
 
 function calculateProductCost(product: Product) {
   return product.bom.reduce((total, bomItem) => {
@@ -29,6 +31,9 @@ function calculateProductCost(product: Product) {
 const LOW_STOCK_THRESHOLD = 50;
 
 export default function InventoryPage() {
+  const { settings } = useContext(SettingsContext);
+  const currencySymbol = getCurrencySymbol(settings.currency);
+
   const getStockVariant = (stock: number): 'secondary' | 'destructive' | 'outline' => {
     if (stock === 0) return 'destructive';
     if (stock < LOW_STOCK_THRESHOLD) return 'outline';
@@ -96,7 +101,7 @@ export default function InventoryPage() {
                                     <Badge variant="outline">{item.category}</Badge>
                                 </TableCell>
                                 <TableCell>{item.supplier}</TableCell>
-                                <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
+                                <TableCell className="text-right">{currencySymbol}{item.price.toFixed(2)}</TableCell>
                                 <TableCell className="text-right">
                                     <Badge variant={stockVariant} className={stockVariant === 'outline' ? 'border-yellow-500 text-yellow-500' : ''}>
                                         {item.stock > 0 ? `${item.stock} units` : 'Out of Stock'}
@@ -141,7 +146,7 @@ export default function InventoryPage() {
                                 </TableCell>
                                 <TableCell className="font-medium">{product.name}</TableCell>
                                 <TableCell className="max-w-xs truncate text-muted-foreground">{product.description}</TableCell>
-                                <TableCell className="text-right font-medium">${calculateProductCost(product).toFixed(2)}</TableCell>
+                                <TableCell className="text-right font-medium">{currencySymbol}{calculateProductCost(product).toFixed(2)}</TableCell>
                                 <TableCell className="text-right">
                                     <Button size="sm">Add to Quote</Button>
                                 </TableCell>

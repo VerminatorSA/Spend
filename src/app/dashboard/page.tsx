@@ -1,4 +1,7 @@
 
+'use client';
+
+import { useContext } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
@@ -10,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { PlusCircle, ChevronDown } from 'lucide-react';
 import { suppliers, items, products, type Product, type Item } from '@/lib/data';
+import { SettingsContext, getCurrencySymbol } from '@/contexts/settings-context';
 
 function calculateProductCost(product: Product, allItems: Item[]): number {
   return product.bom.reduce((total, bomItem) => {
@@ -31,6 +35,9 @@ function calculateTotalProductValue(allProducts: Product[], allItems: Item[]): n
 }
 
 export default function DashboardPage() {
+  const { settings } = useContext(SettingsContext);
+  const currencySymbol = getCurrencySymbol(settings.currency);
+
   const totalItemValue = calculateTotalItemValue(items);
   const totalProductValue = calculateTotalProductValue(products, items);
 
@@ -77,12 +84,12 @@ export default function DashboardPage() {
           </div>
           <div className="flex flex-col">
               <h3 className="text-lg font-medium text-muted-foreground">Total Item Value</h3>
-              <p className="text-5xl font-bold tracking-tight">${totalItemValue.toLocaleString()}</p>
+              <p className="text-5xl font-bold tracking-tight">{currencySymbol}{totalItemValue.toLocaleString()}</p>
               <p className="text-sm text-muted-foreground">The total value of all items currently in stock.</p>
           </div>
            <div className="flex flex-col">
               <h3 className="text-lg font-medium text-muted-foreground">Total Product Value</h3>
-              <p className="text-5xl font-bold tracking-tight">${totalProductValue.toLocaleString()}</p>
+              <p className="text-5xl font-bold tracking-tight">{currencySymbol}{totalProductValue.toLocaleString()}</p>
               <p className="text-sm text-muted-foreground">The total cost of all configured products.</p>
           </div>
         </div>

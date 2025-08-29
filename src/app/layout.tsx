@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -6,6 +7,7 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter,
 import { MainNav } from '@/components/main-nav';
 import { UserNav } from '@/components/user-nav';
 import { Command } from 'lucide-react';
+import { SettingsProvider } from '@/contexts/settings-context';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -22,29 +24,31 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`font-sans antialiased ${inter.variable}`}>
-        <SidebarProvider>
-          <Sidebar>
-            <SidebarHeader className="p-4">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Command className="h-5 w-5" />
+        <SettingsProvider>
+          <SidebarProvider>
+            <Sidebar>
+              <SidebarHeader className="p-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                    <Command className="h-5 w-5" />
+                  </div>
+                  <div className="group-data-[collapsible=icon]:hidden">
+                    <h1 className="text-lg font-bold text-sidebar-foreground">Spend</h1>
+                  </div>
                 </div>
-                <div className="group-data-[collapsible=icon]:hidden">
-                  <h1 className="text-lg font-bold text-sidebar-foreground">Spend</h1>
-                </div>
-              </div>
-            </SidebarHeader>
-            <SidebarContent>
-              <MainNav />
-            </SidebarContent>
-            <SidebarFooter>
-              <UserNav />
-            </SidebarFooter>
-          </Sidebar>
-          <SidebarInset>
-            {children}
-          </SidebarInset>
-        </SidebarProvider>
+              </SidebarHeader>
+              <SidebarContent>
+                <MainNav />
+              </SidebarContent>
+              <SidebarFooter>
+                <UserNav />
+              </SidebarFooter>
+            </Sidebar>
+            <SidebarInset>
+              {children}
+            </SidebarInset>
+          </SidebarProvider>
+        </SettingsProvider>
         <Toaster />
       </body>
     </html>
