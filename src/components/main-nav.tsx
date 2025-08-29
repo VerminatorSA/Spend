@@ -10,6 +10,7 @@ const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, tooltip: "Dashboard"},
   { href: '/inventory', label: 'Inventory', icon: Warehouse, tooltip: "Inventory"},
   { href: '/contacts', label: 'Contacts', icon: Users, tooltip: "Contacts"},
+  { href: '/suggestions', label: 'Turbo', icon: Sparkles, tooltip: "Turbo Suggestions"},
   { href: '/settings', label: 'Settings', icon: SettingsIcon, tooltip: "Settings"},
 ];
 
