@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from '@/components/ui/badge';
 import { PlusCircle } from 'lucide-react';
 import { SettingsContext, getCurrencySymbol } from '@/contexts/settings-context';
+import { generateItemTags } from '@/lib/utils';
 
 function calculateProductCost(product: Product) {
   return product.bom.reduce((total, bomItem) => {
@@ -71,7 +72,7 @@ export default function InventoryPage() {
                         <TableRow>
                             <TableHead className="w-[80px]">Image</TableHead>
                             <TableHead>Name</TableHead>
-                            <TableHead>Category</TableHead>
+                            <TableHead>Tags</TableHead>
                             <TableHead>Supplier</TableHead>
                             <TableHead className="text-right">Price</TableHead>
                             <TableHead className="text-right">Stock</TableHead>
@@ -82,6 +83,7 @@ export default function InventoryPage() {
                         {items.map(item => {
                           const supplier = suppliers.find(s => s.name === item.supplier);
                           const stockVariant = getStockVariant(item.stock, item.reorderLevel);
+                          const tags = generateItemTags(item);
                           return (
                             <TableRow key={item.id}>
                                 <TableCell>
@@ -96,7 +98,11 @@ export default function InventoryPage() {
                                 </TableCell>
                                 <TableCell className="font-medium">{item.name}</TableCell>
                                 <TableCell>
-                                    <Badge variant="outline">{item.category}</Badge>
+                                  <div className="flex flex-wrap gap-1">
+                                    {tags.map(tag => (
+                                      <Badge key={tag} variant="outline">{tag}</Badge>
+                                    ))}
+                                  </div>
                                 </TableCell>
                                 <TableCell>{item.supplier}</TableCell>
                                 <TableCell className="text-right">{currencySymbol}{item.price.toFixed(2)}</TableCell>

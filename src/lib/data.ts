@@ -21,6 +21,7 @@ export type Item = {
   category: string;
   stock: number;
   reorderLevel: number;
+  tags?: string[];
 };
 
 export type Product = {
