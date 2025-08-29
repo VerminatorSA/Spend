@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarInset } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
 import { MainNav } from '@/components/main-nav';
 import { UserNav } from '@/components/user-nav';
 import { Command } from 'lucide-react';
@@ -27,8 +27,8 @@ export default function RootLayout({
         <SettingsProvider>
           <SidebarProvider>
             <Sidebar>
-              <SidebarHeader className="p-4">
-                <div className="flex items-center gap-2.5">
+              <SidebarHeader>
+                <div className="flex items-center gap-2.5 p-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                     <Command className="h-5 w-5" />
                   </div>
@@ -44,9 +44,9 @@ export default function RootLayout({
                 <UserNav />
               </SidebarFooter>
             </Sidebar>
-            <SidebarInset>
+            <main className="flex-1">
               {children}
-            </SidebarInset>
+            </main>
           </SidebarProvider>
         </SettingsProvider>
         <Toaster />
