@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Card, CardContent } from '@/components/ui/card';
-import { User, Palette, FileText, Bell, Building, ChevronRight } from 'lucide-react';
+import { User, Palette, FileText, Bell, Building, ChevronRight, Users } from 'lucide-react';
 
 const settingsSections = [
     { 
@@ -10,6 +10,12 @@ const settingsSections = [
         title: 'My Profile', 
         description: 'Manage your personal information and preferences.', 
         icon: User 
+    },
+    { 
+        href: '/settings/users', 
+        title: 'User Management', 
+        description: 'Manage team members and their permissions.', 
+        icon: Users 
     },
     { 
         href: '/settings/company', 
@@ -50,7 +56,10 @@ export default function SettingsPage() {
                     <Link href={section.href} key={section.href} className="flex items-center justify-between p-4 transition-colors hover:bg-muted/50">
                         <div className="flex items-center gap-4">
                             <section.icon className="h-5 w-5 text-muted-foreground" />
-                            <span className="font-medium">{section.title}</span>
+                            <div className="flex flex-col">
+                                <span className="font-medium">{section.title}</span>
+                                <span className="text-sm text-muted-foreground">{section.description}</span>
+                            </div>
                         </div>
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                     </Link>
