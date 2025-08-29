@@ -1,9 +1,9 @@
-
 'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { items, type Item } from '@/lib/data';
 import { Header } from '@/components/header';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,10 +21,18 @@ import { PlusCircle, LayoutGrid, List } from 'lucide-react';
 
 export default function ItemsPage() {
   const [view, setView] = useState('grid');
+  const searchParams = useSearchParams();
+  const categoryFilter = searchParams.get('category');
+
+  const filteredItems = categoryFilter
+    ? items.filter((item) => item.category === categoryFilter)
+    : items;
+  
+  const pageTitle = categoryFilter ? `Items: ${categoryFilter}` : "Item Catalog";
 
   return (
     <div className="flex h-full flex-col">
-       <Header title="Item Catalog">
+       <Header title={pageTitle}>
           <div className="flex items-center gap-2">
             <div className="hidden rounded-lg bg-muted p-1 md:flex">
                 <Button 
@@ -57,7 +65,7 @@ export default function ItemsPage() {
       <main className="flex-1 overflow-auto p-4 md:p-6">
         {view === 'grid' ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {items.map((item) => (
+            {filteredItems.map((item) => (
                 <Card key={item.id} className="flex flex-col">
                 <CardHeader className="p-0">
                     <div className="relative h-48 w-full">
@@ -107,7 +115,7 @@ export default function ItemsPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {items.map(item => (
+                        {filteredItems.map(item => (
                             <TableRow key={item.id}>
                                 <TableCell>
                                     <Image 
