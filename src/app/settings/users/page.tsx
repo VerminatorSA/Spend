@@ -1,6 +1,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,9 +28,11 @@ export default function UserManagementPage() {
   return (
     <div className="flex h-full flex-col">
       <Header title="User Management">
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add User
+        <Button asChild>
+          <Link href="/settings/users/add">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add User
+          </Link>
         </Button>
       </Header>
       <main className="flex-1 overflow-auto p-4 md:p-6">

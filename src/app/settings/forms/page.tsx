@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { Header } from '@/components/header';
-import { FileText, ChevronRight, User, Package, ShoppingCart, Mail } from 'lucide-react';
+import { FileText, ChevronRight, User, Package, ShoppingCart, Mail, Users } from 'lucide-react';
 
 const formSettingsSections = [
     { 
@@ -28,6 +28,12 @@ const formSettingsSections = [
         description: 'Customize the fields for the supplier contact form.', 
         icon: Mail
     },
+    {
+        href: '/settings/forms/user',
+        title: 'User Form',
+        description: 'Customize the fields for adding new users.',
+        icon: Users
+    }
 ]
 
 export default function FormsSettingsPage() {
