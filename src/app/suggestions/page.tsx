@@ -18,7 +18,7 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending} className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground">
+    <Button type="submit" disabled={pending} className="w-full sm:w-auto">
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -52,6 +52,7 @@ export default function SuggestionsPage() {
   
   const [state, formAction, formRef] = useActionStateWithInput(submitQuery, initialState);
   const { toast } = useToast();
+  const conversationEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (state.message === 'Success') {
@@ -69,8 +70,12 @@ export default function SuggestionsPage() {
     }
   }, [state, toast, formRef]);
 
+  useEffect(() => {
+      conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [state.data]);
+
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full max-h-screen flex-col">
       <Header title="Spencer" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl space-y-8">
@@ -81,7 +86,7 @@ export default function SuggestionsPage() {
             </p>
           </div>
           
-          <div className="space-y-6">
+          <div className="space-y-6 pb-24">
 
             {state.data && state.input && (
                  <div className="space-y-6">
@@ -98,8 +103,8 @@ export default function SuggestionsPage() {
 
                     {/* AI's Response */}
                     <div className="flex items-start gap-4">
-                        <Avatar className="h-9 w-9 border border-accent">
-                             <AvatarFallback className={cn("text-accent-foreground", state.data.isWarning ? "bg-destructive" : "bg-accent" )}>
+                        <Avatar className="h-9 w-9 border border-primary">
+                             <AvatarFallback className={cn("text-primary-foreground", state.data.isWarning ? "bg-destructive" : "bg-primary" )}>
                                 {state.data.isWarning ? <AlertTriangle /> : <Bot />}
                              </AvatarFallback>
                         </Avatar>
@@ -121,30 +126,34 @@ export default function SuggestionsPage() {
                     </div>
                 </div>
             )}
-            
-            <form ref={formRef} action={formAction} className="sticky bottom-0 bg-background/80 py-4 backdrop-blur-md">
-              <div className="relative">
-                <Textarea
-                    id="query"
-                    name="query"
-                    placeholder="e.g., 'Hello! Can you suggest a corrosion-resistant screw for an outdoor enclosure?'"
-                    rows={3}
-                    aria-describedby="spec-error"
-                    className="pr-32"
-                />
-                <div className="absolute bottom-2 right-2">
-                    <SubmitButton />
-                </div>
-              </div>
-               {state.errors?.query && (
-                    <p id="spec-error" className="mt-2 text-sm text-destructive">
-                    {state.errors.query.join(', ')}
-                    </p>
-                )}
-            </form>
+            <div ref={conversationEndRef} />
           </div>
         </div>
       </main>
+       <footer className="sticky bottom-0 border-t bg-background/95 py-4 backdrop-blur-sm">
+          <div className="mx-auto w-full max-w-4xl px-4">
+            <form ref={formRef} action={formAction}>
+                <div className="relative">
+                  <Textarea
+                      id="query"
+                      name="query"
+                      placeholder="e.g., 'Hello! Can you suggest a corrosion-resistant screw for an outdoor enclosure?'"
+                      rows={1}
+                      aria-describedby="spec-error"
+                      className="min-h-12 resize-none pr-24"
+                  />
+                  <div className="absolute bottom-2.5 right-2.5">
+                      <SubmitButton />
+                  </div>
+                </div>
+                {state.errors?.query && (
+                      <p id="spec-error" className="mt-2 text-sm text-destructive">
+                      {state.errors.query.join(', ')}
+                      </p>
+                  )}
+              </form>
+          </div>
+        </footer>
     </div>
   );
 }
