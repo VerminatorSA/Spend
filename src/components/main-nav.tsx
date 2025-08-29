@@ -3,15 +3,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Package, Lightbulb, Mail, Settings as SettingsIcon, Warehouse, LayoutDashboard } from 'lucide-react';
+import { Lightbulb, Settings as SettingsIcon, Warehouse, LayoutDashboard, Building } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, tooltip: "Dashboard"},
-  { href: '/suppliers', label: 'Suppliers', icon: Users, tooltip: "Supplier Directory"},
   { href: '/inventory', label: 'Inventory', icon: Warehouse, tooltip: "Inventory"},
   { href: '/suggestions', label: 'Suggestions', icon: Lightbulb, tooltip: "Smart Suggestions"},
-  { href: '/contact', label: 'Contact Hub', icon: Mail, tooltip: "Contact Hub"},
+  { href: '/contact', label: 'Suppliers', icon: Building, tooltip: "Suppliers"},
   { href: '/settings', label: 'Settings', icon: SettingsIcon, tooltip: "Settings"},
 ];
 
