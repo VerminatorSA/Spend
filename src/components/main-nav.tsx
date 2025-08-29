@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Warehouse, Users, AreaChart } from 'lucide-react';
+import { LayoutDashboard, Warehouse, Users, AreaChart, ClipboardCheck } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import { AiTicker } from './ai-ticker';
 
@@ -11,6 +11,7 @@ const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, tooltip: "Dashboard"},
   { href: '/inventory', label: 'Inventory', icon: Warehouse, tooltip: "Inventory"},
   { href: '/contacts', label: 'Contacts', icon: Users, tooltip: "Contacts"},
+  { href: '/tasks', label: 'Tasks', icon: ClipboardCheck, tooltip: "Tasks"},
   { href: '/reports', label: 'Reports', icon: AreaChart, tooltip: "Reports"},
 ];
 
