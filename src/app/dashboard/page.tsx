@@ -3,8 +3,19 @@
 
 import { useContext } from 'react';
 import Link from 'next/link';
+import { BarChart, PieChart, Pie, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import * as RechartsPrimitive from 'recharts';
+
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,6 +83,50 @@ export default function DashboardPage() {
     },
   ];
 
+  const inventoryValueByCategory = items.reduce((acc, item) => {
+    const value = item.price * item.stock;
+    if (!acc[item.category]) {
+      acc[item.category] = 0;
+    }
+    acc[item.category] += value;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const categoryChartData = Object.entries(inventoryValueByCategory)
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value);
+
+  const categoryChartConfig = {
+    value: {
+      label: 'Value',
+      color: 'hsl(var(--chart-1))',
+    },
+     name: {
+      label: 'Category',
+    },
+  } satisfies React.ComponentProps<typeof ChartContainer>['config'];
+
+  const supplierItemCount = items.reduce((acc, item) => {
+    if (!acc[item.supplier]) {
+      acc[item.supplier] = 0;
+    }
+    acc[item.supplier]++;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const supplierChartData = Object.entries(supplierItemCount)
+    .map(([name, value]) => ({ name, value, fill: `hsl(var(--chart-${Object.keys(supplierItemCount).indexOf(name) + 1}))` }))
+    .sort((a, b) => b.value - a.value);
+
+  const supplierChartConfig = {
+    value: {
+      label: 'Items',
+    },
+    ...supplierChartData.reduce((acc, cur) => {
+        acc[cur.name] = { label: cur.name, color: cur.fill };
+        return acc;
+    }, {} as React.ComponentProps<typeof ChartContainer>['config'])
+  } satisfies React.ComponentProps<typeof ChartContainer>['config'];
 
   return (
     <div className="flex h-full flex-col">
@@ -98,14 +153,78 @@ export default function DashboardPage() {
         </DropdownMenu>
       </Header>
       <main className="flex-1 overflow-auto p-4 md:p-6">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {dashboardMetrics.map((metric, index) => (
-            <div key={index} className="flex flex-col">
-              <h3 className="text-lg font-medium text-muted-foreground">{metric.title}</h3>
-              <p className="text-5xl font-bold tracking-tight">{metric.value}</p>
-              <p className="text-sm text-muted-foreground">{metric.description}</p>
-            </div>
-          ))}
+        <div className="grid gap-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {dashboardMetrics.map((metric, index) => (
+              <Card key={index}>
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{metric.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-4xl font-bold tracking-tight">{metric.value}</p>
+                  <p className="text-xs text-muted-foreground">{metric.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+             <Card className="lg:col-span-4">
+                <CardHeader>
+                    <CardTitle>Inventory Value by Category</CardTitle>
+                    <CardDescription>Showing total stock value for each item category.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ChartContainer config={categoryChartConfig} className="h-64 w-full">
+                        <BarChart accessibilityLayer data={categoryChartData} margin={{ top: 20, left: -20, right: 20 }}>
+                            <RechartsPrimitive.CartesianGrid vertical={false} />
+                            <RechartsPrimitive.XAxis 
+                                dataKey="name"
+                                tickLine={false}
+                                tickMargin={10}
+                                axisLine={false}
+                            />
+                            <RechartsPrimitive.YAxis 
+                                tickFormatter={(value) => `${currencySymbol}${value / 1000}k`}
+                                tickLine={false}
+                                tickMargin={10}
+                                axisLine={false}
+                            />
+                             <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent indicator="line" />}
+                                />
+                            <RechartsPrimitive.Bar dataKey="value" fill="var(--color-value)" radius={4} />
+                        </BarChart>
+                    </ChartContainer>
+                </CardContent>
+             </Card>
+             <Card className="lg:col-span-3">
+                 <CardHeader>
+                    <CardTitle>Supplier Item Distribution</CardTitle>
+                    <CardDescription>Top suppliers by number of distinct items offered.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex justify-center">
+                    <ChartContainer config={supplierChartConfig} className="h-64 w-full">
+                        <PieChart>
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent hideLabel />}
+                                />
+                            <RechartsPrimitive.Pie 
+                                data={supplierChartData} 
+                                dataKey="value" 
+                                nameKey="name"
+                                innerRadius={60}
+                            />
+                            <ChartLegend
+                                content={<ChartLegendContent nameKey="name" />}
+                                />
+                        </PieChart>
+                    </ChartContainer>
+                </CardContent>
+            </Card>
+          </div>
         </div>
       </main>
     </div>
