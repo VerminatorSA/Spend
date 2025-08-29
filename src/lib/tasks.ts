@@ -2,6 +2,7 @@
 export type Task = {
     id: string;
     title: string;
+    description?: string;
     status: 'To Do' | 'In Progress' | 'Done' | 'Cancelled';
     priority: 'Low' | 'Medium' | 'High';
     dueDate: Date | null;
@@ -11,7 +12,7 @@ export type Task = {
     };
 };
 
-export const tasks: Task[] = [
+export let tasks: Task[] = [
     {
         id: 'task-001',
         title: 'Finalize Q3 budget report',

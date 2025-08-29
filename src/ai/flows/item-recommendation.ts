@@ -12,6 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { getLowStockItems } from '@/services/inventory-service';
+import { createTask } from '@/services/task-service';
 
 const AiAssistantInputSchema = z.object({
   query: z
@@ -47,6 +48,28 @@ const inventoryAlertTool = ai.defineTool(
     }
 );
 
+const createTaskTool = ai.defineTool(
+    {
+        name: 'createTask',
+        description: 'Creates a new task and adds it to the user\'s task list. Use this when the user asks to be reminded about something or to create a to-do item.',
+        inputSchema: z.object({
+            title: z.string().describe('The title of the task.'),
+            description: z.string().optional().describe('A longer description of the task.'),
+            priority: z.enum(['High', 'Medium', 'Low']).describe('The priority of the task.'),
+            dueDate: z.string().optional().describe('The due date for the task in YYYY-MM-DD format.'),
+        }),
+        outputSchema: z.string(),
+    },
+    async (input) => {
+        try {
+            await createTask(input);
+            return 'Task created successfully.';
+        } catch (e: any) {
+            return `Error creating task: ${e.message}`;
+        }
+    }
+);
+
 
 export async function getAiAssistantResponse(
   input: AiAssistantInput
@@ -58,7 +81,7 @@ const prompt = ai.definePrompt({
   name: 'aiAssistantPrompt',
   input: {schema: AiAssistantInputSchema},
   output: {schema: AiAssistantOutputSchema},
-  tools: [inventoryAlertTool],
+  tools: [inventoryAlertTool, createTaskTool],
   prompt: `You are an AI assistant named 'Spencer', specializing in procurement and spend management for purchasing managers. You are an agent integrated into this application called Spend.
 
 Your capabilities include:
@@ -67,8 +90,11 @@ Your capabilities include:
 - Providing motivational or relevant business quotations when appropriate.
 - Engaging in friendly conversation and greetings.
 - Proactively checking for and reporting on inventory issues using your tools.
+- Creating tasks and reminders for the user when they request it.
 
 When a user starts a conversation, first check for any inventory alerts. If there are items that are low on stock or out of stock, your first priority is to report these as a critical warning. In this case, set the 'isWarning' flag to true.
+
+If the user asks you to remind them of something or to create a to-do item, use the createTask tool. When creating a task, confirm its creation in your response.
 
 If there are no alerts, or after you have reported the alerts, respond to the user's query conversationally and helpfully, in character as the 'Spencer' AI assistant.
 
