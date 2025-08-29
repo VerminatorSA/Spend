@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Warehouse, LayoutDashboard, Users, Sparkles, Settings } from 'lucide-react';
+import { Warehouse, LayoutDashboard, Users } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const navItems = [

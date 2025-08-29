@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Settings } from 'lucide-react';
+import { Rocket, Settings } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -19,7 +19,7 @@ export function HeaderActions() {
                     <TooltipTrigger asChild>
                         <Button variant="ghost" size="icon" asChild>
                             <Link href="/suggestions">
-                                <Sparkles className="h-5 w-5 text-accent" />
+                                <Rocket className="h-5 w-5 text-accent" />
                                 <span className="sr-only">Turbo</span>
                             </Link>
                         </Button>
