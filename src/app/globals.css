@@ -85,18 +85,3 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
-
-@layer utilities {
-  @keyframes marquee-infinite {
-    from {
-      transform: translateX(100%);
-    }
-    to {
-      transform: translateX(-100%);
-    }
-  }
-
-  .animate-marquee-infinite {
-    animation: marquee-infinite 60s linear infinite;
-  }
-}
