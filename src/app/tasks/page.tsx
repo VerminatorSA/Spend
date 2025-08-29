@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
@@ -23,8 +23,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlusCircle, MoreHorizontal, ArrowUp, ArrowDown, ArrowRight } from 'lucide-react';
-import { tasks, type Task } from '@/lib/tasks';
+import { tasks as initialTasks, type Task } from '@/lib/tasks';
 import { format } from 'date-fns';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type SortKey = keyof Task | null;
 type SortDirection = 'asc' | 'desc';
@@ -36,9 +37,17 @@ const priorityMap: Record<Task['priority'], { variant: 'destructive' | 'outline'
 };
 
 export default function TasksPage() {
-    const [sortedTasks, setSortedTasks] = useState<Task[]>(tasks);
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [sortedTasks, setSortedTasks] = useState<Task[]>([]);
     const [sortKey, setSortKey] = useState<SortKey>(null);
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        setTasks(initialTasks);
+        setSortedTasks(initialTasks);
+    }, []);
 
     const handleSort = (key: SortKey) => {
         const direction = (sortKey === key && sortDirection === 'asc') ? 'desc' : 'asc';
@@ -58,8 +67,8 @@ export default function TasksPage() {
                 return (priorityMap[a.priority].level - priorityMap[b.priority].level) * (direction === 'asc' ? 1 : -1);
             }
             
-            if (key === 'dueDate') {
-                return (new Date(aValue as Date).getTime() - new Date(bValue as Date).getTime()) * (direction === 'asc' ? 1 : -1);
+            if (key === 'dueDate' && aValue && bValue) {
+                return (new Date(aValue as string).getTime() - new Date(bValue as string).getTime()) * (direction === 'asc' ? 1 : -1);
             }
 
             if (aValue < bValue) return direction === 'asc' ? -1 : 1;
@@ -114,49 +123,62 @@ export default function TasksPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {sortedTasks.map((task) => {
-                                const priorityConfig = priorityMap[task.priority];
-                                return (
-                                <TableRow key={task.id}>
-                                    <TableCell className="font-medium">{task.title}</TableCell>
-                                    <TableCell>
-                                        <Badge variant={task.status === 'Done' ? 'default' : 'secondary'}>{task.status}</Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                         <Badge variant={priorityConfig.variant} className={priorityConfig.variant === 'outline' ? 'border-yellow-500 text-yellow-500' : ''}>
-                                            <priorityConfig.icon className="mr-1 h-3 w-3" />
-                                            {task.priority}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        {task.dueDate ? format(task.dueDate, 'PPpp') : 'No due date'}
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="flex items-center gap-2">
-                                            <Avatar className="h-7 w-7">
-                                                <AvatarImage src={task.assignee.avatarUrl} alt={task.assignee.name} data-ai-hint="person avatar" />
-                                                <AvatarFallback>{task.assignee.name.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <span className="text-sm text-muted-foreground">{task.assignee.name}</span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                         <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem>Change Status</DropdownMenuItem>
-                                                <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
+                            {!isClient ? (
+                                Array.from({ length: 5 }).map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell><Skeleton className="h-5 w-48" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-20" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-28" /></TableCell>
+                                    <TableCell></TableCell>
                                 </TableRow>
-                                );
-                            })}
+                                ))
+                            ) : (
+                                sortedTasks.map((task) => {
+                                    const priorityConfig = priorityMap[task.priority];
+                                    return (
+                                    <TableRow key={task.id}>
+                                        <TableCell className="font-medium">{task.title}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={task.status === 'Done' ? 'default' : 'secondary'}>{task.status}</Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={priorityConfig.variant} className={priorityConfig.variant === 'outline' ? 'border-yellow-500 text-yellow-500' : ''}>
+                                                <priorityConfig.icon className="mr-1 h-3 w-3" />
+                                                {task.priority}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            {task.dueDate ? format(new Date(task.dueDate), 'PPpp') : 'No due date'}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center gap-2">
+                                                <Avatar className="h-7 w-7">
+                                                    <AvatarImage src={task.assignee.avatarUrl} alt={task.assignee.name} data-ai-hint="person avatar" />
+                                                    <AvatarFallback>{task.assignee.name.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <span className="text-sm text-muted-foreground">{task.assignee.name}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem>Change Status</DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                    );
+                                })
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>

@@ -15,6 +15,7 @@ import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { createTask } from '@/services/task-service';
 
 export default function AddTaskPage() {
   const { toast } = useToast();
@@ -22,9 +23,9 @@ export default function AddTaskPage() {
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [dueTime, setDueTime] = useState('');
-  const [priority, setPriority] = useState('');
+  const [priority, setPriority] = useState<'High' | 'Medium' | 'Low' | ''>('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title || !priority) {
@@ -36,25 +37,43 @@ export default function AddTaskPage() {
         return;
     }
 
-    let finalDueDate: Date | undefined = dueDate;
-    if (dueDate && dueTime) {
-      const [hours, minutes] = dueTime.split(':');
-      finalDueDate = new Date(dueDate);
-      finalDueDate.setHours(parseInt(hours, 10));
-      finalDueDate.setMinutes(parseInt(minutes, 10));
+    let finalDueDate: string | undefined = undefined;
+    if (dueDate) {
+        const dateWithTime = new Date(dueDate);
+        if (dueTime) {
+            const [hours, minutes] = dueTime.split(':');
+            dateWithTime.setHours(parseInt(hours, 10));
+            dateWithTime.setMinutes(parseInt(minutes, 10));
+        }
+        finalDueDate = dateWithTime.toISOString();
     }
-
-    console.log('New Task Submitted:', { title, description, dueDate: finalDueDate, priority });
-    toast({
-      title: 'Task Created',
-      description: 'The new task has been successfully added to the board.',
-    });
     
-    setTitle('');
-    setDescription('');
-    setDueDate(undefined);
-    setDueTime('');
-    setPriority('');
+    try {
+        await createTask({ 
+            title, 
+            description, 
+            priority, 
+            dueDate: finalDueDate 
+        });
+
+        toast({
+        title: 'Task Created',
+        description: 'The new task has been successfully added to the board.',
+        });
+        
+        setTitle('');
+        setDescription('');
+        setDueDate(undefined);
+        setDueTime('');
+        setPriority('');
+
+    } catch (error) {
+        toast({
+            variant: 'destructive',
+            title: 'Error Creating Task',
+            description: 'There was a problem creating the task. Please try again.',
+        });
+    }
   };
 
 
@@ -95,7 +114,7 @@ export default function AddTaskPage() {
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                             <div className="space-y-2">
                                 <Label htmlFor="priority">Priority <span className="text-destructive">*</span></Label>
-                                <Select onValueChange={setPriority} value={priority}>
+                                <Select onValueChange={(v) => setPriority(v as any)} value={priority}>
                                     <SelectTrigger id="priority">
                                         <SelectValue placeholder="Select a priority" />
                                     </SelectTrigger>
