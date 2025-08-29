@@ -28,15 +28,13 @@ function calculateProductCost(product: Product) {
   }, 0);
 }
 
-const LOW_STOCK_THRESHOLD = 50;
-
 export default function InventoryPage() {
   const { settings } = useContext(SettingsContext);
   const currencySymbol = getCurrencySymbol(settings.currency);
 
-  const getStockVariant = (stock: number): 'secondary' | 'destructive' | 'outline' => {
+  const getStockVariant = (stock: number, reorderLevel: number): 'secondary' | 'destructive' | 'outline' => {
     if (stock === 0) return 'destructive';
-    if (stock < LOW_STOCK_THRESHOLD) return 'outline';
+    if (stock < reorderLevel) return 'outline';
     return 'secondary';
   }
 
@@ -83,7 +81,7 @@ export default function InventoryPage() {
                     <TableBody>
                         {items.map(item => {
                           const supplier = suppliers.find(s => s.name === item.supplier);
-                          const stockVariant = getStockVariant(item.stock);
+                          const stockVariant = getStockVariant(item.stock, item.reorderLevel);
                           return (
                             <TableRow key={item.id}>
                                 <TableCell>

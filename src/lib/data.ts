@@ -20,6 +20,7 @@ export type Item = {
   imageUrl: string;
   category: string;
   stock: number;
+  reorderLevel: number;
 };
 
 export type Product = {
@@ -112,6 +113,7 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Fasteners',
     stock: 500,
+    reorderLevel: 100,
   },
   {
     id: 'item-002',
@@ -122,6 +124,7 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Polymers',
     stock: 120,
+    reorderLevel: 50,
   },
   {
     id: 'item-003',
@@ -132,6 +135,7 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Electronics',
     stock: 2500,
+    reorderLevel: 500,
   },
   {
     id: 'item-004',
@@ -142,6 +146,7 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Metals',
     stock: 40,
+    reorderLevel: 20,
   },
   {
     id: 'item-005',
@@ -152,6 +157,7 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Mechanical Parts',
     stock: 0,
+    reorderLevel: 10,
   },
   {
     id: 'item-006',
@@ -162,6 +168,7 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Electronics',
     stock: 300,
+    reorderLevel: 50,
   },
   {
     id: 'item-007',
@@ -172,6 +179,7 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Composites',
     stock: 75,
+    reorderLevel: 25,
   },
   {
     id: 'item-008',
@@ -182,6 +190,7 @@ export const items: Item[] = [
     imageUrl: 'https://picsum.photos/600/400',
     category: 'Metals',
     stock: 25,
+    reorderLevel: 10,
   },
 ];
 
