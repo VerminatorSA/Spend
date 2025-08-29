@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Warehouse, Users, AreaChart, ClipboardCheck } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
+import { AiTicker } from './ai-ticker';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, tooltip: "Dashboard"},
@@ -19,6 +20,7 @@ export function MainNav() {
 
   return (
     <>
+      <AiTicker />
       <SidebarMenu>
         {navItems.map((item) => (
           <SidebarMenuItem key={item.href}>

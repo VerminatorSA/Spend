@@ -85,3 +85,22 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
+
+@layer utilities {
+  @keyframes ticker-x {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-ticker-x {
+    animation: ticker-x 40s linear infinite;
+  }
+
+  .pause {
+    animation-play-state: paused;
+  }
+}
