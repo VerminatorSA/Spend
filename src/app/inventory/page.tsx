@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { products, items, type Product, type Item } from '@/lib/data';
+import { products, items, suppliers, type Product, type Item } from '@/lib/data';
 import { Header } from '@/components/header';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,15 @@ function calculateProductCost(product: Product) {
   }, 0);
 }
 
+const LOW_STOCK_THRESHOLD = 50;
+
 export default function InventoryPage() {
+  const getStockVariant = (stock: number): 'secondary' | 'destructive' | 'outline' => {
+    if (stock === 0) return 'destructive';
+    if (stock < LOW_STOCK_THRESHOLD) return 'outline';
+    return 'secondary';
+  }
+
   return (
     <div className="flex h-full flex-col">
       <Header title="Inventory">
@@ -68,7 +76,10 @@ export default function InventoryPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {items.map(item => (
+                        {items.map(item => {
+                          const supplier = suppliers.find(s => s.name === item.supplier);
+                          const stockVariant = getStockVariant(item.stock);
+                          return (
                             <TableRow key={item.id}>
                                 <TableCell>
                                     <Image 
@@ -87,15 +98,18 @@ export default function InventoryPage() {
                                 <TableCell>{item.supplier}</TableCell>
                                 <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
                                 <TableCell className="text-right">
-                                    <Badge variant={item.stock > 0 ? 'secondary' : 'destructive'}>
-                                        {item.stock > 0 ? `${item.stock}` : 'Out of Stock'}
+                                    <Badge variant={stockVariant} className={stockVariant === 'outline' ? 'border-yellow-500 text-yellow-500' : ''}>
+                                        {item.stock > 0 ? `${item.stock} units` : 'Out of Stock'}
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Button size="sm" disabled={item.stock === 0}>Add to Cart</Button>
+                                    <Button size="sm" asChild disabled={!supplier}>
+                                      <Link href={supplier ? `/contact/${supplier.id}` : '#'}>Reorder</Link>
+                                    </Button>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                          )
+                        })}
                     </TableBody>
                 </Table>
             </div>
