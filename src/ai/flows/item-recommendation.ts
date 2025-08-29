@@ -11,6 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { getLowStockItems } from '@/services/inventory-service';
 
 const AiAssistantInputSchema = z.object({
   query: z
@@ -29,10 +30,23 @@ const AiAssistantOutputSchema = z.object({
     .describe(
       'The AI assistant\'s response to the user.'
     ),
+  isWarning: z.boolean().describe('Set to true if the response is a critical warning or alert.')
 });
 export type AiAssistantOutput = z.infer<
   typeof AiAssistantOutputSchema
 >;
+
+const inventoryAlertTool = ai.defineTool(
+    {
+        name: 'getInventoryAlerts',
+        description: 'Get a list of items that are low on stock or out of stock.',
+        outputSchema: z.any(),
+    },
+    async () => {
+        return await getLowStockItems();
+    }
+);
+
 
 export async function getAiAssistantResponse(
   input: AiAssistantInput
@@ -44,16 +58,21 @@ const prompt = ai.definePrompt({
   name: 'aiAssistantPrompt',
   input: {schema: AiAssistantInputSchema},
   output: {schema: AiAssistantOutputSchema},
+  tools: [inventoryAlertTool],
   prompt: `You are an AI assistant named 'Spencer', specializing in procurement and spend management for purchasing managers. You are an agent integrated into this application called Spend.
 
 Your capabilities include:
 - Assisting users by suggesting items based on their manufacturing specifications.
 - Answering questions about the application's features (Dashboard, Inventory, Contacts, Reports, Settings).
 - Providing motivational or relevant business quotations when appropriate.
-- Offering helpful warnings or tips about the system.
 - Engaging in friendly conversation and greetings.
+- Proactively checking for and reporting on inventory issues using your tools.
 
-When a user asks for item recommendations, provide a detailed list with descriptions and potential suppliers. For all other interactions, respond conversationally and helpfully, in character as the 'Spencer' AI assistant.
+When a user starts a conversation, first check for any inventory alerts. If there are items that are low on stock or out of stock, your first priority is to report these as a critical warning. In this case, set the 'isWarning' flag to true.
+
+If there are no alerts, or after you have reported the alerts, respond to the user's query conversationally and helpfully, in character as the 'Spencer' AI assistant.
+
+When a user asks for item recommendations, provide a detailed list with descriptions and potential suppliers. For all other interactions, respond conversationally and helpfully.
 
 User Query:
 {{query}}

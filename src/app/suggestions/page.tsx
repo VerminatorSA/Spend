@@ -10,8 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { submitQuery } from './actions';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, User, Bot } from 'lucide-react';
+import { Loader2, Sparkles, User, Bot, AlertTriangle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -98,15 +99,20 @@ export default function SuggestionsPage() {
                     {/* AI's Response */}
                     <div className="flex items-start gap-4">
                         <Avatar className="h-9 w-9 border border-accent">
-                             <AvatarFallback className="bg-accent text-accent-foreground"><Bot /></AvatarFallback>
+                             <AvatarFallback className={cn("text-accent-foreground", state.data.isWarning ? "bg-destructive" : "bg-accent" )}>
+                                {state.data.isWarning ? <AlertTriangle /> : <Bot />}
+                             </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 space-y-4">
-                            <Card>
+                            <Card className={cn(state.data.isWarning && "border-destructive bg-destructive/10")}>
                                 <CardHeader>
-                                <CardTitle>Spencer</CardTitle>
+                                <CardTitle className={cn(state.data.isWarning && "text-destructive")}>Spencer</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <p className="whitespace-pre-wrap font-sans text-sm text-muted-foreground">
+                                    <p className={cn(
+                                        "whitespace-pre-wrap font-sans text-sm",
+                                        state.data.isWarning ? "text-destructive" : "text-muted-foreground"
+                                    )}>
                                         {state.data.response}
                                     </p>
                                 </CardContent>
