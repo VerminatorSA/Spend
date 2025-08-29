@@ -21,6 +21,7 @@ export default function AddTaskPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
+  const [dueTime, setDueTime] = useState('');
   const [priority, setPriority] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -35,7 +36,15 @@ export default function AddTaskPage() {
         return;
     }
 
-    console.log('New Task Submitted:', { title, description, dueDate, priority });
+    let finalDueDate: Date | undefined = dueDate;
+    if (dueDate && dueTime) {
+      const [hours, minutes] = dueTime.split(':');
+      finalDueDate = new Date(dueDate);
+      finalDueDate.setHours(parseInt(hours, 10));
+      finalDueDate.setMinutes(parseInt(minutes, 10));
+    }
+
+    console.log('New Task Submitted:', { title, description, dueDate: finalDueDate, priority });
     toast({
       title: 'Task Created',
       description: 'The new task has been successfully added to the board.',
@@ -44,6 +53,7 @@ export default function AddTaskPage() {
     setTitle('');
     setDescription('');
     setDueDate(undefined);
+    setDueTime('');
     setPriority('');
   };
 
@@ -97,30 +107,39 @@ export default function AddTaskPage() {
                                 </Select>
                             </div>
                             <div className="space-y-2">
-                                 <Label htmlFor="due-date">Due Date</Label>
-                                 <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            id="due-date"
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-full justify-start text-left font-normal",
-                                                !dueDate && "text-muted-foreground"
-                                            )}
-                                            >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {dueDate ? format(dueDate, "PPP") : <span>Pick a date</span>}
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0">
-                                        <Calendar
-                                        mode="single"
-                                        selected={dueDate}
-                                        onSelect={setDueDate}
-                                        initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <Label>Due Date & Time</Label>
+                                <div className="flex gap-2">
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                id="due-date"
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "flex-1 justify-start text-left font-normal",
+                                                    !dueDate && "text-muted-foreground"
+                                                )}
+                                                >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {dueDate ? format(dueDate, "PPP") : <span>Pick a date</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                            mode="single"
+                                            selected={dueDate}
+                                            onSelect={setDueDate}
+                                            initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <Input
+                                        type="time"
+                                        value={dueTime}
+                                        onChange={(e) => setDueTime(e.target.value)}
+                                        className="w-[120px]"
+                                        disabled={!dueDate}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

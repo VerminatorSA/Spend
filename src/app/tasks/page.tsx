@@ -51,11 +51,15 @@ export default function TasksPage() {
             const aValue = a[key];
             const bValue = b[key];
 
-            if (aValue === null) return 1;
-            if (bValue === null) return -1;
+            if (aValue === null || aValue === undefined) return 1;
+            if (bValue === null || bValue === undefined) return -1;
             
             if (key === 'priority') {
                 return (priorityMap[a.priority].level - priorityMap[b.priority].level) * (direction === 'asc' ? 1 : -1);
+            }
+            
+            if (key === 'dueDate') {
+                return (new Date(aValue as Date).getTime() - new Date(bValue as Date).getTime()) * (direction === 'asc' ? 1 : -1);
             }
 
             if (aValue < bValue) return direction === 'asc' ? -1 : 1;
@@ -125,7 +129,7 @@ export default function TasksPage() {
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
-                                        {task.dueDate ? format(task.dueDate, 'PPP') : 'No due date'}
+                                        {task.dueDate ? format(task.dueDate, 'PPpp') : 'No due date'}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-2">

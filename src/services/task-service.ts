@@ -5,6 +5,7 @@
  */
 
 import { tasks, type Task } from '@/lib/tasks';
+import { parseISO } from 'date-fns';
 
 interface CreateTaskInput {
     title: string;
@@ -24,9 +25,15 @@ export async function createTask(input: CreateTaskInput): Promise<void> {
     // Convert dueDate string to Date object if it exists
     let parsedDueDate: Date | null = null;
     if (input.dueDate) {
-        const date = new Date(input.dueDate);
-        // Adjust for timezone offset
-        parsedDueDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+        // Try parsing as ISO 8601 string, which includes date and time
+        const date = parseISO(input.dueDate);
+        if (isNaN(date.getTime())) {
+            // Fallback for date only strings, adjust for timezone
+            const simpleDate = new Date(input.dueDate);
+            parsedDueDate = new Date(simpleDate.getTime() + simpleDate.getTimezoneOffset() * 60000);
+        } else {
+            parsedDueDate = date;
+        }
     }
     
     const newTask: Task = {
