@@ -30,9 +30,12 @@ function calculateTotalItemValue(allItems: Item[]): number {
 
 function calculateTotalProductValue(allProducts: Product[], allItems: Item[]): number {
     return allProducts.reduce((total, product) => {
-        return total + calculateProductCost(product, allItems);
+        const productCost = calculateProductCost(product, allItems);
+        // Assuming each product in the list represents one assembly
+        return total + productCost;
     }, 0);
 }
+
 
 export default function DashboardPage() {
   const { settings } = useContext(SettingsContext);
@@ -40,6 +43,35 @@ export default function DashboardPage() {
 
   const totalItemValue = calculateTotalItemValue(items);
   const totalProductValue = calculateTotalProductValue(products, items);
+
+  const dashboardMetrics = [
+    {
+      title: 'Total Suppliers',
+      value: suppliers.length,
+      description: 'The total number of suppliers in your directory.',
+    },
+    {
+      title: 'Total Items',
+      value: items.length,
+      description: 'The total number of items in your catalog.',
+    },
+    {
+      title: 'Total Products',
+      value: products.length,
+      description: 'The total number of products you have configured.',
+    },
+    {
+      title: 'Total Item Value',
+      value: `${currencySymbol}${totalItemValue.toLocaleString()}`,
+      description: 'The total value of all items currently in stock.',
+    },
+    {
+      title: 'Total Product Value',
+      value: `${currencySymbol}${totalProductValue.toLocaleString()}`,
+      description: 'The total cost of all configured products.',
+    },
+  ];
+
 
   return (
     <div className="flex h-full flex-col">
@@ -67,31 +99,13 @@ export default function DashboardPage() {
       </Header>
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          <div className="flex flex-col">
-              <h3 className="text-lg font-medium text-muted-foreground">Total Suppliers</h3>
-              <p className="text-5xl font-bold tracking-tight">{suppliers.length}</p>
-              <p className="text-sm text-muted-foreground">The total number of suppliers in your directory.</p>
-          </div>
-          <div className="flex flex-col">
-              <h3 className="text-lg font-medium text-muted-foreground">Total Items</h3>
-              <p className="text-5xl font-bold tracking-tight">{items.length}</p>
-              <p className="text-sm text-muted-foreground">The total number of items in your catalog.</p>
-          </div>
-          <div className="flex flex-col">
-              <h3 className="text-lg font-medium text-muted-foreground">Total Products</h3>
-              <p className="text-5xl font-bold tracking-tight">{products.length}</p>
-              <p className="text-sm text-muted-foreground">The total number of products you have configured.</p>
-          </div>
-          <div className="flex flex-col">
-              <h3 className="text-lg font-medium text-muted-foreground">Total Item Value</h3>
-              <p className="text-5xl font-bold tracking-tight">{currencySymbol}{totalItemValue.toLocaleString()}</p>
-              <p className="text-sm text-muted-foreground">The total value of all items currently in stock.</p>
-          </div>
-           <div className="flex flex-col">
-              <h3 className="text-lg font-medium text-muted-foreground">Total Product Value</h3>
-              <p className="text-5xl font-bold tracking-tight">{currencySymbol}{totalProductValue.toLocaleString()}</p>
-              <p className="text-sm text-muted-foreground">The total cost of all configured products.</p>
-          </div>
+          {dashboardMetrics.map((metric, index) => (
+            <div key={index} className="flex flex-col">
+              <h3 className="text-lg font-medium text-muted-foreground">{metric.title}</h3>
+              <p className="text-5xl font-bold tracking-tight">{metric.value}</p>
+              <p className="text-sm text-muted-foreground">{metric.description}</p>
+            </div>
+          ))}
         </div>
       </main>
     </div>
