@@ -2,25 +2,25 @@
 'use server';
 
 import { z } from 'zod';
-import { getItemRecommendations, type ItemRecommendationOutput } from '@/ai/flows/item-recommendation';
+import { getAiAssistantResponse, type AiAssistantOutput } from '@/ai/flows/item-recommendation';
 
 const schema = z.object({
-  itemSpecifications: z.string().min(20, { message: 'Please provide more detailed specifications (at least 20 characters).' }),
+  query: z.string().min(2, { message: 'Please enter a longer query.' }),
 });
 
 type State = {
   message?: string | null;
   errors?: {
-    itemSpecifications?: string[];
+    query?: string[];
   } | null;
-  data?: ItemRecommendationOutput | null;
+  data?: AiAssistantOutput | null;
   input?: string | null;
 };
 
-export async function submitSpecifications(prevState: State, formData: FormData): Promise<State> {
+export async function submitQuery(prevState: State, formData: FormData): Promise<State> {
   try {
     const validatedFields = schema.safeParse({
-      itemSpecifications: formData.get('itemSpecifications'),
+      query: formData.get('query'),
     });
 
     if (!validatedFields.success) {
@@ -31,7 +31,7 @@ export async function submitSpecifications(prevState: State, formData: FormData)
       };
     }
 
-    const result = await getItemRecommendations(validatedFields.data);
+    const result = await getAiAssistantResponse(validatedFields.data);
 
     return {
       message: 'Success',
@@ -41,7 +41,7 @@ export async function submitSpecifications(prevState: State, formData: FormData)
   } catch (error) {
     console.error(error);
     return {
-      message: 'An unexpected error occurred while getting recommendations.',
+      message: 'An unexpected error occurred while getting a response.',
       errors: null,
       data: null,
     };

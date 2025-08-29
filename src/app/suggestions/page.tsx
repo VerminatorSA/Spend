@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { submitSpecifications } from './actions';
+import { submitQuery } from './actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, User, Bot } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -21,12 +21,12 @@ function SubmitButton() {
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Generating...
+          Thinking...
         </>
       ) : (
         <>
           <Sparkles className="mr-2 h-4 w-4" />
-          Get Suggestions
+          Send
         </>
       )}
     </Button>
@@ -36,13 +36,12 @@ function SubmitButton() {
 export default function SuggestionsPage() {
   const initialState = { message: null, errors: {}, data: null, input: null };
   
-  // A custom hook to manage the form state and include the user's input
   const useActionStateWithInput = (action: (prevState: any, formData: FormData) => Promise<any>, initialSt: any) => {
     const [state, setState] = useActionState(action, initialSt);
     const formRef = useRef<HTMLFormElement>(null);
 
     const formAction = async (formData: FormData) => {
-        const input = formData.get('itemSpecifications') as string;
+        const input = formData.get('query') as string;
         const newState = await action(state, formData);
         setState({ ...newState, input });
     };
@@ -50,16 +49,15 @@ export default function SuggestionsPage() {
     return [state, formAction, formRef] as const;
   };
   
-  const [state, formAction, formRef] = useActionStateWithInput(submitSpecifications, initialState);
+  const [state, formAction, formRef] = useActionStateWithInput(submitQuery, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
     if (state.message === 'Success') {
       toast({
-        title: 'Suggestions Generated',
-        description: 'AI recommendations have been successfully generated.',
+        title: 'Response Received',
+        description: 'AI assistant has responded.',
       });
-      // Reset the form input after successful submission
       formRef.current?.reset();
     } else if (state.message && state.message !== 'Invalid input.') {
       toast({
@@ -76,9 +74,9 @@ export default function SuggestionsPage() {
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl space-y-8">
           <div>
-            <h2 className="text-2xl font-bold">AI-Powered Item Recommendations</h2>
+            <h2 className="text-2xl font-bold">AI-Powered Assistant</h2>
             <p className="text-muted-foreground">
-              Describe the specifications of the items you are manufacturing, and our AI will recommend suitable components and materials.
+              Ask for item recommendations, inquire about the app, or just say hello.
             </p>
           </div>
           
@@ -105,21 +103,11 @@ export default function SuggestionsPage() {
                         <div className="flex-1 space-y-4">
                             <Card>
                                 <CardHeader>
-                                <CardTitle>Recommended Items</CardTitle>
+                                <CardTitle>AI Assistant</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <p className="whitespace-pre-wrap font-sans text-sm text-muted-foreground">
-                                        {state.data.recommendedItems}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                             <Card>
-                                <CardHeader>
-                                <CardTitle>Supplier Information</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="whitespace-pre-wrap font-sans text-sm text-muted-foreground">
-                                        {state.data.supplierInformation}
+                                        {state.data.response}
                                     </p>
                                 </CardContent>
                             </Card>
@@ -131,9 +119,9 @@ export default function SuggestionsPage() {
             <form ref={formRef} action={formAction} className="sticky bottom-0 bg-background/80 py-4 backdrop-blur-md">
               <div className="relative">
                 <Textarea
-                    id="itemSpecifications"
-                    name="itemSpecifications"
-                    placeholder="e.g., 'We need a 5mm diameter, 20mm long, corrosion-resistant machine screw for an outdoor enclosure...'"
+                    id="query"
+                    name="query"
+                    placeholder="e.g., 'Hello! Can you suggest a corrosion-resistant screw for an outdoor enclosure?'"
                     rows={3}
                     aria-describedby="spec-error"
                     className="pr-32"
@@ -142,9 +130,9 @@ export default function SuggestionsPage() {
                     <SubmitButton />
                 </div>
               </div>
-               {state.errors?.itemSpecifications && (
+               {state.errors?.query && (
                     <p id="spec-error" className="mt-2 text-sm text-destructive">
-                    {state.errors.itemSpecifications.join(', ')}
+                    {state.errors.query.join(', ')}
                     </p>
                 )}
             </form>
