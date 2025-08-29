@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings as SettingsIcon, Warehouse, LayoutDashboard, Building, Users, Sparkles } from 'lucide-react';
+import { Settings as SettingsIcon, Warehouse, LayoutDashboard, Building, Users } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const navItems = [
