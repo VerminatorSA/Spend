@@ -3,18 +3,20 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Rocket, Settings } from 'lucide-react';
+import { Rocket, Settings, Search } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { SearchInput } from './search-input';
 
 export function HeaderActions() {
     return (
         <TooltipProvider>
             <div className="flex items-center gap-2">
+                 <SearchInput />
                  <Tooltip>
                     <TooltipTrigger asChild>
                         <Button variant="ghost" size="icon" asChild>
