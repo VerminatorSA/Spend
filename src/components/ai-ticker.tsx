@@ -1,11 +1,12 @@
+
 'use client';
 
 import { Megaphone } from 'lucide-react';
 
 const messages = [
-  'Welcome to Spend, your AI-powered procurement partner.',
+  "Welcome! I'm Spencer, your AI-powered procurement partner.",
   'New Feature: Generate reports to gain insights into your operations.',
-  'Tip: Use the Turbo Assistant for intelligent item recommendations.',
+  "Tip: Ask me for intelligent item recommendations.",
   'Press Ctrl+B to toggle the sidebar at any time.',
 ];
 

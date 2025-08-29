@@ -56,7 +56,7 @@ export default function SuggestionsPage() {
     if (state.message === 'Success') {
       toast({
         title: 'Response Received',
-        description: 'AI assistant has responded.',
+        description: 'Spencer has responded.',
       });
       formRef.current?.reset();
     } else if (state.message && state.message !== 'Invalid input.') {
@@ -70,7 +70,7 @@ export default function SuggestionsPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <Header title="Turbo Assistant" />
+      <Header title="Spencer" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl space-y-8">
           <div>
@@ -103,7 +103,7 @@ export default function SuggestionsPage() {
                         <div className="flex-1 space-y-4">
                             <Card>
                                 <CardHeader>
-                                <CardTitle>AI Assistant</CardTitle>
+                                <CardTitle>Spencer</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <p className="whitespace-pre-wrap font-sans text-sm text-muted-foreground">

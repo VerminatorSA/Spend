@@ -22,12 +22,12 @@ export function HeaderActions() {
                         <Button variant="ghost" size="icon" asChild>
                             <Link href="/suggestions">
                                 <Rocket className="h-5 w-5 text-accent" />
-                                <span className="sr-only">Turbo</span>
+                                <span className="sr-only">Spencer</span>
                             </Link>
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>Turbo Suggestions</p>
+                        <p>Ask Spencer</p>
                     </TooltipContent>
                 </Tooltip>
                 <Tooltip>
