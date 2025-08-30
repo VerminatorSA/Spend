@@ -1,4 +1,5 @@
 
+
 export type Task = {
     id: string;
     title: string;
@@ -54,3 +55,18 @@ export let tasks: Task[] = [
         assignee: { name: 'Alicia Keys', avatarUrl: 'https://picsum.photos/id/1011/100/100' }
     },
 ];
+
+export function createTask(task: Omit<Task, 'id' | 'status' | 'assignee'> & { assigneeName: string }) {
+    const newId = `task-${String(tasks.length + 1).padStart(3, '0')}`;
+    const newTask: Task = {
+        id: newId,
+        ...task,
+        status: 'To Do',
+        assignee: {
+            name: task.assigneeName,
+            avatarUrl: `https://picsum.photos/seed/${newId}/100/100`
+        }
+    };
+    tasks.push(newTask);
+    return newTask;
+}

@@ -17,6 +17,12 @@ const settingsSections = [
         description: 'Manage company profile and global settings.', 
         icon: Building
     },
+    {
+        href: '/settings/users',
+        title: 'User Management',
+        description: 'Invite and manage user roles and permissions.',
+        icon: User
+    },
     { 
         href: '/settings/customization', 
         title: 'Customization', 
