@@ -21,7 +21,7 @@ interface FormField {
 
 const FORM_FIELDS_STORAGE_KEY = 'userFormFields';
 
-export default function AddUserPage() {
+export default function InviteUserPage() {
   const { toast } = useToast();
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [configuredFields, setConfiguredFields] = useState<FormField[]>([]);
@@ -34,7 +34,6 @@ export default function AddUserPage() {
             setConfiguredFields(JSON.parse(storedFields));
         } else {
             setConfiguredFields([
-                { id: 'field-full-name', label: 'Full Name', required: true, checked: true, type: 'text' },
                 { id: 'field-email', label: 'Email Address', required: true, checked: true, type: 'email' },
                 { id: 'field-role', label: 'Role', required: true, checked: true, type: 'select', options: ['Admin', 'User'] },
             ]);
@@ -67,10 +66,10 @@ export default function AddUserPage() {
         return;
       }
     }
-    console.log('User Form Submitted:', formData);
+    console.log('User Invitation Submitted:', formData);
     toast({
-      title: 'User Added',
-      description: 'The new user has been successfully added.',
+      title: 'Invitation Sent',
+      description: `An invitation has been sent to ${formData['field-email']}.`,
     });
     
     const resetData: Record<string, string> = {};
@@ -90,14 +89,14 @@ export default function AddUserPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <Header title="Add New User" />
+      <Header title="Invite New User" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
             <div className="space-y-4">
                 <div>
-                    <h2 className="text-2xl font-bold">New User Details</h2>
+                    <h2 className="text-2xl font-bold">New User Invitation</h2>
                     <p className="text-muted-foreground">
-                        Fill out the form below to add a new user to your team. Required fields are marked with an asterisk (*).
+                        Enter the email and role for the new user. They will receive an invitation to join your team. Required fields are marked with an asterisk (*).
                     </p>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -143,7 +142,7 @@ export default function AddUserPage() {
                     )}
 
                     <div className="flex justify-end pt-4">
-                    <Button type="submit">Add User</Button>
+                    <Button type="submit">Send Invitation</Button>
                     </div>
                 </form>
             </div>

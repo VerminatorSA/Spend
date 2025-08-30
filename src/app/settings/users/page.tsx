@@ -31,7 +31,7 @@ export default function UserManagementPage() {
         <Button asChild>
           <Link href="/settings/users/add">
             <PlusCircle className="mr-2 h-4 w-4" />
-            Add User
+            Invite User
           </Link>
         </Button>
       </Header>

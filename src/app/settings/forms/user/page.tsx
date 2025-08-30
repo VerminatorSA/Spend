@@ -8,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 import { FormSettingsSection, type FormField } from '@/components/form-settings-section';
 
 const initialUserFields: FormField[] = [
-    { id: 'field-full-name', label: 'Full Name', required: true, checked: true, type: 'text' },
     { id: 'field-email', label: 'Email Address', required: true, checked: true, type: 'email' },
     { id: 'field-role', label: 'Role', required: true, checked: true, type: 'select', options: ['Admin', 'User'] },
 ];
@@ -55,8 +54,8 @@ export default function UserFormsSettingsPage() {
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-4xl space-y-8">
            <div>
-              <h2 className="text-2xl font-bold">User Form</h2>
-              <p className="text-muted-foreground">Add, remove, or toggle fields for the user creation form.</p>
+              <h2 className="text-2xl font-bold">User Invitation Form</h2>
+              <p className="text-muted-foreground">Add, remove, or toggle fields for the user invitation form.</p>
             </div>
             
             <FormSettingsSection 
