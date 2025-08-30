@@ -1,13 +1,14 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/header';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { companies, divisions, type Company, type Division } from '@/lib/organization';
 
 interface FormField {
   id: string;
@@ -26,6 +27,13 @@ export default function InviteUserPage() {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [configuredFields, setConfiguredFields] = useState<FormField[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState<string>('');
+
+  const availableDivisions = useMemo(() => {
+    if (!selectedCompany) return [];
+    return divisions.filter(d => d.companyId === selectedCompany);
+  }, [selectedCompany]);
+
 
   useEffect(() => {
     try {
@@ -36,6 +44,8 @@ export default function InviteUserPage() {
             setConfiguredFields([
                 { id: 'field-email', label: 'Email Address', required: true, checked: true, type: 'email' },
                 { id: 'field-role', label: 'Role', required: true, checked: true, type: 'select', options: ['Admin', 'User'] },
+                { id: 'field-company', label: 'Company', required: false, checked: true, type: 'select' },
+                { id: 'field-division', label: 'Division', required: false, checked: true, type: 'select' },
             ]);
         }
     } catch (error) {
@@ -51,6 +61,11 @@ export default function InviteUserPage() {
   
   const handleSelectChange = (id: string, value: string) => {
     setFormData((prev) => ({ ...prev, [id]: value }));
+    if (id === 'field-company') {
+        setSelectedCompany(value);
+        // Reset division if company changes
+        setFormData(prev => ({...prev, 'field-division': ''}));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -79,12 +94,58 @@ export default function InviteUserPage() {
         }
     });
     setFormData(resetData);
+    setSelectedCompany('');
   };
 
   const visibleFields = configuredFields.filter(f => f.checked);
 
   if (!isLoaded) {
     return null; 
+  }
+
+  const renderField = (field: FormField) => {
+    if (field.type === 'select') {
+        let options: {value: string, label: string}[] = [];
+        if (field.id === 'field-role') {
+            options = field.options?.map(opt => ({ value: opt, label: opt })) || [];
+        } else if (field.id === 'field-company') {
+            options = companies.map(c => ({ value: c.id, label: c.name }));
+        } else if (field.id === 'field-division') {
+            options = availableDivisions.map(d => ({ value: d.id, label: d.name }));
+        }
+
+        return (
+            <div key={field.id} className="space-y-2">
+                <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                <Select 
+                    onValueChange={(value) => handleSelectChange(field.id, value)}
+                    value={formData[field.id] || ''}
+                    disabled={field.id === 'field-division' && !selectedCompany}
+                >
+                    <SelectTrigger>
+                        <SelectValue placeholder={`Select ${field.label}`} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {options.map(opt => (
+                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
+        )
+    }
+    return (
+        <div key={field.id} className="space-y-2">
+            <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+            <Input 
+                id={field.id} 
+                placeholder={`Enter ${field.label}`} 
+                onChange={handleInputChange} 
+                value={formData[field.id] || ''}
+                type={field.type || 'text'}
+            />
+        </div>
+    )
   }
 
   return (
@@ -103,40 +164,7 @@ export default function InviteUserPage() {
                     {visibleFields.length > 0 && (
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                {visibleFields.map((field) => {
-                                    if (field.type === 'select') {
-                                        return (
-                                            <div key={field.id} className="space-y-2">
-                                                <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
-                                                <Select 
-                                                    onValueChange={(value) => handleSelectChange(field.id, value)}
-                                                    value={formData[field.id] || ''}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder={`Select ${field.label}`} />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {field.options?.map(opt => (
-                                                            <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                        )
-                                    }
-                                    return (
-                                        <div key={field.id} className="space-y-2">
-                                            <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
-                                            <Input 
-                                                id={field.id} 
-                                                placeholder={`Enter ${field.label}`} 
-                                                onChange={handleInputChange} 
-                                                value={formData[field.id] || ''}
-                                                type={field.type || 'text'}
-                                            />
-                                        </div>
-                                    )
-                                })}
+                                {visibleFields.map((field) => renderField(field))}
                             </div>
                         </div>
                     )}

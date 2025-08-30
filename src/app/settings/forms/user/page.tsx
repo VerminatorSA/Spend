@@ -10,6 +10,8 @@ import { FormSettingsSection, type FormField } from '@/components/form-settings-
 const initialUserFields: FormField[] = [
     { id: 'field-email', label: 'Email Address', required: true, checked: true, type: 'email' },
     { id: 'field-role', label: 'Role', required: true, checked: true, type: 'select', options: ['Admin', 'User'] },
+    { id: 'field-company', label: 'Company', required: false, checked: true, type: 'select' },
+    { id: 'field-division', label: 'Division', required: false, checked: true, type: 'select' },
 ];
 
 const USER_FIELDS_STORAGE_KEY = 'userFormFields';
