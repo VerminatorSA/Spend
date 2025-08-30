@@ -18,7 +18,6 @@ export function MainNav() {
   const pathname = usePathname();
 
   return (
-    <>
       <SidebarMenu>
         {navItems.map((item) => (
           <SidebarMenuItem key={item.href}>
@@ -35,6 +34,5 @@ export function MainNav() {
           </SidebarMenuItem>
         ))}
       </SidebarMenu>
-    </>
   );
 }

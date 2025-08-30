@@ -46,13 +46,15 @@ export default function RootLayout({
                   <UserNav />
                 </SidebarFooter>
               </Sidebar>
-              <main className="flex-1 pb-8 md:ml-[var(--sidebar-width)] group-data-[collapsible=icon]/sidebar-wrapper:md:ml-[var(--sidebar-width-icon)] transition-[margin-left] ease-in-out duration-200">
-                {children}
+              <main className="flex flex-1 flex-col pb-8 md:ml-[var(--sidebar-width)] group-data-[collapsible=icon]/sidebar-wrapper:md:ml-[var(--sidebar-width-icon)] transition-[margin-left] ease-in-out duration-200">
+                <div className="flex-1">
+                    {children}
+                </div>
+                <footer className="fixed bottom-0 z-10 w-full md:w-[calc(100vw-var(--sidebar-width))] group-data-[collapsible=icon]/sidebar-wrapper:md:w-[calc(100vw-var(--sidebar-width-icon))] transition-[width] ease-in-out duration-200">
+                    <AiTicker />
+                </footer>
               </main>
             </SidebarProvider>
-            <footer className="fixed bottom-0 z-10 w-full">
-                <AiTicker />
-            </footer>
           </div>
         </SettingsProvider>
         <Toaster />
