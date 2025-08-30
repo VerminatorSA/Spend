@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Warehouse, Users, AreaChart, ClipboardCheck } from 'lucide-react';
+import { LayoutDashboard, Warehouse, Users, ClipboardCheck } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const navItems = [
@@ -11,7 +11,6 @@ const navItems = [
   { href: '/inventory', label: 'Inventory', icon: Warehouse, tooltip: "Inventory"},
   { href: '/contacts', label: 'Contacts', icon: Users, tooltip: "Contacts"},
   { href: '/tasks', label: 'Tasks', icon: ClipboardCheck, tooltip: "Tasks"},
-  { href: '/reports', label: 'Reports', icon: AreaChart, tooltip: "Reports"},
 ];
 
 export function MainNav() {
