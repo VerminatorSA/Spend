@@ -47,18 +47,6 @@ export default function GlobalSettingsPage() {
                             <h3 className="text-lg font-medium">Localisation</h3>
                             <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="language">Language</Label>
-                                    <Select value={localSettings.language} onValueChange={(value) => handleSelectChange('language', value)}>
-                                        <SelectTrigger id="language">
-                                            <SelectValue placeholder="Select language" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="en-US">English (US)</SelectItem>
-                                            <SelectItem value="en-GB">English (UK)</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
                                     <Label htmlFor="dateFormat">Date Format</Label>
                                     <Select value={localSettings.dateFormat} onValueChange={(value) => handleSelectChange('dateFormat', value)}>
                                         <SelectTrigger id="dateFormat">

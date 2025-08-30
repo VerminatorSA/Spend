@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
-import { enUS, enGB } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { createTask } from '@/services/task-service';
 import { SettingsContext } from '@/contexts/settings-context';
@@ -27,8 +27,6 @@ export default function AddTaskPage() {
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [dueTime, setDueTime] = useState('');
   const [priority, setPriority] = useState<'High' | 'Medium' | 'Low' | ''>('');
-
-  const locale = settings.language === 'en-GB' ? enGB : enUS;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,7 +142,7 @@ export default function AddTaskPage() {
                                                 )}
                                                 >
                                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {dueDate ? format(dueDate, "PPP", { locale }) : <span>Pick a date</span>}
+                                                {dueDate ? format(dueDate, "PPP", { locale: enUS }) : <span>Pick a date</span>}
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0">
@@ -153,7 +151,7 @@ export default function AddTaskPage() {
                                                 selected={dueDate}
                                                 onSelect={setDueDate}
                                                 initialFocus
-                                                locale={locale}
+                                                locale={enUS}
                                             />
                                         </PopoverContent>
                                     </Popover>

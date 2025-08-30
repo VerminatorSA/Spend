@@ -25,7 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlusCircle, MoreHorizontal, ArrowUp, ArrowDown, ArrowRight } from 'lucide-react';
 import { tasks as initialTasks, type Task } from '@/lib/tasks';
 import { format } from 'date-fns';
-import { enUS, enGB } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SettingsContext } from '@/contexts/settings-context';
 
@@ -45,8 +45,6 @@ export default function TasksPage() {
     const [sortKey, setSortKey] = useState<SortKey>(null);
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
     const [isClient, setIsClient] = useState(false);
-
-    const locale = settings.language === 'en-GB' ? enGB : enUS;
 
     useEffect(() => {
         setIsClient(true);
@@ -155,7 +153,7 @@ export default function TasksPage() {
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            {task.dueDate ? format(new Date(task.dueDate), 'PPpp', { locale }) : 'No due date'}
+                                            {task.dueDate ? format(new Date(task.dueDate), 'PPpp', { locale: enUS }) : 'No due date'}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex items-center gap-2">
