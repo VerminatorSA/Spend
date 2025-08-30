@@ -8,7 +8,6 @@ import { MainNav } from '@/components/main-nav';
 import { Command } from 'lucide-react';
 import { SettingsProvider } from '@/contexts/settings-context';
 import { AiTicker } from '@/components/ai-ticker';
-import { UserNav } from '@/components/user-nav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -47,7 +46,7 @@ export default function RootLayout({
                 <main className="flex-1 pb-16">
                     {children}
                 </main>
-                <footer className="fixed bottom-0 z-10 w-full md:w-[calc(100vw-var(--sidebar-width))] group-data-[collapsible=icon]/sidebar-wrapper:md:w-[calc(100vw-var(--sidebar-width-icon))] transition-[width] ease-in-out duration-200">
+                <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm md:w-[calc(100vw-var(--sidebar-width))] group-data-[collapsible=icon]/sidebar-wrapper:md:w-[calc(100vw-var(--sidebar-width-icon))] transition-[width] ease-in-out duration-200">
                     <AiTicker />
                 </footer>
               </div>

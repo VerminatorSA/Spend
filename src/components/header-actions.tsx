@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { SearchInput } from './search-input';
+import { UserNav } from './user-nav';
 
 export function HeaderActions() {
     return (
@@ -43,6 +44,7 @@ export function HeaderActions() {
                         <p>Settings</p>
                     </TooltipContent>
                 </Tooltip>
+                <UserNav />
             </div>
         </TooltipProvider>
     )

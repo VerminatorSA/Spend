@@ -13,24 +13,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ChevronRight } from 'lucide-react';
 
 export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-auto w-full justify-between p-2">
-          <div className="flex items-center gap-3">
+        <Button variant="ghost" className="relative h-9 w-9 rounded-full">
             <Avatar className="h-9 w-9">
               <AvatarImage src="https://picsum.photos/100/100" alt="User" data-ai-hint="person avatar" />
               <AvatarFallback>PM</AvatarFallback>
             </Avatar>
-            <div className="text-left group-data-[collapsible=icon]:hidden">
-              <p className="text-sm font-medium text-sidebar-foreground">Purchasing Manager</p>
-              <p className="text-xs text-sidebar-foreground/70">manager@spend.com</p>
-            </div>
-          </div>
-          <ChevronRight className="h-4 w-4 text-sidebar-foreground/70 group-data-[collapsible=icon]:hidden" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
