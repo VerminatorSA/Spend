@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
@@ -25,9 +25,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
 import { users as initialUsers, type User } from '@/lib/users';
 import { companies, divisions } from '@/lib/organization';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function UsersPage() {
     const [users, setUsers] = useState<User[]>(initialUsers);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
   return (
     <div className="flex h-full flex-col">
@@ -59,45 +65,63 @@ export default function UsersPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {users.map((user) => {
-                                const company = companies.find(c => c.id === user.companyId);
-                                const division = divisions.find(d => d.id === user.divisionId);
-                                const userInitials = `${user.firstName[0]}${user.lastName[0]}`;
-
-                                return (
-                                <TableRow key={user.id}>
+                            {!isClient ? (
+                                Array.from({ length: 3 }).map((_, i) => (
+                                <TableRow key={i}>
                                     <TableCell>
                                         <div className="flex items-center gap-3">
-                                            <Avatar className="h-9 w-9">
-                                                <AvatarImage src={user.avatarUrl} alt={user.firstName} data-ai-hint="person avatar" />
-                                                <AvatarFallback>{userInitials}</AvatarFallback>
-                                            </Avatar>
-                                            <div className="font-medium">{user.firstName} {user.lastName}</div>
+                                            <Skeleton className="h-9 w-9 rounded-full" />
+                                            <Skeleton className="h-5 w-32" />
                                         </div>
                                     </TableCell>
-                                    <TableCell className="text-muted-foreground">{user.email}</TableCell>
-                                    <TableCell className="text-muted-foreground">{company?.name || 'N/A'}</TableCell>
-                                    <TableCell className="text-muted-foreground">{division?.name || 'N/A'}</TableCell>
-                                    <TableCell>
-                                        <Badge variant={user.status === 'Active' ? 'default' : 'secondary'}>{user.status}</Badge>
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem>Deactivate</DropdownMenuItem>
-                                                <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
+                                    <TableCell><Skeleton className="h-5 w-48" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-16 rounded-full" /></TableCell>
+                                    <TableCell></TableCell>
                                 </TableRow>
-                                );
-                            })}
+                                ))
+                            ) : (
+                                users.map((user) => {
+                                    const company = companies.find(c => c.id === user.companyId);
+                                    const division = divisions.find(d => d.id === user.divisionId);
+                                    const userInitials = `${user.firstName[0]}${user.lastName[0]}`;
+
+                                    return (
+                                    <TableRow key={user.id}>
+                                        <TableCell>
+                                            <div className="flex items-center gap-3">
+                                                <Avatar className="h-9 w-9">
+                                                    <AvatarImage src={user.avatarUrl} alt={user.firstName} data-ai-hint="person avatar" />
+                                                    <AvatarFallback>{userInitials}</AvatarFallback>
+                                                </Avatar>
+                                                <div className="font-medium">{user.firstName} {user.lastName}</div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground">{user.email}</TableCell>
+                                        <TableCell className="text-muted-foreground">{company?.name || 'N/A'}</TableCell>
+                                        <TableCell className="text-muted-foreground">{division?.name || 'N/A'}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={user.status === 'Active' ? 'default' : 'secondary'}>{user.status}</Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                    );
+                                })
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>
