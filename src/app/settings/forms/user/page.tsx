@@ -6,12 +6,38 @@ import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { FormSettingsSection, type FormField } from '@/components/form-settings-section';
+import { companies, divisions } from '@/lib/organization';
+
 
 const initialUserFields: FormField[] = [
     { id: 'field-email', label: 'Email Address', required: true, checked: true, type: 'email' },
-    { id: 'field-role', label: 'Role', required: true, checked: true, type: 'select', options: ['Admin', 'User'] },
-    { id: 'field-company', label: 'Company', required: false, checked: true, type: 'select' },
-    { id: 'field-division', label: 'Division', required: false, checked: true, type: 'select' },
+    { 
+        id: 'field-role', 
+        label: 'Role', 
+        required: true, 
+        checked: true, 
+        type: 'select', 
+        options: [
+            { value: 'admin', label: 'Admin'},
+            { value: 'user', label: 'User'},
+        ] 
+    },
+    { 
+        id: 'field-company', 
+        label: 'Company', 
+        required: false, 
+        checked: true, 
+        type: 'select',
+        options: companies.map(c => ({ value: c.id, label: c.name }))
+    },
+    { 
+        id: 'field-division', 
+        label: 'Division', 
+        required: false, 
+        checked: true, 
+        type: 'select',
+        // Options for division are dynamic and will be handled in the form component
+    },
 ];
 
 const USER_FIELDS_STORAGE_KEY = 'userFormFields';
@@ -24,7 +50,22 @@ export default function UserFormsSettingsPage() {
   useEffect(() => {
     try {
       const storedUserFields = localStorage.getItem(USER_FIELDS_STORAGE_KEY);
-      setUserFields(storedUserFields ? JSON.parse(storedUserFields) : initialUserFields);
+      if (storedUserFields) {
+        // Basic migration: if old format (string options) is detected, map it.
+        const parsedFields = JSON.parse(storedUserFields);
+        const migratedFields = parsedFields.map((field: any) => {
+            if (field.id === 'field-role' && field.options && typeof field.options[0] === 'string') {
+                return { ...field, options: field.options.map((o: string) => ({ value: o.toLowerCase(), label: o })) };
+            }
+             if (field.id === 'field-company') {
+                return { ...field, options: companies.map(c => ({ value: c.id, label: c.name })) };
+            }
+            return field;
+        });
+        setUserFields(migratedFields);
+      } else {
+        setUserFields(initialUserFields);
+      }
     } catch (error) {
       console.error("Failed to parse fields from localStorage", error);
       setUserFields(initialUserFields);

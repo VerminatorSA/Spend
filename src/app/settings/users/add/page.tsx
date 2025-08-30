@@ -8,17 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { companies, divisions, type Company, type Division } from '@/lib/organization';
-
-interface FormField {
-  id: string;
-  label: string;
-  required: boolean;
-  checked: boolean;
-  isCustom?: boolean;
-  type?: 'text' | 'email' | 'select';
-  options?: string[];
-}
+import { divisions, type Division } from '@/lib/organization';
+import { type FormField } from '@/components/form-settings-section';
 
 const FORM_FIELDS_STORAGE_KEY = 'userFormFields';
 
@@ -27,29 +18,27 @@ export default function InviteUserPage() {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [configuredFields, setConfiguredFields] = useState<FormField[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState<string>('');
 
   const availableDivisions = useMemo(() => {
-    if (!selectedCompany) return [];
-    return divisions.filter(d => d.companyId === selectedCompany);
-  }, [selectedCompany]);
-
+    const companyId = formData['field-company'];
+    if (!companyId) return [];
+    return divisions.filter(d => d.companyId === companyId);
+  }, [formData]);
 
   useEffect(() => {
     try {
-        const storedFields = localStorage.getItem(FORM_FIELDS_STORAGE_KEY);
-        if (storedFields) {
-            setConfiguredFields(JSON.parse(storedFields));
-        } else {
-            setConfiguredFields([
-                { id: 'field-email', label: 'Email Address', required: true, checked: true, type: 'email' },
-                { id: 'field-role', label: 'Role', required: true, checked: true, type: 'select', options: ['Admin', 'User'] },
-                { id: 'field-company', label: 'Company', required: false, checked: true, type: 'select' },
-                { id: 'field-division', label: 'Division', required: false, checked: true, type: 'select' },
-            ]);
-        }
+      const storedFields = localStorage.getItem(FORM_FIELDS_STORAGE_KEY);
+      if (storedFields) {
+        setConfiguredFields(JSON.parse(storedFields));
+      } else {
+        // Fallback to a minimal default if nothing is in storage
+        setConfiguredFields([
+            { id: 'field-email', label: 'Email Address', required: true, checked: true, type: 'email' },
+            { id: 'field-role', label: 'Role', required: true, checked: true, type: 'select', options: [{ value: 'admin', label: 'Admin'}, {value: 'user', label: 'User'}] },
+        ]);
+      }
     } catch (error) {
-        console.error("Failed to parse fields from localStorage", error);
+      console.error("Failed to parse fields from localStorage", error);
     }
     setIsLoaded(true);
   }, []);
@@ -60,12 +49,12 @@ export default function InviteUserPage() {
   };
   
   const handleSelectChange = (id: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    const newFormData = { ...formData, [id]: value };
+    // If the company changes, reset the division
     if (id === 'field-company') {
-        setSelectedCompany(value);
-        // Reset division if company changes
-        setFormData(prev => ({...prev, 'field-division': ''}));
+        delete newFormData['field-division'];
     }
+    setFormData(newFormData);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -87,6 +76,7 @@ export default function InviteUserPage() {
       description: `An invitation has been sent to ${formData['field-email']}.`,
     });
     
+    // Reset form
     const resetData: Record<string, string> = {};
     configuredFields.forEach(field => {
         if(field.checked) {
@@ -94,24 +84,22 @@ export default function InviteUserPage() {
         }
     });
     setFormData(resetData);
-    setSelectedCompany('');
   };
 
   const visibleFields = configuredFields.filter(f => f.checked);
 
   if (!isLoaded) {
-    return null; 
+    return null; // Or a loading spinner
   }
 
   const renderField = (field: FormField) => {
     if (field.type === 'select') {
-        let options: {value: string, label: string}[] = [];
-        if (field.id === 'field-role') {
-            options = field.options?.map(opt => ({ value: opt, label: opt })) || [];
-        } else if (field.id === 'field-company') {
-            options = companies.map(c => ({ value: c.id, label: c.name }));
-        } else if (field.id === 'field-division') {
+        let options: { value: string, label: string }[] = field.options || [];
+        let isDisabled = false;
+
+        if (field.id === 'field-division') {
             options = availableDivisions.map(d => ({ value: d.id, label: d.name }));
+            isDisabled = !formData['field-company'];
         }
 
         return (
@@ -120,7 +108,7 @@ export default function InviteUserPage() {
                 <Select 
                     onValueChange={(value) => handleSelectChange(field.id, value)}
                     value={formData[field.id] || ''}
-                    disabled={field.id === 'field-division' && !selectedCompany}
+                    disabled={isDisabled}
                 >
                     <SelectTrigger>
                         <SelectValue placeholder={`Select ${field.label}`} />
@@ -132,8 +120,10 @@ export default function InviteUserPage() {
                     </SelectContent>
                 </Select>
             </div>
-        )
+        );
     }
+
+    // Default to text input
     return (
         <div key={field.id} className="space-y-2">
             <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
@@ -145,7 +135,7 @@ export default function InviteUserPage() {
                 type={field.type || 'text'}
             />
         </div>
-    )
+    );
   }
 
   return (

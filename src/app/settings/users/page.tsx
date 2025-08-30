@@ -23,6 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
 import { users } from '@/lib/users';
+import { companies, divisions } from '@/lib/organization';
 
 export default function UserManagementPage() {
   return (
@@ -48,11 +49,15 @@ export default function UserManagementPage() {
                             <TableRow>
                                 <TableHead>User</TableHead>
                                 <TableHead>Role</TableHead>
+                                <TableHead>Assignment</TableHead>
                                 <TableHead className="w-[100px]"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {users.map((user) => (
+                            {users.map((user) => {
+                                const company = companies.find(c => c.id === user.companyId);
+                                const division = divisions.find(d => d.id === user.divisionId);
+                                return (
                                 <TableRow key={user.id}>
                                     <TableCell>
                                         <div className="flex items-center gap-3">
@@ -71,6 +76,12 @@ export default function UserManagementPage() {
                                             {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                                         </Badge>
                                     </TableCell>
+                                    <TableCell>
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-medium">{company?.name || 'N/A'}</span>
+                                            <span className="text-xs text-muted-foreground">{division?.name}</span>
+                                        </div>
+                                    </TableCell>
                                     <TableCell className="text-right">
                                          <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -85,7 +96,7 @@ export default function UserManagementPage() {
                                         </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )})}
                         </TableBody>
                     </Table>
                 </CardContent>

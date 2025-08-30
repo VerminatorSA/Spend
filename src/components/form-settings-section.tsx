@@ -20,6 +20,7 @@ export interface FormField {
   checked: boolean;
   isCustom?: boolean;
   type?: FieldType;
+  options?: { value: string, label: string }[];
 }
 
 interface FormSettingsSectionProps {
