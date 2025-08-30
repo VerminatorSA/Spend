@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Card, CardContent } from '@/components/ui/card';
-import { User, Palette, FileText, Bell, Building, ChevronRight, Users, Globe } from 'lucide-react';
+import { User, Users, Building, Brush, Bell, ChevronRight } from 'lucide-react';
 
 const settingsSections = [
     { 
@@ -18,28 +18,16 @@ const settingsSections = [
         icon: Users 
     },
     { 
-        href: '/settings/company', 
-        title: 'Company', 
-        description: 'Manage your organization\'s details and branding.', 
+        href: '/settings/organization', 
+        title: 'Organization', 
+        description: 'Manage company profile and global settings.', 
         icon: Building
     },
     { 
-        href: '/settings/global', 
-        title: 'Global', 
-        description: 'Manage application-wide settings.', 
-        icon: Globe
-    },
-    { 
-        href: '/settings/appearance', 
-        title: 'Appearance', 
-        description: 'Customize the look and feel of the application.', 
-        icon: Palette
-    },
-    { 
-        href: '/settings/forms', 
-        title: 'Forms', 
-        description: 'Customize the fields in your forms.', 
-        icon: FileText 
+        href: '/settings/customization', 
+        title: 'Customization', 
+        description: 'Customize appearance and forms.', 
+        icon: Brush
     },
     { 
         href: '/settings/notifications', 
