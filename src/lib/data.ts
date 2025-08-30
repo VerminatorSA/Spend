@@ -1,14 +1,19 @@
 
+
 export type Supplier = {
   id: string;
   name: string;
-  contact: {
-    name: string;
-    email: string;
-    phone: string;
-  };
   itemsOffered: number;
   location: string;
+};
+
+export type Contact = {
+  id: string;
+  supplierId: string;
+  name: string;
+  email: string;
+  phone: string;
+  isPrimary: boolean;
 };
 
 export type Item = {
@@ -39,69 +44,48 @@ export const suppliers: Supplier[] = [
   {
     id: 'sup-001',
     name: 'Global Components Inc.',
-    contact: {
-      name: 'Sarah Chen',
-      email: 'sarah.chen@globalcomp.com',
-      phone: '1-800-555-0101',
-    },
     itemsOffered: 150,
     location: 'Shenzhen, China',
   },
   {
     id: 'sup-002',
     name: 'Precision Parts Co.',
-    contact: {
-      name: 'David Rodriguez',
-      email: 'david.r@precisionparts.com',
-      phone: '1-800-555-0102',
-    },
     itemsOffered: 230,
     location: 'Stuttgart, Germany',
   },
   {
     id: 'sup-003',
     name: 'American Metals LLC',
-    contact: {
-      name: 'John Miller',
-      email: 'jmiller@americanmetals.com',
-      phone: '1-800-555-0103',
-    },
     itemsOffered: 85,
     location: 'Pittsburgh, USA',
   },
   {
     id: 'sup-004',
     name: 'Advanced Polymers',
-    contact: {
-      name: 'Yuki Tanaka',
-      email: 'y.tanaka@advancedpolymers.jp',
-      phone: '1-800-555-0104',
-    },
     itemsOffered: 300,
     location: 'Osaka, Japan',
   },
   {
     id: 'sup-005',
     name: 'TechFasteners Ltd.',
-    contact: {
-      name: 'Emily White',
-      email: 'emily.w@techfasteners.co.uk',
-      phone: '1-800-555-0105',
-    },
     itemsOffered: 500,
     location: 'Manchester, UK',
   },
   {
     id: 'sup-006',
     name: 'Silicon Valley Circuits',
-    contact: {
-        name: 'Michael Brown',
-        email: 'mbrown@svcircuits.com',
-        phone: '1-800-555-0106',
-    },
     itemsOffered: 120,
     location: 'San Jose, USA',
   },
+];
+
+export const contacts: Contact[] = [
+    { id: 'contact-001', supplierId: 'sup-001', name: 'Sarah Chen', email: 'sarah.chen@globalcomp.com', phone: '1-800-555-0101', isPrimary: true },
+    { id: 'contact-002', supplierId: 'sup-002', name: 'David Rodriguez', email: 'david.r@precisionparts.com', phone: '1-800-555-0102', isPrimary: true },
+    { id: 'contact-003', supplierId: 'sup-003', name: 'John Miller', email: 'jmiller@americanmetals.com', phone: '1-800-555-0103', isPrimary: true },
+    { id: 'contact-004', supplierId: 'sup-004', name: 'Yuki Tanaka', email: 'y.tanaka@advancedpolymers.jp', phone: '1-800-555-0104', isPrimary: true },
+    { id: 'contact-005', supplierId: 'sup-005', name: 'Emily White', email: 'emily.w@techfasteners.co.uk', phone: '1-800-555-0105', isPrimary: true },
+    { id: 'contact-006', supplierId: 'sup-006', name: 'Michael Brown', email: 'mbrown@svcircuits.com', phone: '1-800-555-0106', isPrimary: true },
 ];
 
 export const items: Item[] = [

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { items, suppliers, type Item, type Supplier } from '@/lib/data';
+import { items, suppliers, contacts, type Item, type Supplier } from '@/lib/data';
 import { SettingsContext, getCurrencySymbol } from '@/contexts/settings-context';
 import { generateItemTags } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -39,13 +39,16 @@ export default function ReportsPage() {
                 status: item.stock === 0 ? 'Out of Stock' : (item.stock < item.reorderLevel ? 'Low Stock' : 'In Stock'),
             }));
         } else if (reportType === 'supplier-overview') {
-            data = suppliers.map(supplier => ({
-                id: supplier.id,
-                name: supplier.name,
-                location: supplier.location,
-                itemsOffered: supplier.itemsOffered,
-                contact: supplier.contact.name,
-            }));
+            data = suppliers.map(supplier => {
+                const primaryContact = contacts.find(c => c.supplierId === supplier.id && c.isPrimary);
+                return {
+                    id: supplier.id,
+                    name: supplier.name,
+                    location: supplier.location,
+                    itemsOffered: supplier.itemsOffered,
+                    contact: primaryContact?.name || 'N/A',
+                }
+            });
         }
         setReportData(data);
         setGeneratedReportType(reportType);

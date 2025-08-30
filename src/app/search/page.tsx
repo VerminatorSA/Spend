@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/header';
-import { items, products, suppliers, type Item, type Product, type Supplier } from '@/lib/data';
+import { items, products, suppliers, contacts, type Item, type Product, type Supplier } from '@/lib/data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -26,13 +26,17 @@ function searchData(query: string) {
         ) || bomItems.toLowerCase().includes(lowerCaseQuery);
     });
 
-    const filteredSuppliers = suppliers.filter(supplier => 
-        Object.values(supplier).some(value => 
-            String(value).toLowerCase().includes(lowerCaseQuery) ||
-            String(supplier.contact.name).toLowerCase().includes(lowerCaseQuery) ||
-            String(supplier.contact.email).toLowerCase().includes(lowerCaseQuery)
-        )
-    );
+    const filteredSuppliers = suppliers.filter(supplier => {
+        const supplierContacts = contacts.filter(c => c.supplierId === supplier.id);
+        const contactMatch = supplierContacts.some(c => 
+            c.name.toLowerCase().includes(lowerCaseQuery) || 
+            c.email.toLowerCase().includes(lowerCaseQuery)
+        );
+
+        return Object.values(supplier).some(value => 
+            String(value).toLowerCase().includes(lowerCaseQuery)
+        ) || contactMatch;
+    });
 
     return {
         items: filteredItems,
@@ -110,18 +114,25 @@ function SearchResults() {
                  <section>
                     <h3 className="text-xl font-semibold mb-4">Suppliers ({results.suppliers.length})</h3>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {results.suppliers.map(supplier => (
-                            <Card key={supplier.id}>
-                                <CardHeader>
-                                    <CardTitle>{supplier.name}</CardTitle>
-                                    <CardDescription>{supplier.location}</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-sm"><span className="font-semibold">Contact:</span> {supplier.contact.name}</p>
-                                    <p className="text-sm text-muted-foreground">{supplier.contact.email}</p>
-                                </CardContent>
-                            </Card>
-                        ))}
+                        {results.suppliers.map(supplier => {
+                            const primaryContact = contacts.find(c => c.supplierId === supplier.id && c.isPrimary);
+                            return (
+                                <Card key={supplier.id}>
+                                    <CardHeader>
+                                        <CardTitle>{supplier.name}</CardTitle>
+                                        <CardDescription>{supplier.location}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {primaryContact && (
+                                            <>
+                                                <p className="text-sm"><span className="font-semibold">Contact:</span> {primaryContact.name}</p>
+                                                <p className="text-sm text-muted-foreground">{primaryContact.email}</p>
+                                            </>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            )
+                        })}
                     </div>
                 </section>
             )}

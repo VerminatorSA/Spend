@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
-import { suppliers, type Supplier } from '@/lib/data';
+import { suppliers, contacts, type Supplier } from '@/lib/data';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
@@ -105,9 +105,9 @@ export default function ContactSupplierPage() {
     <div className="flex h-full flex-col">
       <Header title={`Contact ${supplier.name}`}>
         <Button asChild variant="outline">
-            <Link href="/suppliers">
+            <Link href="/contacts">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Suppliers
+                Back to Contacts
             </Link>
         </Button>
       </Header>

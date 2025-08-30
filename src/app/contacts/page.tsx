@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { suppliers } from '@/lib/data';
+import { suppliers, contacts } from '@/lib/data';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,11 +22,13 @@ import { Globe, Mail, Phone, User, PlusCircle, LayoutGrid, List } from 'lucide-r
 export default function ContactsPage() {
   const [supplierView, setSupplierView] = useState<'grid' | 'list'>('grid');
 
-  const allContacts = suppliers.map(supplier => ({
-    ...supplier.contact,
-    supplierName: supplier.name,
-    supplierId: supplier.id,
-  }));
+  const allContacts = contacts.map(contact => {
+      const supplier = suppliers.find(s => s.id === contact.supplierId);
+      return {
+          ...contact,
+          supplierName: supplier?.name || 'N/A',
+      }
+  });
 
   return (
     <div className="flex h-full flex-col">
@@ -99,7 +101,9 @@ export default function ContactsPage() {
                 </div>
                 {supplierView === 'grid' ? (
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {suppliers.map((supplier) => (
+                    {suppliers.map((supplier) => {
+                        const primaryContact = contacts.find(c => c.supplierId === supplier.id && c.isPrimary);
+                        return (
                         <Card key={supplier.id} className="flex flex-col">
                         <CardHeader>
                             <div className="flex items-start justify-between">
@@ -114,23 +118,27 @@ export default function ContactsPage() {
                             </div>
                         </CardHeader>
                         <CardContent className="flex flex-1 flex-col justify-between">
-                            <div className="space-y-3 text-sm">
-                            <p className="font-medium">Primary Contact</p>
-                            <div className="flex items-center text-muted-foreground">
-                                <User className="mr-2 h-4 w-4" />
-                                <span>{supplier.contact.name}</span>
-                            </div>
-                            <div className="flex items-center text-muted-foreground">
-                                <Mail className="mr-2 h-4 w-4" />
-                                <a href={`mailto:${supplier.contact.email}`} className="hover:text-primary">
-                                {supplier.contact.email}
-                                </a>
-                            </div>
-                            <div className="flex items-center text-muted-foreground">
-                                <Phone className="mr-2 h-4 w-4" />
-                                <span>{supplier.contact.phone}</span>
-                            </div>
-                            </div>
+                            {primaryContact ? (
+                                <div className="space-y-3 text-sm">
+                                <p className="font-medium">Primary Contact</p>
+                                <div className="flex items-center text-muted-foreground">
+                                    <User className="mr-2 h-4 w-4" />
+                                    <span>{primaryContact.name}</span>
+                                </div>
+                                <div className="flex items-center text-muted-foreground">
+                                    <Mail className="mr-2 h-4 w-4" />
+                                    <a href={`mailto:${primaryContact.email}`} className="hover:text-primary">
+                                    {primaryContact.email}
+                                    </a>
+                                </div>
+                                <div className="flex items-center text-muted-foreground">
+                                    <Phone className="mr-2 h-4 w-4" />
+                                    <span>{primaryContact.phone}</span>
+                                </div>
+                                </div>
+                            ) : (
+                                <div className="text-sm text-muted-foreground">No primary contact.</div>
+                            )}
                             <div className="mt-6 flex gap-2">
                                 <Button asChild className="flex-1">
                                     <Link href={`/contact/${supplier.id}`}>Contact</Link>
@@ -138,7 +146,8 @@ export default function ContactsPage() {
                             </div>
                         </CardContent>
                         </Card>
-                    ))}
+                        )
+                    })}
                     </div>
                 ) : (
                     <div className="rounded-xl border">
@@ -153,17 +162,23 @@ export default function ContactsPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {suppliers.map(supplier => (
+                                {suppliers.map(supplier => {
+                                    const primaryContact = contacts.find(c => c.supplierId === supplier.id && c.isPrimary);
+                                    return (
                                     <TableRow key={supplier.id}>
                                         <TableCell className="font-medium">{supplier.name}</TableCell>
                                         <TableCell className="text-muted-foreground">{supplier.location}</TableCell>
                                         <TableCell>
-                                            <div className="flex flex-col">
-                                                <span>{supplier.contact.name}</span>
-                                                <a href={`mailto:${supplier.contact.email}`} className="text-xs text-muted-foreground hover:text-primary">
-                                                    {supplier.contact.email}
-                                                </a>
-                                            </div>
+                                            {primaryContact ? (
+                                                <div className="flex flex-col">
+                                                    <span>{primaryContact.name}</span>
+                                                    <a href={`mailto:${primaryContact.email}`} className="text-xs text-muted-foreground hover:text-primary">
+                                                        {primaryContact.email}
+                                                    </a>
+                                                </div>
+                                            ) : (
+                                                <span className="text-xs text-muted-foreground">No primary contact</span>
+                                            )}
                                         </TableCell>
                                         <TableCell className="text-center text-muted-foreground">{supplier.itemsOffered}</TableCell>
                                         <TableCell className="text-right">
@@ -172,7 +187,7 @@ export default function ContactsPage() {
                                             </Button>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )})}
                             </TableBody>
                         </Table>
                     </div>
