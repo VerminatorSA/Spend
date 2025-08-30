@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { FileText, ChevronRight, User, Package, ShoppingCart, Mail, Users, Building, Sitemap } from 'lucide-react';
+import { FileText, ChevronRight, User, Package, ShoppingCart, Mail, Users, Building, GitFork } from 'lucide-react';
 
 
 const formSettingsSections = [
@@ -53,7 +53,7 @@ const formSettingsSections = [
         href: '/settings/forms/division',
         title: 'Division Form',
         description: 'Customize the fields for adding new divisions.',
-        icon: Sitemap
+        icon: GitFork
     }
 ]
 
