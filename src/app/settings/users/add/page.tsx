@@ -103,7 +103,7 @@ export default function InviteUserPage() {
         }
 
         return (
-            <div key={field.id} className="space-y-2">
+            <div className="space-y-2">
                 <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
                 <Select 
                     onValueChange={(value) => handleSelectChange(field.id, value)}
@@ -125,7 +125,7 @@ export default function InviteUserPage() {
 
     // Default to text input
     return (
-        <div key={field.id} className="space-y-2">
+        <div className="space-y-2">
             <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
             <Input 
                 id={field.id} 
@@ -154,7 +154,9 @@ export default function InviteUserPage() {
                     {visibleFields.length > 0 && (
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                {visibleFields.map((field) => renderField(field))}
+                                {visibleFields.map((field) => (
+                                  <div key={field.id}>{renderField(field)}</div>
+                                ))}
                             </div>
                         </div>
                     )}
