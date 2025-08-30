@@ -16,6 +16,18 @@ import { companies as initialCompanies, divisions as initialDivisions, type Comp
 import { PlusCircle, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
+interface FormField {
+  id: string;
+  label: string;
+  required: boolean;
+  checked: boolean;
+  isCustom?: boolean;
+  type?: 'text' | 'textarea' | 'select' | 'email' | 'number' | 'date';
+}
+
+const COMPANY_FIELDS_STORAGE_KEY = 'companyFormFields';
+const DIVISION_FIELDS_STORAGE_KEY = 'divisionFormFields';
+
 function GroupProfileTab({ settings: initialSettings, onSave }: { settings: AppSettings, onSave: (settings: AppSettings) => void }) {
     const [localSettings, setLocalSettings] = useState<AppSettings>(initialSettings);
 
@@ -93,23 +105,37 @@ function GroupProfileTab({ settings: initialSettings, onSave }: { settings: AppS
 
 function CompaniesTab() {
     const [companies, setCompanies] = useState<Company[]>(initialCompanies);
-    const [newCompanyName, setNewCompanyName] = useState('');
-    const [newCompanyIndustry, setNewCompanyIndustry] = useState('');
+    const [newCompanyData, setNewCompanyData] = useState<Record<string, string>>({});
+    const [configuredFields, setConfiguredFields] = useState<FormField[]>([]);
     const { toast } = useToast();
 
+    useEffect(() => {
+        const storedFields = localStorage.getItem(COMPANY_FIELDS_STORAGE_KEY);
+        setConfiguredFields(storedFields ? JSON.parse(storedFields) : [
+            { id: 'field-company-name', label: 'Company Name', required: true, checked: true },
+            { id: 'field-industry', label: 'Industry', required: true, checked: true },
+        ]);
+    }, []);
+
+    const handleInputChange = (id: string, value: string) => {
+        setNewCompanyData(prev => ({...prev, [id]: value}));
+    };
+
     const handleAddCompany = () => {
-        if (!newCompanyName || !newCompanyIndustry) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Please fill out all fields for the new company.' });
-            return;
+        for (const field of configuredFields) {
+            if (field.checked && field.required && !newCompanyData[field.id]) {
+                toast({ variant: 'destructive', title: 'Error', description: `Please fill out the "${field.label}" field.` });
+                return;
+            }
         }
+        
         const newCompany: Company = {
             id: `comp-${Date.now()}`,
-            name: newCompanyName,
-            industry: newCompanyIndustry,
+            name: newCompanyData['field-company-name'],
+            industry: newCompanyData['field-industry'],
         };
         setCompanies([...companies, newCompany]);
-        setNewCompanyName('');
-        setNewCompanyIndustry('');
+        setNewCompanyData({});
         toast({ title: 'Company Added', description: `${newCompany.name} has been added.` });
     };
 
@@ -117,6 +143,8 @@ function CompaniesTab() {
         setCompanies(companies.filter(c => c.id !== id));
         toast({ title: 'Company Removed' });
     };
+    
+    const visibleFields = configuredFields.filter(f => f.checked);
 
     return (
         <Card>
@@ -150,11 +178,22 @@ function CompaniesTab() {
                     </Table>
                 </div>
                  <div className="rounded-lg border bg-muted/50 p-4">
-                    <h4 className="mb-2 font-medium">Add New Company</h4>
-                    <div className="flex flex-col gap-2 sm:flex-row">
-                        <Input placeholder="Company Name" value={newCompanyName} onChange={e => setNewCompanyName(e.target.value)} />
-                        <Input placeholder="Industry" value={newCompanyIndustry} onChange={e => setNewCompanyIndustry(e.target.value)} />
-                        <Button onClick={handleAddCompany} className="w-full sm:w-auto">
+                    <h4 className="mb-4 font-medium">Add New Company</h4>
+                    <div className="flex flex-col gap-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            {visibleFields.map(field => (
+                                <div key={field.id} className="space-y-2">
+                                    <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                                    <Input
+                                        id={field.id}
+                                        placeholder={`Enter ${field.label}`}
+                                        value={newCompanyData[field.id] || ''}
+                                        onChange={e => handleInputChange(field.id, e.target.value)}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <Button onClick={handleAddCompany} className="w-full sm:w-auto self-end">
                             <PlusCircle className="mr-2 h-4 w-4" /> Add Company
                         </Button>
                     </div>
@@ -167,23 +206,41 @@ function CompaniesTab() {
 function DivisionsTab() {
     const [divisions, setDivisions] = useState<Division[]>(initialDivisions);
     const [companies] = useState<Company[]>(initialCompanies);
-    const [newDivisionName, setNewDivisionName] = useState('');
-    const [selectedCompanyId, setSelectedCompanyId] = useState('');
+    const [newDivisionData, setNewDivisionData] = useState<Record<string, string>>({});
+    const [configuredFields, setConfiguredFields] = useState<FormField[]>([]);
     const { toast } = useToast();
 
+     useEffect(() => {
+        const storedFields = localStorage.getItem(DIVISION_FIELDS_STORAGE_KEY);
+        setConfiguredFields(storedFields ? JSON.parse(storedFields) : [
+            { id: 'field-division-name', label: 'Division Name', required: true, checked: true },
+            { id: 'field-parent-company', label: 'Parent Company', required: true, checked: true, type: 'select' },
+        ]);
+    }, []);
+
+    const handleInputChange = (id: string, value: string) => {
+        setNewDivisionData(prev => ({...prev, [id]: value}));
+    };
+
+    const handleSelectChange = (id: string, value: string) => {
+        setNewDivisionData(prev => ({ ...prev, [id]: value }));
+    };
+
     const handleAddDivision = () => {
-        if (!newDivisionName || !selectedCompanyId) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Please fill out all fields for the new division.' });
-            return;
+        for (const field of configuredFields) {
+            if (field.checked && field.required && !newDivisionData[field.id]) {
+                toast({ variant: 'destructive', title: 'Error', description: `Please fill out the "${field.label}" field.` });
+                return;
+            }
         }
+
         const newDivision: Division = {
             id: `div-${Date.now()}`,
-            name: newDivisionName,
-            companyId: selectedCompanyId,
+            name: newDivisionData['field-division-name'],
+            companyId: newDivisionData['field-parent-company'],
         };
         setDivisions([...divisions, newDivision]);
-        setNewDivisionName('');
-        setSelectedCompanyId('');
+        setNewDivisionData({});
         toast({ title: 'Division Added', description: `${newDivision.name} has been added.` });
     };
 
@@ -191,6 +248,8 @@ function DivisionsTab() {
         setDivisions(divisions.filter(d => d.id !== id));
         toast({ title: 'Division Removed' });
     };
+    
+    const visibleFields = configuredFields.filter(f => f.checked);
 
     return (
          <Card>
@@ -227,18 +286,33 @@ function DivisionsTab() {
                     </Table>
                 </div>
                  <div className="rounded-lg border bg-muted/50 p-4">
-                    <h4 className="mb-2 font-medium">Add New Division</h4>
-                    <div className="flex flex-col gap-2 sm:flex-row">
-                        <Input placeholder="Division Name" value={newDivisionName} onChange={e => setNewDivisionName(e.target.value)} />
-                        <Select value={selectedCompanyId} onValueChange={setSelectedCompanyId}>
-                             <SelectTrigger className="w-full sm:w-[240px]">
-                                <SelectValue placeholder="Select Parent Company" />
-                             </SelectTrigger>
-                             <SelectContent>
-                                {companies.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-                             </SelectContent>
-                        </Select>
-                        <Button onClick={handleAddDivision} className="w-full sm:w-auto">
+                    <h4 className="mb-4 font-medium">Add New Division</h4>
+                    <div className="flex flex-col gap-4">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                             {visibleFields.map(field => (
+                                <div key={field.id} className="space-y-2">
+                                    <Label htmlFor={field.id}>{field.label} {field.required && <span className="text-destructive">*</span>}</Label>
+                                    {field.type === 'select' ? (
+                                        <Select value={newDivisionData[field.id] || ''} onValueChange={(value) => handleSelectChange(field.id, value)}>
+                                            <SelectTrigger id={field.id}>
+                                                <SelectValue placeholder="Select Parent Company" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {companies.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                                            </SelectContent>
+                                        </Select>
+                                    ) : (
+                                        <Input
+                                            id={field.id}
+                                            placeholder={`Enter ${field.label}`}
+                                            value={newDivisionData[field.id] || ''}
+                                            onChange={e => handleInputChange(field.id, e.target.value)}
+                                        />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                        <Button onClick={handleAddDivision} className="w-full sm:w-auto self-end">
                             <PlusCircle className="mr-2 h-4 w-4" /> Add Division
                         </Button>
                     </div>

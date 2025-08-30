@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { FileText, ChevronRight, User, Package, ShoppingCart, Mail, Users } from 'lucide-react';
+import { FileText, ChevronRight, User, Package, ShoppingCart, Mail, Users, Building, Sitemap } from 'lucide-react';
 
 
 const formSettingsSections = [
@@ -42,6 +42,18 @@ const formSettingsSections = [
         title: 'User Form',
         description: 'Customize the fields for adding new users.',
         icon: Users
+    },
+    {
+        href: '/settings/forms/company',
+        title: 'Company Form',
+        description: 'Customize the fields for adding new companies.',
+        icon: Building
+    },
+    {
+        href: '/settings/forms/division',
+        title: 'Division Form',
+        description: 'Customize the fields for adding new divisions.',
+        icon: Sitemap
     }
 ]
 
