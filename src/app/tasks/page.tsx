@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
@@ -25,7 +25,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlusCircle, MoreHorizontal, ArrowUp, ArrowDown, ArrowRight } from 'lucide-react';
 import { tasks as initialTasks, type Task } from '@/lib/tasks';
 import { format } from 'date-fns';
+import { enUS, enGB } from 'date-fns/locale';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SettingsContext } from '@/contexts/settings-context';
 
 type SortKey = keyof Task | null;
 type SortDirection = 'asc' | 'desc';
@@ -37,11 +39,14 @@ const priorityMap: Record<Task['priority'], { variant: 'destructive' | 'outline'
 };
 
 export default function TasksPage() {
+    const { settings } = useContext(SettingsContext);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [sortedTasks, setSortedTasks] = useState<Task[]>([]);
     const [sortKey, setSortKey] = useState<SortKey>(null);
     const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
     const [isClient, setIsClient] = useState(false);
+
+    const locale = settings.language === 'en-GB' ? enGB : enUS;
 
     useEffect(() => {
         setIsClient(true);
@@ -150,7 +155,7 @@ export default function TasksPage() {
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            {task.dueDate ? format(new Date(task.dueDate), 'PPpp') : 'No due date'}
+                                            {task.dueDate ? format(new Date(task.dueDate), 'PPpp', { locale }) : 'No due date'}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex items-center gap-2">
