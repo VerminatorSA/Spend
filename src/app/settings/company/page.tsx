@@ -104,7 +104,7 @@ export default function CompanySettingsPage() {
                                 </div>
                             </div>
                         </div>
-                        <Separator />
+                         <Separator />
                         <div>
                             <h3 className="text-lg font-medium">Localization Defaults</h3>
                             <div className="mt-4 space-y-6">
@@ -128,19 +128,6 @@ export default function CompanySettingsPage() {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="dateFormat">Date Format</Label>
-                                    <Select value={localSettings.dateFormat} onValueChange={(value) => handleSelectChange('dateFormat', value)}>
-                                        <SelectTrigger id="dateFormat" className="max-w-xs">
-                                            <SelectValue placeholder="Select date format" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
-                                            <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
-                                            <SelectItem value="yyyy-mm-dd">YYYY-MM-DD</SelectItem>
-                                        </SelectContent>
-                                    </Select>
                                 </div>
                             </div>
                         </div>
