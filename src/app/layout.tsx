@@ -7,7 +7,6 @@ import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter 
 import { MainNav } from '@/components/main-nav';
 import { Command } from 'lucide-react';
 import { SettingsProvider } from '@/contexts/settings-context';
-import { AiTicker } from '@/components/ai-ticker';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -43,12 +42,9 @@ export default function RootLayout({
                 </SidebarContent>
               </Sidebar>
               <div className="flex flex-1 flex-col md:ml-[var(--sidebar-width)] group-data-[collapsible=icon]/sidebar-wrapper:md:ml-[var(--sidebar-width-icon)] transition-[margin-left] ease-in-out duration-200">
-                <main className="flex-1 pb-16">
+                <main className="flex-1">
                     {children}
                 </main>
-                <footer className="fixed bottom-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm md:w-[calc(100vw-var(--sidebar-width))] group-data-[collapsible=icon]/sidebar-wrapper:md:w-[calc(100vw-var(--sidebar-width-icon))] transition-[width] ease-in-out duration-200">
-                    <AiTicker />
-                </footer>
               </div>
             </SidebarProvider>
           </div>
