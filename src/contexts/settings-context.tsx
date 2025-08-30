@@ -11,9 +11,10 @@ export interface CompanySettings {
   city: string;
   state: string;
   postalCode: string;
-  country: string;
+  country: 'US' | 'CA' | 'GB' | 'AU' | 'ZA' | 'DE' | 'JP' | 'CN' | 'BR' | 'IN';
   currency: 'USD' | 'CAD' | 'EUR' | 'GBP' | 'AUD' | 'JPY' | 'ZAR' | 'BRL' | 'INR';
   dateFormat: 'mm-dd-yyyy' | 'dd-mm-yyyy' | 'yyyy-mm-dd';
+  language: 'en-US' | 'en-GB';
 }
 
 interface SettingsContextType {
@@ -35,6 +36,7 @@ const defaultSettings: CompanySettings = {
   country: 'US',
   currency: 'USD',
   dateFormat: 'mm-dd-yyyy',
+  language: 'en-US',
 };
 
 export const currencySymbols: Record<CompanySettings['currency'], string> = {
