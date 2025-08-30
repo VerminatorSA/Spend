@@ -2,6 +2,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -10,36 +12,25 @@ import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { companies, divisions } from '@/lib/organization';
 import { users } from '@/lib/users';
-import Link from 'next/link';
 
 export default function InviteUserPage() {
     const { toast } = useToast();
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        companyId: '',
-        divisionId: '',
-    });
-    const [availableDivisions, setAvailableDivisions] = useState(divisions);
+    const router = useRouter();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [companyId, setCompanyId] = useState('');
+    const [divisionId, setDivisionId] = useState('');
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setFormData(prev => ({...prev, [id]: value}));
-    };
+    const availableDivisions = companyId ? divisions.filter(d => d.companyId === companyId) : [];
 
-    const handleSelectChange = (id: 'companyId' | 'divisionId', value: string) => {
-        if (id === 'companyId') {
-            setFormData(prev => ({...prev, companyId: value, divisionId: ''}));
-            setAvailableDivisions(divisions.filter(d => d.companyId === value));
-        } else {
-            setFormData(prev => ({...prev, [id]: value}));
-        }
+    const handleCompanyChange = (id: string) => {
+        setCompanyId(id);
+        setDivisionId(''); // Reset division when company changes
     };
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const { firstName, lastName, email, companyId, divisionId } = formData;
 
         if (!firstName || !lastName || !email || !companyId || !divisionId) {
             toast({
@@ -62,23 +53,15 @@ export default function InviteUserPage() {
             avatarUrl: `https://picsum.photos/seed/${Date.now()}/100/100`,
         };
 
+        // Add the new user to the shared users array
         users.push(newUser);
 
-        console.log('Invitation Sent:', formData);
         toast({
             title: 'Invitation Sent',
             description: `An invitation has been sent to ${email}.`,
         });
 
-        // Reset form
-        setFormData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            companyId: '',
-            divisionId: '',
-        });
-        setAvailableDivisions(divisions);
+        router.push('/settings/users');
     };
 
     return (
@@ -97,21 +80,21 @@ export default function InviteUserPage() {
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                              <div className="space-y-2">
                                 <Label htmlFor="firstName">First Name</Label>
-                                <Input id="firstName" placeholder="e.g., John" value={formData.firstName} onChange={handleInputChange} />
+                                <Input id="firstName" placeholder="e.g., John" value={firstName} onChange={e => setFirstName(e.target.value)} />
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="lastName">Last Name</Label>
-                                <Input id="lastName" placeholder="e.g., Doe" value={formData.lastName} onChange={handleInputChange} />
+                                <Input id="lastName" placeholder="e.g., Doe" value={lastName} onChange={e => setLastName(e.target.value)} />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="email">Email Address</Label>
-                            <Input id="email" type="email" placeholder="e.g., user@example.com" value={formData.email} onChange={handleInputChange} />
+                            <Input id="email" type="email" placeholder="e.g., user@example.com" value={email} onChange={e => setEmail(e.target.value)} />
                         </div>
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="space-y-2">
                                 <Label htmlFor="companyId">Company</Label>
-                                <Select value={formData.companyId} onValueChange={(value) => handleSelectChange('companyId', value)}>
+                                <Select value={companyId} onValueChange={handleCompanyChange}>
                                     <SelectTrigger id="companyId">
                                         <SelectValue placeholder="Select a company" />
                                     </SelectTrigger>
@@ -124,7 +107,7 @@ export default function InviteUserPage() {
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="divisionId">Division</Label>
-                                <Select value={formData.divisionId} onValueChange={(value) => handleSelectChange('divisionId', value)} disabled={!formData.companyId}>
+                                <Select value={divisionId} onValueChange={setDivisionId} disabled={!companyId}>
                                     <SelectTrigger id="divisionId">
                                         <SelectValue placeholder="Select a division" />
                                     </SelectTrigger>
