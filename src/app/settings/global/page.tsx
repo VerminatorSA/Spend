@@ -44,7 +44,7 @@ export default function GlobalSettingsPage() {
                    
                     <div className="space-y-6">
                         <div>
-                            <h3 className="text-lg font-medium">Localization</h3>
+                            <h3 className="text-lg font-medium">Localisation</h3>
                             <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="language">Language</Label>
