@@ -367,6 +367,11 @@ function GlobalTab({ settings: initialSettings, onSave }: { settings: AppSetting
                                 <SelectItem value="EUR">EUR (€)</SelectItem>
                                 <SelectItem value="GBP">GBP (£)</SelectItem>
                                 <SelectItem value="JPY">JPY (¥)</SelectItem>
+                                <SelectItem value="AUD">AUD (A$)</SelectItem>
+                                <SelectItem value="CAD">CAD (C$)</SelectItem>
+                                <SelectItem value="INR">INR (₹)</SelectItem>
+                                <SelectItem value="BRL">BRL (R$)</SelectItem>
+                                <SelectItem value="ZAR">ZAR (R)</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -422,5 +427,3 @@ export default function OrganizationSettingsPage() {
         </div>
     );
 }
-
-    
