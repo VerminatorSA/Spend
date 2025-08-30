@@ -78,19 +78,6 @@ function AppearanceTab() {
 
             <div className="space-y-6">
                 <div className="space-y-2">
-                    <Label htmlFor="theme">Theme</Label>
-                    <Select defaultValue="system">
-                        <SelectTrigger id="theme" className="max-w-xs">
-                            <SelectValue placeholder="Select theme" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="light">Light</SelectItem>
-                            <SelectItem value="dark">Dark</SelectItem>
-                            <SelectItem value="system">System</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="space-y-2">
                     <Label>Primary Color</Label>
                     <div className="flex items-center gap-2">
                         <Input type="color" defaultValue="#4A8FE7" className="h-10 w-14 p-1"/>
