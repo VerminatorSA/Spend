@@ -2,42 +2,26 @@
 'use client';
 
 import { createContext, useState, useEffect, ReactNode } from 'react';
+import { group, type GroupProfile } from '@/lib/organization';
 
-export interface CompanySettings {
-  companyName: string;
-  companyWebsite: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: 'US' | 'CA' | 'GB' | 'AU' | 'ZA' | 'DE' | 'JP' | 'CN' | 'BR' | 'IN';
-  currency: 'USD' | 'CAD' | 'EUR' | 'GBP' | 'AUD' | 'JPY' | 'ZAR' | 'BRL' | 'INR';
+export interface AppSettings extends GroupProfile {
   dateFormat: 'mm-dd-yyyy' | 'dd-mm-yyyy' | 'yyyy-mm-dd';
 }
 
 interface SettingsContextType {
-  settings: CompanySettings;
-  setSettings: (settings: CompanySettings) => void;
+  settings: AppSettings;
+  setSettings: (settings: AppSettings) => void;
   isLoaded: boolean;
 }
 
-const SETTINGS_STORAGE_KEY = 'companySettings';
+const SETTINGS_STORAGE_KEY = 'appSettings';
 
-const defaultSettings: CompanySettings = {
-  companyName: 'Spend Inc.',
-  companyWebsite: 'https://spend.com',
-  address1: '',
-  address2: '',
-  city: '',
-  state: '',
-  postalCode: '',
-  country: 'US',
-  currency: 'USD',
+const defaultSettings: AppSettings = {
+  ...group,
   dateFormat: 'mm-dd-yyyy',
 };
 
-export const currencySymbols: Record<CompanySettings['currency'], string> = {
+export const currencySymbols: Record<AppSettings['currency'], string> = {
     USD: '$',
     CAD: 'C$',
     EUR: '€',
@@ -49,7 +33,7 @@ export const currencySymbols: Record<CompanySettings['currency'], string> = {
     INR: '₹',
 }
 
-export function getCurrencySymbol(currencyCode: CompanySettings['currency']) {
+export function getCurrencySymbol(currencyCode: AppSettings['currency']) {
     return currencySymbols[currencyCode] || '$';
 }
 
@@ -61,7 +45,7 @@ export const SettingsContext = createContext<SettingsContextType>({
 });
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<CompanySettings>(defaultSettings);
+  const [settings, setSettings] = useState<AppSettings>(defaultSettings);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -76,7 +60,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setIsLoaded(true);
   }, []);
 
-  const handleSetSettings = (newSettings: CompanySettings) => {
+  const handleSetSettings = (newSettings: AppSettings) => {
     setSettings(newSettings);
     try {
         localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(newSettings));

@@ -9,11 +9,15 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { SettingsContext, type CompanySettings } from '@/contexts/settings-context';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { SettingsContext, type AppSettings } from '@/contexts/settings-context';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { companies as initialCompanies, divisions as initialDivisions, type Company, type Division } from '@/lib/organization';
+import { PlusCircle, Trash2 } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-function CompanyProfileTab({ settings: initialSettings, onSave }: { settings: CompanySettings, onSave: (settings: CompanySettings) => void }) {
-    const [localSettings, setLocalSettings] = useState<CompanySettings>(initialSettings);
+function GroupProfileTab({ settings: initialSettings, onSave }: { settings: AppSettings, onSave: (settings: AppSettings) => void }) {
+    const [localSettings, setLocalSettings] = useState<AppSettings>(initialSettings);
 
     useEffect(() => {
         setLocalSettings(initialSettings);
@@ -24,106 +28,279 @@ function CompanyProfileTab({ settings: initialSettings, onSave }: { settings: Co
         setLocalSettings(prev => ({...prev, [id]: value}));
     }
 
-    return (
-        <div className="space-y-8">
-            <div>
-                <h3 className="text-xl font-bold">Company Profile</h3>
-                <p className="text-muted-foreground">
-                    Manage your organization's details and branding.
-                </p>
-            </div>
-           
-            <div className="space-y-6">
-                <div className="space-y-2">
-                    <Label htmlFor="companyName">Company Name</Label>
-                    <Input id="companyName" value={localSettings.companyName} onChange={handleInputChange} className="max-w-lg" />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="companyWebsite">Website</Label>
-                    <Input id="companyWebsite" value={localSettings.companyWebsite} onChange={handleInputChange} className="max-w-lg" />
-                </div>
-                <Separator />
-                <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Company Address</h3>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div className="sm:col-span-2 space-y-2">
-                            <Label htmlFor="address1" className="text-xs text-muted-foreground">Address Line 1</Label>
-                            <Input id="address1" placeholder="e.g., 123 Main St" value={localSettings.address1} onChange={handleInputChange} />
-                        </div>
-                        <div className="sm:col-span-2 space-y-2">
-                            <Label htmlFor="address2" className="text-xs text-muted-foreground">Address Line 2 (Optional)</Label>
-                            <Input id="address2" placeholder="e.g., Suite 400" value={localSettings.address2} onChange={handleInputChange} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="city" className="text-xs text-muted-foreground">City</Label>
-                            <Input id="city" placeholder="e.g., San Francisco" value={localSettings.city} onChange={handleInputChange} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="state" className="text-xs text-muted-foreground">State / Province</Label>
-                            <Input id="state" placeholder="e.g., CA" value={localSettings.state} onChange={handleInputChange} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="postalCode" className="text-xs text-muted-foreground">Postal Code</Label>
-                            <Input id="postalCode" placeholder="e.g., 94103" value={localSettings.postalCode} onChange={handleInputChange} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="companyCountry" className="text-xs text-muted-foreground">Country</Label>
-                            <Input id="companyCountry" value={localSettings.country} readOnly disabled />
-                        </div>
-                    </div>
-                </div>
-            </div>
-             <div className="flex justify-end">
-                <Button onClick={() => onSave(localSettings)}>Save Company Settings</Button>
-            </div>
-        </div>
-    )
-}
-
-function GlobalSettingsTab({ settings: initialSettings, onSave }: { settings: CompanySettings, onSave: (settings: CompanySettings) => void }) {
-    const [localSettings, setLocalSettings] = useState<CompanySettings>(initialSettings);
-
-    useEffect(() => {
-        setLocalSettings(initialSettings);
-    }, [initialSettings]);
-
-    const handleSelectChange = (id: keyof CompanySettings, value: string) => {
+    const handleSelectChange = (id: keyof AppSettings, value: string) => {
         setLocalSettings(prev => ({ ...prev, [id]: value as any }));
     };
 
     return (
         <div className="space-y-8">
-            <div>
-                <h3 className="text-xl font-bold">Global Settings</h3>
-                <p className="text-muted-foreground">
-                    Manage application-wide settings.
-                </p>
-            </div>
-           
-            <div className="space-y-6">
-                <div>
-                    <h3 className="text-lg font-medium">Localisation</h3>
-                    <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Group Profile</CardTitle>
+                    <CardDescription>
+                        Manage the details for the top-level parent company/group.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                         <div className="space-y-2">
-                            <Label htmlFor="dateFormat">Date Format</Label>
-                            <Select value={localSettings.dateFormat} onValueChange={(value) => handleSelectChange('dateFormat', value)}>
-                                <SelectTrigger id="dateFormat">
-                                    <SelectValue placeholder="Select date format" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
-                                    <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
-                                    <SelectItem value="yyyy-mm-dd">YYYY-MM-DD</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <Label htmlFor="name">Group Name</Label>
+                            <Input id="name" value={localSettings.name} onChange={handleInputChange} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="website">Website</Label>
+                            <Input id="website" value={localSettings.website} onChange={handleInputChange} />
                         </div>
                     </div>
-                </div>
-            </div>
+                    <Separator />
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-medium">Group Address</h3>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="sm:col-span-2 space-y-2">
+                                <Label htmlFor="address1" className="text-xs text-muted-foreground">Address Line 1</Label>
+                                <Input id="address1" placeholder="e.g., 123 Main St" value={localSettings.address1} onChange={handleInputChange} />
+                            </div>
+                            <div className="sm:col-span-2 space-y-2">
+                                <Label htmlFor="address2" className="text-xs text-muted-foreground">Address Line 2 (Optional)</Label>
+                                <Input id="address2" placeholder="e.g., Suite 400" value={localSettings.address2} onChange={handleInputChange} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="city" className="text-xs text-muted-foreground">City</Label>
+                                <Input id="city" placeholder="e.g., San Francisco" value={localSettings.city} onChange={handleInputChange} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="state" className="text-xs text-muted-foreground">State / Province</Label>
+                                <Input id="state" placeholder="e.g., CA" value={localSettings.state} onChange={handleInputChange} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="postalCode" className="text-xs text-muted-foreground">Postal Code</Label>
+                                <Input id="postalCode" placeholder="e.g., 94103" value={localSettings.postalCode} onChange={handleInputChange} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="country" className="text-xs text-muted-foreground">Country</Label>
+                                <Input id="country" value={localSettings.country} readOnly disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex justify-end">
+                        <Button onClick={() => onSave(localSettings)}>Save Group Settings</Button>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    )
+}
 
-            <div className="flex justify-end">
-                <Button onClick={() => onSave(localSettings)}>Save Global Settings</Button>
-            </div>
+function CompaniesTab() {
+    const [companies, setCompanies] = useState<Company[]>(initialCompanies);
+    const [newCompanyName, setNewCompanyName] = useState('');
+    const [newCompanyIndustry, setNewCompanyIndustry] = useState('');
+    const { toast } = useToast();
+
+    const handleAddCompany = () => {
+        if (!newCompanyName || !newCompanyIndustry) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Please fill out all fields for the new company.' });
+            return;
+        }
+        const newCompany: Company = {
+            id: `comp-${Date.now()}`,
+            name: newCompanyName,
+            industry: newCompanyIndustry,
+        };
+        setCompanies([...companies, newCompany]);
+        setNewCompanyName('');
+        setNewCompanyIndustry('');
+        toast({ title: 'Company Added', description: `${newCompany.name} has been added.` });
+    };
+
+    const handleRemoveCompany = (id: string) => {
+        setCompanies(companies.filter(c => c.id !== id));
+        toast({ title: 'Company Removed' });
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Companies</CardTitle>
+                <CardDescription>Manage the child companies within the group. These are the main subdivisions for filtering.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="rounded-xl border">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Company Name</TableHead>
+                                <TableHead>Industry</TableHead>
+                                <TableHead className="w-[80px]"></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {companies.map(company => (
+                                <TableRow key={company.id}>
+                                    <TableCell className="font-medium">{company.name}</TableCell>
+                                    <TableCell>{company.industry}</TableCell>
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon" onClick={() => handleRemoveCompany(company.id)}>
+                                            <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+                 <div className="rounded-lg border bg-muted/50 p-4">
+                    <h4 className="mb-2 font-medium">Add New Company</h4>
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                        <Input placeholder="Company Name" value={newCompanyName} onChange={e => setNewCompanyName(e.target.value)} />
+                        <Input placeholder="Industry" value={newCompanyIndustry} onChange={e => setNewCompanyIndustry(e.target.value)} />
+                        <Button onClick={handleAddCompany} className="w-full sm:w-auto">
+                            <PlusCircle className="mr-2 h-4 w-4" /> Add Company
+                        </Button>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
+
+function DivisionsTab() {
+    const [divisions, setDivisions] = useState<Division[]>(initialDivisions);
+    const [companies] = useState<Company[]>(initialCompanies);
+    const [newDivisionName, setNewDivisionName] = useState('');
+    const [selectedCompanyId, setSelectedCompanyId] = useState('');
+    const { toast } = useToast();
+
+    const handleAddDivision = () => {
+        if (!newDivisionName || !selectedCompanyId) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Please fill out all fields for the new division.' });
+            return;
+        }
+        const newDivision: Division = {
+            id: `div-${Date.now()}`,
+            name: newDivisionName,
+            companyId: selectedCompanyId,
+        };
+        setDivisions([...divisions, newDivision]);
+        setNewDivisionName('');
+        setSelectedCompanyId('');
+        toast({ title: 'Division Added', description: `${newDivision.name} has been added.` });
+    };
+
+    const handleRemoveDivision = (id: string) => {
+        setDivisions(divisions.filter(d => d.id !== id));
+        toast({ title: 'Division Removed' });
+    };
+
+    return (
+         <Card>
+            <CardHeader>
+                <CardTitle>Divisions</CardTitle>
+                <CardDescription>Manage the grandchildren divisions within each company.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="rounded-xl border">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Division Name</TableHead>
+                                <TableHead>Parent Company</TableHead>
+                                <TableHead className="w-[80px]"></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {divisions.map(division => {
+                                const company = companies.find(c => c.id === division.companyId);
+                                return (
+                                    <TableRow key={division.id}>
+                                        <TableCell className="font-medium">{division.name}</TableCell>
+                                        <TableCell>{company?.name || 'N/A'}</TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="ghost" size="icon" onClick={() => handleRemoveDivision(division.id)}>
+                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })}
+                        </TableBody>
+                    </Table>
+                </div>
+                 <div className="rounded-lg border bg-muted/50 p-4">
+                    <h4 className="mb-2 font-medium">Add New Division</h4>
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                        <Input placeholder="Division Name" value={newDivisionName} onChange={e => setNewDivisionName(e.target.value)} />
+                        <Select value={selectedCompanyId} onValueChange={setSelectedCompanyId}>
+                             <SelectTrigger className="w-full sm:w-[240px]">
+                                <SelectValue placeholder="Select Parent Company" />
+                             </SelectTrigger>
+                             <SelectContent>
+                                {companies.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                             </SelectContent>
+                        </Select>
+                        <Button onClick={handleAddDivision} className="w-full sm:w-auto">
+                            <PlusCircle className="mr-2 h-4 w-4" /> Add Division
+                        </Button>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
+
+function GlobalTab({ settings: initialSettings, onSave }: { settings: AppSettings, onSave: (settings: AppSettings) => void }) {
+    const [localSettings, setLocalSettings] = useState<AppSettings>(initialSettings);
+
+    useEffect(() => {
+        setLocalSettings(initialSettings);
+    }, [initialSettings]);
+
+    const handleSelectChange = (id: keyof AppSettings, value: string) => {
+        setLocalSettings(prev => ({ ...prev, [id]: value as any }));
+    };
+
+    return (
+        <div className="space-y-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Global Settings</CardTitle>
+                    <CardDescription>
+                        Manage application-wide settings like date formats and default currency.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                     <div className="space-y-2 max-w-xs">
+                        <Label htmlFor="dateFormat">Date Format</Label>
+                        <Select value={localSettings.dateFormat} onValueChange={(value) => handleSelectChange('dateFormat', value)}>
+                            <SelectTrigger id="dateFormat">
+                                <SelectValue placeholder="Select date format" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
+                                <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
+                                <SelectItem value="yyyy-mm-dd">YYYY-MM-DD</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                     <div className="space-y-2 max-w-xs">
+                        <Label htmlFor="currency">Currency</Label>
+                        <Select value={localSettings.currency} onValueChange={(value) => handleSelectChange('currency', value)}>
+                            <SelectTrigger id="currency">
+                                <SelectValue placeholder="Select currency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="USD">USD ($)</SelectItem>
+                                <SelectItem value="EUR">EUR (€)</SelectItem>
+                                <SelectItem value="GBP">GBP (£)</SelectItem>
+                                <SelectItem value="JPY">JPY (¥)</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="flex justify-end">
+                        <Button onClick={() => onSave(localSettings)}>Save Global Settings</Button>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     )
 }
@@ -133,7 +310,7 @@ export default function OrganizationSettingsPage() {
     const { settings, setSettings } = useContext(SettingsContext);
     const { toast } = useToast();
 
-    const handleSave = (newSettings: CompanySettings) => {
+    const handleSave = (newSettings: AppSettings) => {
         setSettings(newSettings);
         toast({
             title: 'Settings Saved',
@@ -146,16 +323,24 @@ export default function OrganizationSettingsPage() {
             <Header title="Organization Settings" />
             <main className="flex-1 overflow-auto p-4 md:p-6">
                 <div className="mx-auto max-w-4xl space-y-8">
-                    <Tabs defaultValue="profile">
-                        <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="profile">Company Profile</TabsTrigger>
+                    <Tabs defaultValue="group">
+                        <TabsList className="grid w-full grid-cols-4">
+                            <TabsTrigger value="group">Group Profile</TabsTrigger>
+                            <TabsTrigger value="companies">Companies</TabsTrigger>
+                            <TabsTrigger value="divisions">Divisions</TabsTrigger>
                             <TabsTrigger value="global">Global</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="profile" className="mt-6">
-                            <CompanyProfileTab settings={settings} onSave={handleSave} />
+                        <TabsContent value="group" className="mt-6">
+                            <GroupProfileTab settings={settings} onSave={handleSave} />
+                        </TabsContent>
+                        <TabsContent value="companies" className="mt-6">
+                            <CompaniesTab />
+                        </TabsContent>
+                        <TabsContent value="divisions" className="mt-6">
+                            <DivisionsTab />
                         </TabsContent>
                         <TabsContent value="global" className="mt-6">
-                            <GlobalSettingsTab settings={settings} onSave={handleSave} />
+                            <GlobalTab settings={settings} onSave={handleSave} />
                         </TabsContent>
                     </Tabs>
                 </div>
