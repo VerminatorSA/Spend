@@ -26,14 +26,23 @@ import { PlusCircle, MoreHorizontal } from 'lucide-react';
 import { users as initialUsers, type User } from '@/lib/users';
 import { companies, divisions } from '@/lib/organization';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
 
 export default function UsersPage() {
     const [users, setUsers] = useState<User[]>(initialUsers);
     const [isClient, setIsClient] = useState(false);
+    const { toast } = useToast();
 
     useEffect(() => {
         setIsClient(true);
     }, []);
+
+    const handleResend = (email: string) => {
+        toast({
+            title: 'Invitation Resent',
+            description: `An invitation has been resent to ${email}.`,
+        });
+    }
 
   return (
     <div className="flex h-full flex-col">
@@ -112,8 +121,16 @@ export default function UsersPage() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    {user.status === 'Invited' ? (
+                                                        <DropdownMenuItem onClick={() => handleResend(user.email)}>
+                                                            Resend Invitation
+                                                        </DropdownMenuItem>
+                                                    ) : (
+                                                        <>
+                                                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                            <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                        </>
+                                                    )}
                                                     <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
