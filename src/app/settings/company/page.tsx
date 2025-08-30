@@ -84,50 +84,7 @@ export default function CompanySettingsPage() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="companyCountry" className="text-xs text-muted-foreground">Country</Label>
-                                    <Select value={localSettings.country} onValueChange={(value) => handleSelectChange('country', value)}>
-                                        <SelectTrigger id="companyCountry">
-                                            <SelectValue placeholder="Select country" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="US">United States</SelectItem>
-                                            <SelectItem value="CA">Canada</SelectItem>
-                                            <SelectItem value="GB">United Kingdom</SelectItem>
-                                            <SelectItem value="AU">Australia</SelectItem>
-                                            <SelectItem value="ZA">South Africa</SelectItem>
-                                            <SelectItem value="DE">Germany</SelectItem>
-                                            <SelectItem value="JP">Japan</SelectItem>
-                                            <SelectItem value="CN">China</SelectItem>
-                                            <SelectItem value="BR">Brazil</SelectItem>
-                                            <SelectItem value="IN">India</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                        </div>
-                         <Separator />
-                        <div>
-                            <h3 className="text-lg font-medium">Localization Defaults</h3>
-                            <div className="mt-4 space-y-6">
-                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="currency">Currency</Label>
-                                        <Select value={localSettings.currency} onValueChange={(value) => handleSelectChange('currency', value)}>
-                                            <SelectTrigger id="currency">
-                                                <SelectValue placeholder="Select currency" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="USD">USD ($)</SelectItem>
-                                                <SelectItem value="CAD">CAD (C$)</SelectItem>
-                                                <SelectItem value="EUR">EUR (€)</SelectItem>
-                                                <SelectItem value="GBP">GBP (£)</SelectItem>
-                                                <SelectItem value="AUD">AUD (A$)</SelectItem>
-                                                <SelectItem value="JPY">JPY (¥)</SelectItem>
-                                                <SelectItem value="ZAR">ZAR (R)</SelectItem>
-                                                <SelectItem value="BRL">BRL (R$)</SelectItem>
-                                                <SelectItem value="INR">INR (₹)</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
+                                    <Input id="companyCountry" value={localSettings.country} readOnly disabled />
                                 </div>
                             </div>
                         </div>

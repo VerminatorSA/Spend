@@ -45,17 +45,56 @@ export default function GlobalSettingsPage() {
                     <div className="space-y-6">
                         <div>
                             <h3 className="text-lg font-medium">Localization</h3>
-                            <div className="mt-4 space-y-6">
+                            <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="dateFormat">Date Format</Label>
                                     <Select value={localSettings.dateFormat} onValueChange={(value) => handleSelectChange('dateFormat', value)}>
-                                        <SelectTrigger id="dateFormat" className="max-w-xs">
+                                        <SelectTrigger id="dateFormat">
                                             <SelectValue placeholder="Select date format" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
                                             <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
                                             <SelectItem value="yyyy-mm-dd">YYYY-MM-DD</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                 <div className="space-y-2">
+                                    <Label htmlFor="currency">Default Currency</Label>
+                                    <Select value={localSettings.currency} onValueChange={(value) => handleSelectChange('currency', value)}>
+                                        <SelectTrigger id="currency">
+                                            <SelectValue placeholder="Select currency" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="USD">USD ($)</SelectItem>
+                                            <SelectItem value="CAD">CAD (C$)</SelectItem>
+                                            <SelectItem value="EUR">EUR (€)</SelectItem>
+                                            <SelectItem value="GBP">GBP (£)</SelectItem>
+                                            <SelectItem value="AUD">AUD (A$)</SelectItem>
+                                            <SelectItem value="JPY">JPY (¥)</SelectItem>
+                                            <SelectItem value="ZAR">ZAR (R)</SelectItem>
+                                            <SelectItem value="BRL">BRL (R$)</SelectItem>
+                                            <SelectItem value="INR">INR (₹)</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2 sm:col-span-2">
+                                    <Label htmlFor="country">Default Country</Label>
+                                    <Select value={localSettings.country} onValueChange={(value) => handleSelectChange('country', value)}>
+                                        <SelectTrigger id="country">
+                                            <SelectValue placeholder="Select country" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="US">United States</SelectItem>
+                                            <SelectItem value="CA">Canada</SelectItem>
+                                            <SelectItem value="GB">United Kingdom</SelectItem>
+                                            <SelectItem value="AU">Australia</SelectItem>
+                                            <SelectItem value="ZA">South Africa</SelectItem>
+                                            <SelectItem value="DE">Germany</SelectItem>
+                                            <SelectItem value="JP">Japan</SelectItem>
+                                            <SelectItem value="CN">China</SelectItem>
+                                            <SelectItem value="BR">Brazil</SelectItem>
+                                            <SelectItem value="IN">India</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
