@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Card, CardContent } from '@/components/ui/card';
-import { User, Users, Building, Brush, Bell, ChevronRight } from 'lucide-react';
+import { User, Building, Brush, Bell, ChevronRight } from 'lucide-react';
 
 const settingsSections = [
     { 
@@ -10,12 +10,6 @@ const settingsSections = [
         title: 'My Profile', 
         description: 'Manage your personal information and preferences.', 
         icon: User 
-    },
-    { 
-        href: '/settings/users', 
-        title: 'User Management', 
-        description: 'Manage team members and their permissions.', 
-        icon: Users 
     },
     { 
         href: '/settings/organization', 

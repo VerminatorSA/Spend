@@ -140,6 +140,7 @@ export default function TasksPage() {
                             ) : (
                                 sortedTasks.map((task) => {
                                     const priorityConfig = priorityMap[task.priority];
+                                    const assigneeInitial = task.assignee.name.split(' ').map(n => n[0]).join('');
                                     return (
                                     <TableRow key={task.id}>
                                         <TableCell className="font-medium">{task.title}</TableCell>
@@ -159,7 +160,7 @@ export default function TasksPage() {
                                             <div className="flex items-center gap-2">
                                                 <Avatar className="h-7 w-7">
                                                     <AvatarImage src={task.assignee.avatarUrl} alt={task.assignee.name} data-ai-hint="person avatar" />
-                                                    <AvatarFallback>{task.assignee.name.charAt(0)}</AvatarFallback>
+                                                    <AvatarFallback>{assigneeInitial}</AvatarFallback>
                                                 </Avatar>
                                                 <span className="text-sm text-muted-foreground">{task.assignee.name}</span>
                                             </div>

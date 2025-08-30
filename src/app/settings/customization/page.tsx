@@ -6,10 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { FileText, ChevronRight, User, Package, ShoppingCart, Mail, Users, Building, GitFork } from 'lucide-react';
+import { ChevronRight, User, Package, ShoppingCart, Mail, Building, GitFork } from 'lucide-react';
 
 
 const formSettingsSections = [
@@ -36,12 +35,6 @@ const formSettingsSections = [
         title: 'Contact Form', 
         description: 'Customize the fields for the supplier contact form.', 
         icon: Mail
-    },
-    {
-        href: '/settings/forms/user',
-        title: 'User Form',
-        description: 'Customize the fields for adding new users.',
-        icon: Users
     },
     {
         href: '/settings/forms/company',

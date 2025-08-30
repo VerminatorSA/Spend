@@ -54,5 +54,3 @@ export let tasks: Task[] = [
         assignee: { name: 'Alicia Keys', avatarUrl: 'https://picsum.photos/id/1011/100/100' }
     },
 ];
-
-
