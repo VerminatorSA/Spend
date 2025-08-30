@@ -23,13 +23,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlusCircle, MoreHorizontal } from 'lucide-react';
-import { users as initialUsers, type User } from '@/lib/users';
+import { users, type User } from '@/lib/users';
 import { companies, divisions } from '@/lib/organization';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { sendInvitationEmail } from '@/services/email-service';
 
 export default function UsersPage() {
-    const [users, setUsers] = useState<User[]>(initialUsers);
     const [isClient, setIsClient] = useState(false);
     const { toast } = useToast();
 
@@ -37,11 +37,20 @@ export default function UsersPage() {
         setIsClient(true);
     }, []);
 
-    const handleResend = (email: string) => {
-        toast({
-            title: 'Invitation Resent',
-            description: `An invitation has been resent to ${email}.`,
-        });
+    const handleResend = async (user: User) => {
+        try {
+            await sendInvitationEmail({ email: user.email, name: user.firstName });
+            toast({
+                title: 'Invitation Resent',
+                description: `An invitation has been resent to ${user.email}.`,
+            });
+        } catch (error) {
+             toast({
+                variant: 'destructive',
+                title: 'Failed to Resend Invitation',
+                description: 'There was a problem resending the invitation. Please try again.',
+            });
+        }
     }
 
   return (
@@ -80,12 +89,14 @@ export default function UsersPage() {
                                     <TableCell>
                                         <div className="flex items-center gap-3">
                                             <Skeleton className="h-9 w-9 rounded-full" />
-                                            <Skeleton className="h-5 w-32" />
+                                            <div className="flex flex-col gap-1">
+                                                <Skeleton className="h-4 w-32" />
+                                            </div>
                                         </div>
                                     </TableCell>
-                                    <TableCell><Skeleton className="h-5 w-48" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
-                                    <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-4 w-48" /></TableCell>
+                                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                                    <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                     <TableCell><Skeleton className="h-6 w-16 rounded-full" /></TableCell>
                                     <TableCell></TableCell>
                                 </TableRow>
@@ -122,7 +133,7 @@ export default function UsersPage() {
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
                                                     {user.status === 'Invited' ? (
-                                                        <DropdownMenuItem onClick={() => handleResend(user.email)}>
+                                                        <DropdownMenuItem onClick={() => handleResend(user)}>
                                                             Resend Invitation
                                                         </DropdownMenuItem>
                                                     ) : (
