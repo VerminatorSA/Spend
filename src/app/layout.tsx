@@ -5,10 +5,10 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
 import { MainNav } from '@/components/main-nav';
-import { UserNav } from '@/components/user-nav';
 import { Command } from 'lucide-react';
 import { SettingsProvider } from '@/contexts/settings-context';
 import { AiTicker } from '@/components/ai-ticker';
+import { UserNav } from '@/components/user-nav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -42,18 +42,15 @@ export default function RootLayout({
                 <SidebarContent>
                   <MainNav />
                 </SidebarContent>
-                <SidebarFooter>
-                  <UserNav />
-                </SidebarFooter>
               </Sidebar>
-              <main className="flex flex-1 flex-col pb-8 md:ml-[var(--sidebar-width)] group-data-[collapsible=icon]/sidebar-wrapper:md:ml-[var(--sidebar-width-icon)] transition-[margin-left] ease-in-out duration-200">
-                <div className="flex-1">
+              <div className="flex flex-1 flex-col md:ml-[var(--sidebar-width)] group-data-[collapsible=icon]/sidebar-wrapper:md:ml-[var(--sidebar-width-icon)] transition-[margin-left] ease-in-out duration-200">
+                <main className="flex-1 pb-16">
                     {children}
-                </div>
+                </main>
                 <footer className="fixed bottom-0 z-10 w-full md:w-[calc(100vw-var(--sidebar-width))] group-data-[collapsible=icon]/sidebar-wrapper:md:w-[calc(100vw-var(--sidebar-width-icon))] transition-[width] ease-in-out duration-200">
                     <AiTicker />
                 </footer>
-              </main>
+              </div>
             </SidebarProvider>
           </div>
         </SettingsProvider>
