@@ -113,7 +113,7 @@ export default function InventoryPage() {
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <Button size="sm" asChild disabled={!supplier}>
-                                      <Link href={supplier ? `/contact/${supplier.id}` : '#'}>Reorder</Link>
+                                      <Link href={supplier ? `/contacts` : '#'}>Reorder</Link>
                                     </Button>
                                 </TableCell>
                             </TableRow>
