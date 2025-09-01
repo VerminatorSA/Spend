@@ -4,8 +4,18 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { group, type GroupProfile } from '@/lib/organization';
 
+export interface EmailSettings {
+    smtpServer?: string;
+    smtpPort?: number | string;
+    smtpUser?: string;
+    smtpPass?: string;
+    fromName?: string;
+    fromEmail?: string;
+}
+
 export interface AppSettings extends GroupProfile {
   dateFormat: 'mm-dd-yyyy' | 'dd-mm-yyyy' | 'yyyy-mm-dd';
+  emailSettings?: EmailSettings;
 }
 
 interface SettingsContextType {
@@ -19,6 +29,14 @@ const SETTINGS_STORAGE_KEY = 'appSettings';
 const defaultSettings: AppSettings = {
   ...group,
   dateFormat: 'mm-dd-yyyy',
+  emailSettings: {
+    smtpServer: '',
+    smtpPort: '',
+    smtpUser: '',
+    smtpPass: '',
+    fromName: '',
+    fromEmail: '',
+  }
 };
 
 export const currencySymbols: Record<AppSettings['currency'], string> = {
@@ -52,7 +70,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     try {
       const storedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
       if (storedSettings) {
-        setSettings(JSON.parse(storedSettings));
+        const parsedSettings = JSON.parse(storedSettings);
+        // Merge with defaults to ensure new settings are not missing
+        setSettings({ ...defaultSettings, ...parsedSettings });
       }
     } catch (error) {
       console.error("Failed to parse settings from localStorage", error);

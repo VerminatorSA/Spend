@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Header } from '@/components/header';
 import { Card, CardContent } from '@/components/ui/card';
-import { User, Building, Brush, Bell, ChevronRight } from 'lucide-react';
+import { User, Building, Brush, Bell, ChevronRight, Mail } from 'lucide-react';
 
 const settingsSections = [
     { 
@@ -28,6 +28,12 @@ const settingsSections = [
         title: 'Customization', 
         description: 'Customize appearance and forms.', 
         icon: Brush
+    },
+    { 
+        href: '/settings/email', 
+        title: 'Email Configuration', 
+        description: 'Set up your SMTP server for sending emails.', 
+        icon: Mail 
     },
     { 
         href: '/settings/notifications', 
