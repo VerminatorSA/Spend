@@ -1,31 +1,64 @@
 
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {defineSecret} from "firebase-functions/params";
+import * as logger from "firebase-functions/logger";
+import * as nodemailer from "nodemailer";
 
-import {setGlobalOptions} from "firebase-functions";
+const GMAIL_USER = defineSecret("GMAIL_USER");
+const GMAIL_APP_PASSWORD = defineSecret("GMAIL_APP_PASSWORD");
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+export const sendEmail = onCall(
+  {
+    region: "us-central1",
+    secrets: [GMAIL_USER, GMAIL_APP_PASSWORD],
+  },
+  async (req) => {
+    if (!req.auth) {
+      throw new HttpsError("unauthenticated", "Sign in required to send emails.");
+    }
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+    const data = req.data || {};
+    const to = data.to;
+    const subject = data.subject;
+    const text = data.text;
+    const from = GMAIL_USER.value();
+    const replyTo = req.auth.token.email;
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+    if (!to || !subject || !text) {
+      throw new HttpsError(
+        "invalid-argument",
+        "to, subject, and text are required."
+      );
+    }
+
+    try {
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: GMAIL_USER.value(),
+          pass: GMAIL_APP_PASSWORD.value(),
+        },
+      });
+
+      await transporter.sendMail({
+        to,
+        from,
+        replyTo,
+        subject,
+        text,
+      });
+
+      logger.info("Email sent", {to, subject, from});
+      return {ok: true};
+    } catch (e: unknown) {
+      const message =
+        e && typeof e === "object" && "message" in e ?
+          String((e as {message: unknown}).message) :
+          "unknown";
+      logger.error("Email send failed", {message});
+      throw new HttpsError("internal", "Failed to send email.");
+    }
+  }
+);
