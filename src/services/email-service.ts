@@ -16,11 +16,12 @@ interface SendEmailPayload {
  */
 export async function sendInvitationEmail(payload: SendEmailPayload): Promise<void> {
     
-    // The function is deployed under the 'spend' codebase, so we need to reference it correctly.
-    // The default export from the file becomes the function name.
+    // The function is deployed under the 'spend' codebase. The default export 
+    // from 'functions-sendemail/src/index.ts' becomes the function name.
     const functionName = 'sendEmail';
 
     try {
+        // We need to specify the region if it's not the default 'us-central1'
         const sendEmailFunction = httpsCallable(functions, functionName);
         
         const emailData = {
@@ -28,7 +29,6 @@ export async function sendInvitationEmail(payload: SendEmailPayload): Promise<vo
             subject: `You're invited to join Spend`,
             // A simple text body. You could make this an HTML template.
             text: `Hi ${payload.name},\n\nYou have been invited to join the Spend application. Please click the link below to get started.\n\nThank you!`,
-            // The 'from' and 'replyTo' could be configured in the function or passed from settings
         };
 
         const result = await sendEmailFunction(emailData);
