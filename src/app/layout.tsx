@@ -3,9 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
-import { MainNav } from '@/components/main-nav';
-import { Command } from 'lucide-react';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { SettingsProvider } from '@/contexts/settings-context';
 import { AuthProvider } from '@/contexts/auth-context';
 import { AppContent } from '@/components/app-content';
@@ -27,9 +25,11 @@ export default function RootLayout({
       <body className={`font-sans antialiased ${inter.variable}`}>
         <AuthProvider>
           <SettingsProvider>
-            <AppContent>
-              {children}
-            </AppContent>
+            <SidebarProvider>
+              <AppContent>
+                {children}
+              </AppContent>
+            </SidebarProvider>
           </SettingsProvider>
         </AuthProvider>
         <Toaster />

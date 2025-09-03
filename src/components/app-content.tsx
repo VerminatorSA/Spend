@@ -4,13 +4,13 @@
 import { useContext, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { AuthContext } from '@/contexts/auth-context';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent } from '@/components/ui/sidebar';
+import { Sidebar, SidebarHeader, SidebarContent } from '@/components/ui/sidebar';
 import { MainNav } from '@/components/main-nav';
 import { Command } from 'lucide-react';
 
 const publicRoutes = ['/login', '/signup'];
 
-export function AppContent({ children }: { children: ReactNode }) {
+export function AppContent({ children }: { children: React.ReactNode }) {
   const { user } = useContext(AuthContext);
   const pathname = usePathname();
   const isPublicRoute = publicRoutes.includes(pathname);
@@ -21,7 +21,6 @@ export function AppContent({ children }: { children: ReactNode }) {
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <SidebarProvider>
         <Sidebar>
           <SidebarHeader>
             <div className="flex items-center gap-2.5 p-2">
@@ -42,7 +41,6 @@ export function AppContent({ children }: { children: ReactNode }) {
               {children}
           </main>
         </div>
-      </SidebarProvider>
     </div>
   );
 }
