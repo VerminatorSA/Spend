@@ -3,6 +3,7 @@
  * @fileOverview A service for sending emails via Firebase Cloud Functions.
  */
 import { functions, httpsCallable } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 
 interface SendEmailPayload {
     email: string;
@@ -16,8 +17,11 @@ interface SendEmailPayload {
  */
 export async function sendInvitationEmail(payload: SendEmailPayload): Promise<void> {
     
-    // The function is deployed under the 'default' codebase.
     const functionName = 'sendEmail';
+
+    if (!auth.currentUser) {
+        throw new Error("User is not authenticated. Cannot send email.");
+    }
 
     try {
         const sendEmailFunction = httpsCallable(functions, functionName);
@@ -25,8 +29,10 @@ export async function sendInvitationEmail(payload: SendEmailPayload): Promise<vo
         const emailData = {
             to: payload.email,
             subject: `You're invited to join Spend`,
-            // A simple text body. You could make this an HTML template.
+            // The text body for the email.
             text: `Hi ${payload.name},\n\nYou have been invited to join the Spend application. Please click the link below to get started.\n\nThank you!`,
+            // The sender is determined by the Cloud Function's configuration (GMAIL_USER secret)
+            // The reply-to address is automatically set to the authenticated user's email on the backend.
         };
 
         const result = await sendEmailFunction(emailData);
