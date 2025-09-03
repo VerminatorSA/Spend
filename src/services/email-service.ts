@@ -16,9 +16,9 @@ interface SendEmailPayload {
  */
 export async function sendInvitationEmail(payload: SendEmailPayload): Promise<void> {
     
-    // The function is deployed under the 'spend' codebase. The default export 
-    // from 'functions-sendemail/src/index.ts' becomes the function name.
-    const functionName = 'sendEmail';
+    // The function is deployed under the 'spend' codebase. The name in the
+    // Firebase Console is `sendEmail1`.
+    const functionName = 'sendEmail1';
 
     try {
         const sendEmailFunction = httpsCallable(functions, functionName);
