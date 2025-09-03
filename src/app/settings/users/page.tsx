@@ -22,7 +22,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { PlusCircle, MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import { users, type User } from '@/lib/users';
 import { companies, divisions } from '@/lib/organization';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -39,14 +39,7 @@ export default function UsersPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <Header title="User Management">
-        <Button asChild>
-          <Link href="/signup">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add User
-          </Link>
-        </Button>
-      </Header>
+      <Header title="User Management" />
       <main className="flex-1 overflow-auto p-4 md:p-6">
         <div className="mx-auto max-w-6xl">
            <div>

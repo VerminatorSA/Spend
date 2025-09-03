@@ -12,24 +12,17 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, pass: string) => Promise<any>;
-  signup: (email: string, pass: string, displayName: string) => Promise<any>;
   logout: () => Promise<void>;
-  isNewUser: boolean;
-  clearNewUserFlag: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   login: async () => {},
-  signup: async () => {},
   logout: async () => {},
-  isNewUser: false,
-  clearNewUserFlag: () => {},
 });
 
-const publicRoutes = ['/login', '/signup'];
-const profileSetupRoute = '/signup/profile';
+const publicRoutes = ['/login'];
 
 function AuthSkeleton() {
   return (
@@ -48,7 +41,6 @@ function AuthSkeleton() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isNewUser, setIsNewUser] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -65,33 +57,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (loading) return;
 
     const isPublicRoute = publicRoutes.includes(pathname);
-    const isProfileSetup = pathname === profileSetupRoute;
 
-    if (isNewUser && !isProfileSetup) {
-        router.push(profileSetupRoute);
-        return;
-    }
-
-    if (!user && !isPublicRoute && !isProfileSetup) {
+    if (!user && !isPublicRoute) {
       router.push('/login');
-    } else if (user && (isPublicRoute || (isProfileSetup && !isNewUser))) {
+    } else if (user && isPublicRoute) {
       router.push('/dashboard');
     }
-  }, [user, loading, pathname, router, isNewUser]);
+  }, [user, loading, pathname, router]);
 
   const login = (email: string, pass: string) => {
     return signInWithEmailAndPassword(auth, email, pass);
-  }
-
-  const signup = async (email: string, pass: string, displayName: string) => {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-      await updateProfile(userCredential.user, { displayName });
-      setIsNewUser(true); // Flag that this is a new user
-      return userCredential;
-  }
-  
-  const clearNewUserFlag = () => {
-    setIsNewUser(false);
   }
 
   const logout = async () => {
@@ -99,9 +74,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
-  const value = { user, loading, login, signup, logout, isNewUser, clearNewUserFlag };
+  const value = { user, loading, login, logout };
   
-  const isPublicRoute = publicRoutes.includes(pathname) || pathname === profileSetupRoute;
+  const isPublicRoute = publicRoutes.includes(pathname);
 
   if (loading && !isPublicRoute) {
     return <AuthSkeleton />;
