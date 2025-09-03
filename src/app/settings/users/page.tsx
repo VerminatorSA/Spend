@@ -27,7 +27,7 @@ import { users, type User } from '@/lib/users';
 import { companies, divisions } from '@/lib/organization';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { sendInvitationEmail } from '@/services/email-service';
+
 
 export default function UsersPage() {
     const [isClient, setIsClient] = useState(false);
@@ -38,28 +38,20 @@ export default function UsersPage() {
     }, []);
 
     const handleResend = async (user: User) => {
-        try {
-            await sendInvitationEmail({ email: user.email, name: user.firstName });
-            toast({
-                title: 'Invitation Resent',
-                description: `An invitation has been resent to ${user.email}.`,
-            });
-        } catch (error) {
-             toast({
-                variant: 'destructive',
-                title: 'Failed to Resend Invitation',
-                description: 'There was a problem resending the invitation. Please try again.',
-            });
-        }
+        toast({
+            variant: 'destructive',
+            title: 'Feature Deprecated',
+            description: 'Email invitations are currently disabled.',
+        });
     }
 
   return (
     <div className="flex h-full flex-col">
       <Header title="User Management">
         <Button asChild>
-          <Link href="/settings/users/add">
+          <Link href="/signup">
             <PlusCircle className="mr-2 h-4 w-4" />
-            Invite User
+            Add User
           </Link>
         </Button>
       </Header>

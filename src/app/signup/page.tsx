@@ -12,6 +12,8 @@ import { Command } from 'lucide-react';
 
 export default function SignupPage() {
   const { signup } = useContext(AuthContext);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +24,7 @@ export default function SignupPage() {
     setLoading(true);
     setError(null);
     try {
-      await signup(email, password);
+      await signup(email, password, `${firstName} ${lastName}`);
     } catch (err: any) {
       if (err.code === 'auth/email-already-in-use') {
         setError('This email is already in use. Please try logging in.');
@@ -44,10 +46,32 @@ export default function SignupPage() {
                 </div>
             </div>
           <CardTitle className="text-2xl">Create an account</CardTitle>
-          <CardDescription>Enter your email and password to get started</CardDescription>
+          <CardDescription>Enter your details below to get started</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignup} className="space-y-4">
+             <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                        id="firstName"
+                        placeholder="John"
+                        required
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                        id="lastName"
+                        placeholder="Doe"
+                        required
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                    />
+                </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input

@@ -12,7 +12,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { companies, divisions } from '@/lib/organization';
 import { users } from '@/lib/users';
-import { sendInvitationEmail } from '@/services/email-service';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
+
 
 export default function InviteUserPage() {
     const { toast } = useToast();
@@ -45,40 +47,12 @@ export default function InviteUserPage() {
             return;
         }
 
-        const newUser = {
-            id: `user-${Date.now()}`,
-            firstName,
-            lastName,
-            email,
-            companyId,
-            divisionId,
-            role: 'Member' as 'Member', // Default role for now
-            status: 'Invited' as 'Invited',
-            avatarUrl: `https://picsum.photos/seed/${Date.now()}/100/100`,
-        };
-
-        try {
-            await sendInvitationEmail({ email, name: firstName });
-            
-            users.push(newUser);
-
-            toast({
-                title: 'Invitation Sent',
-                description: `An invitation has been sent to ${email}.`,
-            });
-
-            router.push('/settings/users');
-
-        } catch (error) {
-             toast({
-                variant: 'destructive',
-                title: 'Failed to Send Invitation',
-                description: 'There was a problem sending the invitation. This could be a network issue or a problem with the email service.',
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-
+        toast({
+            variant: 'destructive',
+            title: 'Feature Deprecated',
+            description: 'Email invitations are currently disabled. Please ask new users to sign up directly.',
+        });
+        setIsSubmitting(false);
     };
 
     return (
@@ -93,25 +67,32 @@ export default function InviteUserPage() {
                             Fill out the form below to invite a new user to the application. All fields are required.
                         </p>
                     </div>
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                     <Alert variant="destructive">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Invitations Disabled</AlertTitle>
+                        <AlertDescription>
+                            The email invitation service is currently unavailable. New users should be directed to the <Link href="/signup" className="font-bold underline">Sign Up</Link> page to create their own accounts.
+                        </AlertDescription>
+                    </Alert>
+                    <form onSubmit={handleSubmit} className="space-y-6 opacity-50">
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                              <div className="space-y-2">
                                 <Label htmlFor="firstName">First Name <span className="text-destructive">*</span></Label>
-                                <Input id="firstName" placeholder="e.g., John" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                                <Input id="firstName" placeholder="e.g., John" value={firstName} onChange={e => setFirstName(e.target.value)} disabled />
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="lastName">Last Name <span className="text-destructive">*</span></Label>
-                                <Input id="lastName" placeholder="e.g., Doe" value={lastName} onChange={e => setLastName(e.target.value)} />
+                                <Input id="lastName" placeholder="e.g., Doe" value={lastName} onChange={e => setLastName(e.target.value)} disabled />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="email">Email Address <span className="text-destructive">*</span></Label>
-                            <Input id="email" type="email" placeholder="e.g., user@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+                            <Input id="email" type="email" placeholder="e.g., user@example.com" value={email} onChange={e => setEmail(e.target.value)} disabled />
                         </div>
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             <div className="space-y-2">
                                 <Label htmlFor="companyId">Company <span className="text-destructive">*</span></Label>
-                                <Select value={companyId} onValueChange={handleCompanyChange}>
+                                <Select value={companyId} onValueChange={handleCompanyChange} disabled>
                                     <SelectTrigger id="companyId">
                                         <SelectValue placeholder="Select a company" />
                                     </SelectTrigger>
@@ -124,7 +105,7 @@ export default function InviteUserPage() {
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="divisionId">Division <span className="text-destructive">*</span></Label>
-                                <Select value={divisionId} onValueChange={setDivisionId} disabled={!companyId}>
+                                <Select value={divisionId} onValueChange={setDivisionId} disabled>
                                     <SelectTrigger id="divisionId">
                                         <SelectValue placeholder="Select a division" />
                                     </SelectTrigger>
@@ -140,8 +121,8 @@ export default function InviteUserPage() {
                           <Button asChild variant="outline">
                             <Link href="/settings/users">Cancel</Link>
                           </Button>
-                          <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? 'Sending...' : 'Send Invitation'}
+                          <Button type="submit" disabled>
+                            Send Invitation
                           </Button>
                         </div>
                     </form>
