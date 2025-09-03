@@ -1,3 +1,4 @@
+
 /**
  * Import function triggers from their respective submodules:
  *
@@ -33,8 +34,11 @@ export const sendEmail = onCall(
     const subject = data.subject;
     const text = data.text;
     const html = data.html;
-    const from = data.from;
-    const replyTo = data.replyTo || req.auth.token.email;
+    
+    // The 'from' address should always be the authenticated GMAIL_USER
+    const from = GMAIL_USER.value();
+    // The 'replyTo' can be the person sending the invite, if available.
+    const replyTo = req.auth.token.email || GMAIL_USER.value();
 
     if (!to || !subject || (!text && !html)) {
       throw new HttpsError(
@@ -56,7 +60,7 @@ export const sendEmail = onCall(
 
       await transporter.sendMail({
         to,
-        from: from || GMAIL_USER.value(),
+        from,
         replyTo,
         subject,
         text,
