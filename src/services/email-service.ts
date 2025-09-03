@@ -21,7 +21,6 @@ export async function sendInvitationEmail(payload: SendEmailPayload): Promise<vo
     const functionName = 'sendEmail';
 
     try {
-        // We need to specify the region if it's not the default 'us-central1'
         const sendEmailFunction = httpsCallable(functions, functionName);
         
         const emailData = {
