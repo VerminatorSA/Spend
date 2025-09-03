@@ -15,27 +15,28 @@ interface SendEmailPayload {
  * @returns A promise that resolves when the function is called.
  */
 export async function sendInvitationEmail(payload: SendEmailPayload): Promise<void> {
-    // In a real application, you would have a Cloud Function named 'sendEmail'.
-    // We are simulating the call to it here.
-    console.log(`Simulating call to Firebase Cloud Function 'sendEmail' with payload:`, payload);
+    
+    // The function is deployed under the 'spend' codebase, so we need to reference it correctly.
+    // The default export from the file becomes the function name.
+    const functionName = 'sendEmail';
 
-    // This is how you would call the function if it were deployed:
-    /*
     try {
-        const sendEmail = httpsCallable(functions, 'sendEmail');
-        const result = await sendEmail(payload);
+        const sendEmailFunction = httpsCallable(functions, functionName);
+        
+        const emailData = {
+            to: payload.email,
+            subject: `You're invited to join Spend`,
+            // A simple text body. You could make this an HTML template.
+            text: `Hi ${payload.name},\n\nYou have been invited to join the Spend application. Please click the link below to get started.\n\nThank you!`,
+            // The 'from' and 'replyTo' could be configured in the function or passed from settings
+        };
+
+        const result = await sendEmailFunction(emailData);
         console.log('Cloud Function called successfully, result:', result.data);
+
     } catch (error) {
         console.error("Error calling Cloud Function:", error);
+        // Re-throw the error so the UI can catch it and show a message
         throw new Error("Failed to send email via Cloud Function.");
     }
-    */
-
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // To test an error state, you can uncomment the following line:
-    // throw new Error("Simulated network failure");
-    
-    return Promise.resolve();
 }
