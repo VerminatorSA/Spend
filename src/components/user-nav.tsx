@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useContext } from 'react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,8 +14,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { AuthContext } from '@/contexts/auth-context';
 
 export function UserNav() {
+  const { user, logout } = useContext(AuthContext);
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,7 +38,7 @@ export function UserNav() {
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">Purchasing Manager</p>
             <p className="text-xs leading-none text-muted-foreground">
-              manager@spend.com
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -44,7 +52,7 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

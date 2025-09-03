@@ -1,5 +1,6 @@
 
 import { initializeApp, getApps, getApp, type FirebaseOptions } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 
 const firebaseConfig: FirebaseOptions = {
@@ -13,6 +14,7 @@ const firebaseConfig: FirebaseOptions = {
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const auth = getAuth(app);
 const functions = getFunctions(app);
 
-export { app, functions, httpsCallable };
+export { app, auth, functions, httpsCallable };
