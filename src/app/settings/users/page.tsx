@@ -37,14 +37,6 @@ export default function UsersPage() {
         setIsClient(true);
     }, []);
 
-    const handleResend = async (user: User) => {
-        toast({
-            variant: 'destructive',
-            title: 'Feature Deprecated',
-            description: 'Email invitations are currently disabled.',
-        });
-    }
-
   return (
     <div className="flex h-full flex-col">
       <Header title="User Management">
@@ -124,16 +116,10 @@ export default function UsersPage() {
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    {user.status === 'Invited' ? (
-                                                        <DropdownMenuItem onClick={() => handleResend(user)}>
-                                                            Resend Invitation
-                                                        </DropdownMenuItem>
-                                                    ) : (
-                                                        <>
-                                                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                                                            <DropdownMenuItem>Deactivate</DropdownMenuItem>
-                                                        </>
-                                                    )}
+                                                    
+                                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                                                    
                                                     <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
