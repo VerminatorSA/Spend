@@ -33,17 +33,11 @@ export const sendEmail = onCall(
     const to = data.to;
     const subject = data.subject;
     const text = data.text;
-    const html = data.html;
     
-    // The 'from' address should always be the authenticated GMAIL_USER
-    const from = GMAIL_USER.value();
-    // The 'replyTo' can be the person sending the invite, if available.
-    const replyTo = req.auth.token.email || GMAIL_USER.value();
-
-    if (!to || !subject || (!text && !html)) {
+    if (!to || !subject || !text) {
       throw new HttpsError(
         "invalid-argument",
-        "to, subject, and text or html are required."
+        "to, subject, and text are required."
       );
     }
 
@@ -59,15 +53,13 @@ export const sendEmail = onCall(
       });
 
       await transporter.sendMail({
+        from: GMAIL_USER.value(),
         to,
-        from,
-        replyTo,
         subject,
         text,
-        html,
       });
 
-      logger.info("Email sent", {to, subject, from});
+      logger.info("Email sent", {to, subject, from: GMAIL_USER.value()});
       return {ok: true};
     } catch (e: unknown) {
       const message =

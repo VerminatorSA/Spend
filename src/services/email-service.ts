@@ -29,10 +29,7 @@ export async function sendInvitationEmail(payload: SendEmailPayload): Promise<vo
         const emailData = {
             to: payload.email,
             subject: `You're invited to join Spend`,
-            // The text body for the email.
             text: `Hi ${payload.name},\n\nYou have been invited to join the Spend application. Please click the link below to get started.\n\nThank you!`,
-            // The sender is determined by the Cloud Function's configuration (GMAIL_USER secret)
-            // The reply-to address is automatically set to the authenticated user's email on the backend.
         };
 
         const result = await sendEmailFunction(emailData);
