@@ -3,6 +3,7 @@
 
 import { useState, useContext } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -17,15 +18,13 @@ import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { createTask } from '@/services/task-service';
-import { SettingsContext } from '@/contexts/settings-context';
 
 export default function AddTaskPage() {
-  const { settings } = useContext(SettingsContext);
   const { toast } = useToast();
+  const router = useRouter();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
-  const [dueTime, setDueTime] = useState('');
   const [priority, setPriority] = useState<'High' | 'Medium' | 'Low' | ''>('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,20 +41,14 @@ export default function AddTaskPage() {
 
     let finalDueDate: string | undefined = undefined;
     if (dueDate) {
-        const dateWithTime = new Date(dueDate);
-        if (dueTime) {
-            const [hours, minutes] = dueTime.split(':');
-            dateWithTime.setHours(parseInt(hours, 10));
-            dateWithTime.setMinutes(parseInt(minutes, 10));
-        }
-        finalDueDate = dateWithTime.toISOString();
+        finalDueDate = dueDate.toISOString();
     }
     
     try {
         await createTask({ 
             title, 
             description, 
-            priority, 
+            priority: priority as 'High' | 'Medium' | 'Low', 
             dueDate: finalDueDate 
         });
 
@@ -64,11 +57,7 @@ export default function AddTaskPage() {
         description: 'The new task has been successfully added to the board.',
         });
         
-        setTitle('');
-        setDescription('');
-        setDueDate(undefined);
-        setDueTime('');
-        setPriority('');
+        router.push('/tasks');
 
     } catch (error) {
         toast({
@@ -129,40 +118,31 @@ export default function AddTaskPage() {
                                 </Select>
                             </div>
                             <div className="space-y-2">
-                                <Label>Due Date & Time</Label>
-                                <div className="flex gap-2">
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                id="due-date"
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "flex-1 justify-start text-left font-normal",
-                                                    !dueDate && "text-muted-foreground"
-                                                )}
-                                                >
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {dueDate ? format(dueDate, "PPP", { locale: enUS }) : <span>Pick a date</span>}
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0">
-                                            <Calendar
-                                                mode="single"
-                                                selected={dueDate}
-                                                onSelect={setDueDate}
-                                                initialFocus
-                                                locale={enUS}
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <Input
-                                        type="time"
-                                        value={dueTime}
-                                        onChange={(e) => setDueTime(e.target.value)}
-                                        className="w-[120px]"
-                                        disabled={!dueDate}
-                                    />
-                                </div>
+                                <Label>Due Date</Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            id="due-date"
+                                            variant={"outline"}
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !dueDate && "text-muted-foreground"
+                                            )}
+                                            >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {dueDate ? format(dueDate, "PPP", { locale: enUS }) : <span>Pick a date</span>}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                            mode="single"
+                                            selected={dueDate}
+                                            onSelect={setDueDate}
+                                            initialFocus
+                                            locale={enUS}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                             </div>
                         </div>
                     </div>

@@ -54,7 +54,9 @@ export default function TasksPage() {
             'Cancelled': [],
         };
         tasks.forEach(task => {
-            groupedTasks[task.status].push(task);
+            if (groupedTasks[task.status]) {
+                groupedTasks[task.status].push(task);
+            }
         });
         return groupedTasks;
     }, [tasks]);
@@ -80,17 +82,16 @@ export default function TasksPage() {
         setActiveTask(null);
 
         if (over && active.id !== over.id) {
-            const activeTask = tasks.find(t => t.id === active.id);
-            if (activeTask) {
+            const activeTaskIndex = tasks.findIndex(t => t.id === active.id);
+            if (activeTaskIndex !== -1) {
                 const newStatus = over.id as TaskStatus;
-                // In a real app, you would also handle reordering within a column.
-                // For this implementation, we are just changing the status.
-                if (statuses.includes(newStatus) && activeTask.status !== newStatus) {
-                     setTasks(prevTasks => 
-                        prevTasks.map(task => 
-                            task.id === active.id ? { ...task, status: newStatus } : task
-                        )
-                    );
+                
+                if (statuses.includes(newStatus) && tasks[activeTaskIndex].status !== newStatus) {
+                     setTasks(prevTasks => {
+                        const newTasks = [...prevTasks];
+                        newTasks[activeTaskIndex] = { ...newTasks[activeTaskIndex], status: newStatus };
+                        return newTasks;
+                     });
                 }
             }
         }
