@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview A service for interacting with task data.
  *
@@ -11,6 +12,7 @@ interface CreateTaskInput {
     description?: string;
     priority: 'High' | 'Medium' | 'Low';
     dueDate?: string; // Expecting ISO string
+    boardId: string;
 }
 
 /**
@@ -28,6 +30,7 @@ export async function createTask(input: CreateTaskInput): Promise<void> {
         status: 'To Do',
         priority: input.priority,
         dueDate: input.dueDate || null,
+        boardId: input.boardId,
         // For now, assign to the default user. In a real app, this would be the logged-in user.
         assignee: { name: 'Purchasing Manager', avatarUrl: 'https://picsum.photos/100/100' },
     };

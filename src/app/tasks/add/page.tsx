@@ -18,6 +18,7 @@ import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { createTask } from '@/services/task-service';
+import { boards } from '@/lib/boards';
 
 export default function AddTaskPage() {
   const { toast } = useToast();
@@ -26,15 +27,16 @@ export default function AddTaskPage() {
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [priority, setPriority] = useState<'High' | 'Medium' | 'Low' | ''>('');
+  const [boardId, setBoardId] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title || !priority) {
+    if (!title || !priority || !boardId) {
          toast({
           variant: 'destructive',
           title: 'Missing Required Fields',
-          description: `Please fill out the Title and Priority fields.`,
+          description: `Please fill out the Title, Priority, and Board fields.`,
         });
         return;
     }
@@ -49,7 +51,8 @@ export default function AddTaskPage() {
             title, 
             description, 
             priority: priority as 'High' | 'Medium' | 'Low', 
-            dueDate: finalDueDate 
+            dueDate: finalDueDate,
+            boardId,
         });
 
         toast({
@@ -57,7 +60,7 @@ export default function AddTaskPage() {
         description: 'The new task has been successfully added to the board.',
         });
         
-        router.push('/tasks');
+        router.push(`/tasks/${boardId}`);
 
     } catch (error) {
         toast({
@@ -104,6 +107,19 @@ export default function AddTaskPage() {
                         </div>
 
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                             <div className="space-y-2">
+                                <Label htmlFor="board">Board <span className="text-destructive">*</span></Label>
+                                <Select onValueChange={setBoardId} value={boardId}>
+                                    <SelectTrigger id="board">
+                                        <SelectValue placeholder="Select a board" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {boards.map(board => (
+                                            <SelectItem key={board.id} value={board.id}>{board.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                             <div className="space-y-2">
                                 <Label htmlFor="priority">Priority <span className="text-destructive">*</span></Label>
                                 <Select onValueChange={(v) => setPriority(v as any)} value={priority}>
@@ -117,7 +133,7 @@ export default function AddTaskPage() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-2 md:col-span-2">
                                 <Label>Due Date</Label>
                                 <Popover>
                                     <PopoverTrigger asChild>
