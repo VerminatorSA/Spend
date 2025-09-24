@@ -18,7 +18,7 @@ export const sendEmail = onCall(
     const subject = data.subject;
     const text = data.text;
     const html = data.html;
-    const from = GMAIL_USER.value();
+    const from = data.from || GMAIL_USER.value();
     const replyTo = from; // Default replyTo to the sender's email
 
     if (!to || !subject || (!text && !html)) {
@@ -48,7 +48,7 @@ export const sendEmail = onCall(
         html,
       });
 
-      logger.info("Email sent", {to, subject, from});
+      logger.info("Email sent", {to, subject});
       return {ok: true};
     } catch (e: unknown) {
       const message =
