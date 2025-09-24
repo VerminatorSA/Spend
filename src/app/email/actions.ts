@@ -23,7 +23,6 @@ type State = {
 // This function needs to run on the server, as it calls the Firebase Function
 async function callSendEmail(data: { to: string; subject: string; text: string }) {
     try {
-        // Use httpsCallableFromURL for unauthenticated access from the server
         const functions = getFunctions(app, 'us-central1');
         const sendEmail = httpsCallable(functions, 'sendEmail');
         const result = await sendEmail(data);
