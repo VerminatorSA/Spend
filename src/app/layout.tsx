@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import { AppContent } from '@/components/app-content';
 import './globals.css';
+import { ClientBody } from '@/components/client-body';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -19,9 +20,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
-      <body className="font-sans antialiased" suppressHydrationWarning>
+      <ClientBody>
         <AppContent>{children}</AppContent>
-      </body>
+      </ClientBody>
     </html>
   );
 }
