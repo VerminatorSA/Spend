@@ -11,6 +11,7 @@ export const sendEmail = onCall(
   {
     region: "us-central1",
     secrets: [GMAIL_USER, GMAIL_APP_PASSWORD],
+    allow: "unauthenticated",
   },
   async (req) => {
     const data = req.data || {};
