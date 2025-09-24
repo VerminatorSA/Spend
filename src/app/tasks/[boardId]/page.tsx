@@ -68,8 +68,21 @@ export default function TaskBoardPage() {
         });
 
         const priorityOrder: Record<Task['priority'], number> = { 'High': 1, 'Medium': 2, 'Low': 3 };
+        
         for (const status in groupedTasks) {
-            groupedTasks[status as TaskStatus].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+            groupedTasks[status as TaskStatus].sort((a, b) => {
+                // First, sort by priority
+                const priorityDifference = priorityOrder[a.priority] - priorityOrder[b.priority];
+                if (priorityDifference !== 0) {
+                    return priorityDifference;
+                }
+
+                // If priorities are the same, sort by due date (soonest first)
+                const dateA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+                const dateB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+
+                return dateA - dateB;
+            });
         }
 
         return groupedTasks;
