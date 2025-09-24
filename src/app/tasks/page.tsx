@@ -58,6 +58,13 @@ export default function TasksPage() {
                 groupedTasks[task.status].push(task);
             }
         });
+
+        // Sort tasks within each column by priority
+        const priorityOrder: Record<Task['priority'], number> = { 'High': 1, 'Medium': 2, 'Low': 3 };
+        for (const status in groupedTasks) {
+            groupedTasks[status as TaskStatus].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+        }
+
         return groupedTasks;
     }, [tasks]);
 
