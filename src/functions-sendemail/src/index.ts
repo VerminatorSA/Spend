@@ -1,4 +1,3 @@
-
 import {onCall, HttpsError} from "firebase-functions/v2/https";
 import {defineSecret} from "firebase-functions/params";
 import * as logger from "firebase-functions/logger";
@@ -11,6 +10,7 @@ export const sendEmail = onCall(
   {
     region: "us-central1",
     secrets: [GMAIL_USER, GMAIL_APP_PASSWORD],
+    allow: "unauthenticated",
   },
   async (req) => {
     const data = req.data || {};
@@ -19,7 +19,7 @@ export const sendEmail = onCall(
     const text = data.text;
     const html = data.html;
     const from = data.from || GMAIL_USER.value();
-    const replyTo = from; 
+    const replyTo = from;
 
     if (!to || !subject || (!text && !html)) {
       throw new HttpsError(
