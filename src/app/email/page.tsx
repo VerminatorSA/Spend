@@ -9,11 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { submitEmail } from './actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Send } from 'lucide-react';
-import { contacts } from '@/lib/data';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -65,24 +63,13 @@ export default function EmailPage() {
             <Card>
                 <CardHeader>
                     <CardTitle>Compose Email</CardTitle>
-                    <CardDescription>Send an email to one of your contacts.</CardDescription>
+                    <CardDescription>Send an email to any recipient.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form ref={formRef} action={formAction} className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="to">Recipient</Label>
-                            <Select name="to">
-                                <SelectTrigger id="to">
-                                    <SelectValue placeholder="Select a contact" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {contacts.map(contact => (
-                                        <SelectItem key={contact.id} value={contact.email}>
-                                            {contact.name} ({contact.email})
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <Input id="to" name="to" type="email" placeholder="Enter recipient's email address" />
                              {state.errors?.to && (
                                 <p className="mt-2 text-sm text-destructive">
                                     {state.errors.to.join(', ')}

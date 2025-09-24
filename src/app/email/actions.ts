@@ -6,7 +6,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '@/lib/firebase'; // Assuming you have firebase initialized here
 
 const schema = z.object({
-  to: z.string().email({ message: 'Please select a valid recipient.' }),
+  to: z.string().email({ message: 'Please enter a valid email address.' }),
   subject: z.string().min(1, { message: 'Subject is required.' }),
   message: z.string().min(1, { message: 'Message cannot be empty.' }),
 });
