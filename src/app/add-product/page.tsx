@@ -1,6 +1,8 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -9,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { items, type Item } from '@/lib/data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
+import { createProduct } from '@/services/product-service';
 
 interface FormField {
   id: string;
@@ -27,6 +30,7 @@ const FORM_FIELDS_STORAGE_KEY = 'productFormFields';
 
 export default function AddProductPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [configuredFields, setConfiguredFields] = useState<FormField[]>([]);
   const [bom, setBom] = useState<BomItem[]>([]);
@@ -69,7 +73,7 @@ export default function AddProductPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     for (const field of configuredFields) {
       if (field.checked && field.required && !formData[field.id]) {
@@ -89,20 +93,27 @@ export default function AddProductPage() {
         });
         return;
     }
-    console.log('Product Form Submitted:', { ...formData, bom });
-    toast({
-      title: 'Product Submitted',
-      description: 'The new product has been successfully created.',
-    });
-    
-    const resetData: Record<string, string> = {};
-    configuredFields.forEach(field => {
-        if(field.checked) {
-            resetData[field.id] = '';
-        }
-    });
-    setFormData(resetData);
-    setBom([]);
+
+    try {
+        await createProduct({
+            name: formData['field-product-name'],
+            description: formData['field-product-description'],
+            bom: bom,
+        });
+
+        toast({
+            title: 'Product Created',
+            description: 'The new product has been successfully created.',
+        });
+
+        router.push('/inventory');
+    } catch (error) {
+        toast({
+            variant: 'destructive',
+            title: 'Error Creating Product',
+            description: 'There was a problem creating the product. Please try again.',
+        });
+    }
   };
 
   const visibleFields = configuredFields.filter(f => f.checked);
