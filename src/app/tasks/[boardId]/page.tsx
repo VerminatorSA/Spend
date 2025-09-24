@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import {
   DndContext,
   closestCenter,
@@ -29,7 +29,10 @@ import { TaskCard } from '@/components/task-card';
 import { EditTaskDialog } from '@/components/edit-task-dialog';
 import { updateTask } from '@/services/task-service';
 
-export default function TaskBoardPage({ params }: { params: { boardId: string } }) {
+export default function TaskBoardPage() {
+    const params = useParams();
+    const boardId = params.boardId as string;
+
     const [board, setBoard] = useState<Board | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -38,13 +41,13 @@ export default function TaskBoardPage({ params }: { params: { boardId: string } 
 
     useEffect(() => {
         setIsClient(true);
-        const currentBoard = allBoards.find(b => b.id === params.boardId);
+        const currentBoard = allBoards.find(b => b.id === boardId);
         if (currentBoard) {
             setBoard(currentBoard);
-            const boardTasks = initialTasks.filter(t => t.boardId === params.boardId);
+            const boardTasks = initialTasks.filter(t => t.boardId === boardId);
             setTasks(boardTasks);
         }
-    }, [params.boardId]);
+    }, [boardId]);
 
     const columns = useMemo(() => {
         return board?.statuses.map(status => ({
