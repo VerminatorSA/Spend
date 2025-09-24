@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { type Task } from '@/lib/tasks';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { ArrowUp, ArrowRight, ArrowDown } from 'lucide-react';
+import { ArrowUp, ArrowRight, ArrowDown, Package } from 'lucide-react';
 
 interface TaskCardProps {
   task: Task;
@@ -46,6 +46,7 @@ export function TaskCard({ task, isOverlay, onEdit }: TaskCardProps) {
 
   const priorityConfig = priorityMap[task.priority];
   const assigneeInitial = task.assignee.name.split(' ').map(n => n[0]).join('');
+  const inventoryItemCount = task.inventoryItems?.length || 0;
 
   if (isDragging) {
     return (
@@ -74,10 +75,18 @@ export function TaskCard({ task, isOverlay, onEdit }: TaskCardProps) {
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
              <div className="flex items-center justify-between">
-                <Badge variant={priorityConfig.variant} className={priorityConfig.variant === 'outline' ? 'border-yellow-500 text-yellow-500' : ''}>
-                    <priorityConfig.icon className="mr-1 h-3 w-3" />
-                    {task.priority}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant={priorityConfig.variant} className={priorityConfig.variant === 'outline' ? 'border-yellow-500 text-yellow-500' : ''}>
+                      <priorityConfig.icon className="mr-1 h-3 w-3" />
+                      {task.priority}
+                  </Badge>
+                  {inventoryItemCount > 0 && (
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <Package className="h-3 w-3" />
+                      {inventoryItemCount}
+                    </Badge>
+                  )}
+                </div>
                 {task.dueDate && (
                     <span className="text-xs text-muted-foreground">
                         {format(new Date(task.dueDate), 'MMM d')}

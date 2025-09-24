@@ -13,6 +13,10 @@ export type Task = {
         avatarUrl: string;
     };
     boardId: string;
+    inventoryItems?: {
+        itemId: string;
+        quantity: number;
+    }[];
 };
 
 export let tasks: Task[] = [
@@ -23,7 +27,11 @@ export let tasks: Task[] = [
         priority: 'High',
         dueDate: '2024-09-15T14:00:00Z',
         assignee: { name: 'Alicia Keys', avatarUrl: 'https://picsum.photos/id/1011/100/100' },
-        boardId: 'board-001'
+        boardId: 'board-001',
+        inventoryItems: [
+            { itemId: 'item-001', quantity: 100 },
+            { itemId: 'item-003', quantity: 10 },
+        ],
     },
     {
         id: 'task-002',
@@ -41,7 +49,11 @@ export let tasks: Task[] = [
         priority: 'Medium',
         dueDate: '2024-09-25T16:30:00Z',
         assignee: { name: 'Ben Carter', avatarUrl: 'https://picsum.photos/id/1025/100/100' },
-        boardId: 'board-001'
+        boardId: 'board-001',
+        inventoryItems: [
+            { itemId: 'item-002', quantity: 2 },
+            { itemId: 'item-007', quantity: 1 },
+        ],
     },
     {
         id: 'task-004',
