@@ -19,7 +19,7 @@ export function KanbanColumn({ id, title, tasks, onEditTask }: KanbanColumnProps
   return (
     <div
       ref={setNodeRef}
-      className="flex flex-col rounded-lg bg-muted/50"
+      className="flex h-full w-[320px] flex-col rounded-lg bg-muted/50"
     >
       <h3 className="p-4 text-lg font-semibold tracking-tight text-foreground">
         {title} ({tasks.length})
