@@ -3,6 +3,7 @@
  * @fileOverview A service for interacting with task data.
  *
  * - createTask - A function that creates a new task.
+ * - updateTask - A function that updates an existing task.
  */
 
 import { tasks, type Task } from '@/lib/tasks';
@@ -36,4 +37,18 @@ export async function createTask(input: CreateTaskInput): Promise<void> {
     };
 
     tasks.push(newTask);
+}
+
+
+/**
+ * Updates an existing task with new data.
+ * @param updatedTask The task object with updated values.
+ * @returns A promise that resolves when the task is updated.
+ */
+export async function updateTask(updatedTask: Task): Promise<void> {
+    const taskIndex = tasks.findIndex(t => t.id === updatedTask.id);
+    if (taskIndex === -1) {
+        throw new Error('Task not found');
+    }
+    tasks[taskIndex] = updatedTask;
 }

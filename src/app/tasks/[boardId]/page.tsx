@@ -26,13 +26,15 @@ import { tasks as initialTasks, type Task } from '@/lib/tasks';
 import { boards as allBoards, type Board, type TaskStatus } from '@/lib/boards';
 import { KanbanColumn } from '@/components/kanban-column';
 import { TaskCard } from '@/components/task-card';
-
+import { EditTaskDialog } from '@/components/edit-task-dialog';
+import { updateTask } from '@/services/task-service';
 
 export default function TaskBoardPage({ params }: { params: { boardId: string } }) {
     const [board, setBoard] = useState<Board | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [activeTask, setActiveTask] = useState<Task | null>(null);
     const [isClient, setIsClient] = useState(false);
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
 
     useEffect(() => {
         setIsClient(true);
@@ -106,6 +108,20 @@ export default function TaskBoardPage({ params }: { params: { boardId: string } 
         }
     };
 
+    const handleEditTask = (task: Task) => {
+        setEditingTask(task);
+    };
+
+    const handleTaskUpdate = async (updatedTask: Task) => {
+        try {
+            await updateTask(updatedTask);
+            setTasks(currentTasks => currentTasks.map(t => t.id === updatedTask.id ? updatedTask : t));
+            setEditingTask(null);
+        } catch (error) {
+            console.error("Failed to update task", error);
+        }
+    };
+
     if (!isClient) {
         return null; // Or a loading skeleton
     }
@@ -126,7 +142,7 @@ export default function TaskBoardPage({ params }: { params: { boardId: string } 
             </Header>
             <main className="flex-1 overflow-x-auto overflow-y-hidden p-4 md:p-6">
                  <div className="mb-4">
-                    <p className="text-muted-foreground">Drag and drop tasks to change their status.</p>
+                    <p className="text-muted-foreground">Click on a task to edit it, or drag and drop to change its status.</p>
                 </div>
                 <DndContext
                     sensors={sensors}
@@ -142,6 +158,7 @@ export default function TaskBoardPage({ params }: { params: { boardId: string } 
                                     id={column.id} 
                                     title={column.title} 
                                     tasks={tasksByStatus[column.id as TaskStatus]}
+                                    onEditTask={handleEditTask}
                                 />
                             ))}
                         </SortableContext>
@@ -151,6 +168,14 @@ export default function TaskBoardPage({ params }: { params: { boardId: string } 
                     </DragOverlay>
                 </DndContext>
             </main>
+            {editingTask && (
+                <EditTaskDialog
+                    task={editingTask}
+                    isOpen={!!editingTask}
+                    onClose={() => setEditingTask(null)}
+                    onSave={handleTaskUpdate}
+                />
+            )}
         </div>
     );
 }

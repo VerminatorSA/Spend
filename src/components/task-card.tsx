@@ -14,6 +14,7 @@ import { ArrowUp, ArrowRight, ArrowDown } from 'lucide-react';
 interface TaskCardProps {
   task: Task;
   isOverlay?: boolean;
+  onEdit?: () => void;
 }
 
 const priorityMap: Record<Task['priority'], { variant: 'destructive' | 'outline' | 'secondary'; icon: React.ElementType }> = {
@@ -22,7 +23,7 @@ const priorityMap: Record<Task['priority'], { variant: 'destructive' | 'outline'
     'Low': { variant: 'secondary', icon: ArrowDown },
 };
 
-export function TaskCard({ task, isOverlay }: TaskCardProps) {
+export function TaskCard({ task, isOverlay, onEdit }: TaskCardProps) {
   const {
     attributes,
     listeners,
@@ -62,8 +63,9 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
       style={style}
       {...attributes}
       {...listeners}
+      onClick={onEdit}
       className={cn(
-        'rounded-lg bg-card text-card-foreground shadow-sm transition-shadow',
+        'cursor-grab rounded-lg bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing',
         isOverlay && 'ring-2 ring-primary'
       )}
     >
