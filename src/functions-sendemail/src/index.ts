@@ -13,17 +13,13 @@ export const sendEmail = onCall(
     secrets: [GMAIL_USER, GMAIL_APP_PASSWORD],
   },
   async (req) => {
-    if (!req.auth) {
-      throw new HttpsError("unauthenticated", "Sign in required to send emails.");
-    }
-
     const data = req.data || {};
     const to = data.to;
     const subject = data.subject;
     const text = data.text;
     const html = data.html;
-    const from = data.from || req.auth.token.email;
-    const replyTo = data.replyTo || req.auth.token.email;
+    const from = GMAIL_USER.value();
+    const replyTo = from; // Default replyTo to the sender's email
 
     if (!to || !subject || (!text && !html)) {
       throw new HttpsError(
