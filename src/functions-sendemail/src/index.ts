@@ -19,7 +19,7 @@ export const sendEmail = onCall(
     const text = data.text;
     const html = data.html;
     const from = data.from || GMAIL_USER.value();
-    const replyTo = from; // Default replyTo to the sender's email
+    const replyTo = from; 
 
     if (!to || !subject || (!text && !html)) {
       throw new HttpsError(
