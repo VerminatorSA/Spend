@@ -1,8 +1,4 @@
 import { Inter } from 'next/font/google';
-import { AuthProvider } from '@/contexts/auth-context';
-import { SettingsProvider } from '@/contexts/settings-context';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { Toaster } from '@/components/ui/toaster';
 import { AppContent } from '@/components/app-content';
 import './globals.css';
 
@@ -24,14 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased">
-        <AuthProvider>
-          <SettingsProvider>
-            <SidebarProvider>
-              <AppContent>{children}</AppContent>
-              <Toaster />
-            </SidebarProvider>
-          </SettingsProvider>
-        </AuthProvider>
+        <AppContent>{children}</AppContent>
       </body>
     </html>
   );

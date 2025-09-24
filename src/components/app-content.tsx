@@ -3,14 +3,16 @@
 
 import { useContext, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { AuthContext } from '@/contexts/auth-context';
-import { Sidebar, SidebarHeader, SidebarContent } from '@/components/ui/sidebar';
+import { AuthContext, AuthProvider } from '@/contexts/auth-context';
+import { SettingsProvider } from '@/contexts/settings-context';
+import { Sidebar, SidebarHeader, SidebarContent, SidebarProvider } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/toaster';
 import { MainNav } from '@/components/main-nav';
 import { Command } from 'lucide-react';
 
 const publicRoutes = ['/login', '/signup'];
 
-export function AppContent({ children }: { children: React.ReactNode }) {
+function AppLayout({ children }: { children: React.ReactNode }) {
   const { user } = useContext(AuthContext);
   const pathname = usePathname();
   const isPublicRoute = publicRoutes.includes(pathname);
@@ -42,5 +44,18 @@ export function AppContent({ children }: { children: React.ReactNode }) {
           </main>
         </div>
     </div>
+  );
+}
+
+export function AppContent({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <SettingsProvider>
+        <SidebarProvider>
+          <AppLayout>{children}</AppLayout>
+          <Toaster />
+        </SidebarProvider>
+      </SettingsProvider>
+    </AuthProvider>
   );
 }
