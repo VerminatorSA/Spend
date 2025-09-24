@@ -11,7 +11,15 @@ export type Board = {
     ownerId?: string;
 };
 
+export const GENERAL_TASKS_BOARD_ID = 'board-general';
+
 export let boards: Board[] = [
+    {
+        id: GENERAL_TASKS_BOARD_ID,
+        name: 'General Tasks',
+        description: 'A place for all your standalone tasks.',
+        statuses: ['To Do', 'In Progress', 'Done'],
+    },
     {
         id: 'board-001',
         name: 'Team A',

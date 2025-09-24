@@ -27,16 +27,16 @@ export default function AddTaskPage() {
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [priority, setPriority] = useState<'High' | 'Medium' | 'Low' | ''>('');
-  const [boardId, setBoardId] = useState('');
+  const [boardId, setBoardId] = useState<string | undefined>(undefined);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title || !priority || !boardId) {
+    if (!title || !priority) {
          toast({
           variant: 'destructive',
           title: 'Missing Required Fields',
-          description: `Please fill out the Title, Priority, and Board fields.`,
+          description: `Please fill out the Title and Priority fields.`,
         });
         return;
     }
@@ -60,7 +60,7 @@ export default function AddTaskPage() {
         description: 'The new task has been successfully added to the board.',
         });
         
-        router.push(`/tasks/${boardId}`);
+        router.push(`/tasks/${boardId || 'board-general'}`);
 
     } catch (error) {
         toast({
@@ -108,10 +108,10 @@ export default function AddTaskPage() {
 
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                              <div className="space-y-2">
-                                <Label htmlFor="board">Board <span className="text-destructive">*</span></Label>
+                                <Label htmlFor="board">Board (Optional)</Label>
                                 <Select onValueChange={setBoardId} value={boardId}>
                                     <SelectTrigger id="board">
-                                        <SelectValue placeholder="Select a board" />
+                                        <SelectValue placeholder="Select a board (defaults to General)" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {boards.map(board => (

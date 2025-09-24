@@ -54,7 +54,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
   
   useEffect(() => {
-    if (loading) return;
+    // This effect should only run on the client side
+    if (typeof window === 'undefined' || loading) return;
 
     const isPublicRoute = publicRoutes.includes(pathname);
 
