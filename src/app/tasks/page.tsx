@@ -7,11 +7,11 @@ import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { PlusCircle, KanbanSquare, Building, GitFork, User } from 'lucide-react';
 import { boards } from '@/lib/boards';
+import { tasks } from '@/lib/tasks';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { companies, divisions } from '@/lib/organization';
 import { users } from '@/lib/users';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 
 export default function TasksListPage() {
   const [isClient, setIsClient] = useState(false);
@@ -22,6 +22,18 @@ export default function TasksListPage() {
 
   if (!isClient) {
     return null; // Or a loading skeleton
+  }
+
+  const getProjectProgress = (boardId: string) => {
+      const projectTasks = tasks.filter(task => task.boardId === boardId);
+      if (projectTasks.length === 0) {
+          return { progress: 0, totalTasks: 0 };
+      }
+      const completedTasks = projectTasks.filter(task => task.status === 'Done').length;
+      return {
+          progress: Math.round((completedTasks / projectTasks.length) * 100),
+          totalTasks: projectTasks.length,
+      };
   }
 
   return (
@@ -53,6 +65,7 @@ export default function TasksListPage() {
                 const company = companies.find(c => c.id === board.companyId);
                 const division = divisions.find(d => d.id === board.divisionId);
                 const owner = users.find(u => u.id === board.ownerId);
+                const { progress, totalTasks } = getProjectProgress(board.id);
 
                 return (
                   <Link href={`/tasks/${board.id}`} key={board.id}>
@@ -65,8 +78,16 @@ export default function TasksListPage() {
                           <CardTitle>{board.name}</CardTitle>
                         </div>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="flex-grow space-y-4">
                         <CardDescription>{board.description}</CardDescription>
+                        <div>
+                            <div className="mb-1 flex justify-between text-xs text-muted-foreground">
+                                <span>Progress</span>
+                                <span>{progress}%</span>
+                            </div>
+                            <Progress value={progress} className="h-2" />
+                            <p className="mt-1 text-right text-xs text-muted-foreground">{totalTasks} tasks</p>
+                        </div>
                       </CardContent>
                       <CardFooter>
                         <div className="flex w-full flex-col gap-2 text-xs text-muted-foreground">
