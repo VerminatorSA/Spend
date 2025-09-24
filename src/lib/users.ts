@@ -4,7 +4,7 @@ export type User = {
     firstName: string;
     lastName: string;
     email: string;
-    role: 'Admin' | 'Manager' | 'Member';
+    role: 'Super Admin' | 'Admin' | 'Manager' | 'Member';
     status: 'Active' | 'Invited' | 'Inactive';
     companyId: string;
     divisionId: string;
@@ -17,7 +17,7 @@ export let users: User[] = [
         firstName: 'Purchasing',
         lastName: 'Manager',
         email: 'manager@spend.com',
-        role: 'Admin',
+        role: 'Super Admin',
         status: 'Active',
         companyId: 'comp-001',
         divisionId: 'div-001',
