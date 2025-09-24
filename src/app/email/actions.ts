@@ -23,13 +23,19 @@ type State = {
 // This function needs to run on the server, as it calls the Firebase Function
 async function callSendEmail(data: { to: string; subject: string; text: string }) {
     try {
+        // Use httpsCallableFromURL for unauthenticated access from the server
         const functions = getFunctions(app, 'us-central1');
         const sendEmail = httpsCallable(functions, 'sendEmail');
         const result = await sendEmail(data);
         return { success: true, data: result.data };
     } catch (error: any) {
         console.error('Firebase Functions call failed:', error);
-        return { success: false, error: error.message || 'An unknown error occurred.' };
+        // Provide a more specific error message if available
+        const errorMessage = error.message || 'An unknown error occurred.';
+        if (error.code === 'unauthenticated') {
+             return { success: false, error: 'Sign in required to send emails.' };
+        }
+        return { success: false, error: errorMessage };
     }
 }
 
