@@ -30,4 +30,13 @@ export let boards: Board[] = [
         divisionId: 'div-003',
         ownerId: 'user-003',
     },
+    {
+        id: 'board-003',
+        name: 'Team C',
+        description: 'Tasks for the retail and e-commerce team.',
+        statuses: ['To Do', 'In Progress', 'Done'],
+        companyId: 'comp-003',
+        divisionId: 'div-005',
+        ownerId: 'user-003',
+    },
 ];

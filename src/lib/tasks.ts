@@ -61,4 +61,22 @@ export let tasks: Task[] = [
         assignee: { name: 'Alicia Keys', avatarUrl: 'https://picsum.photos/id/1011/100/100' },
         boardId: 'board-002'
     },
+    {
+        id: 'task-006',
+        title: 'Launch new online store marketing campaign',
+        status: 'To Do',
+        priority: 'High',
+        dueDate: '2024-10-01T09:00:00Z',
+        assignee: { name: 'Ben Carter', avatarUrl: 'https://picsum.photos/id/1025/100/100' },
+        boardId: 'board-003'
+    },
+    {
+        id: 'task-007',
+        title: 'Analyze Q3 online sales data',
+        status: 'In Progress',
+        priority: 'Medium',
+        dueDate: '2024-10-05T17:00:00Z',
+        assignee: { name: 'Ben Carter', avatarUrl: 'https://picsum.photos/id/1025/100/100' },
+        boardId: 'board-003'
+    },
 ];
