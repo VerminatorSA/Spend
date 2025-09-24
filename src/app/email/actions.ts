@@ -24,10 +24,7 @@ type State = {
 async function callSendEmail(data: { to: string; subject: string; text: string }) {
     try {
         const functions = getFunctions(app, 'us-central1');
-        // The second argument to httpsCallable allows specifying options.
-        // We pass an empty options object which is sufficient for unauthenticated calls
-        // when the backend function is configured with `allow: "unauthenticated"`.
-        const sendEmail = httpsCallable(functions, 'sendEmail', {});
+        const sendEmail = httpsCallable(functions, 'sendEmail');
         const result = await sendEmail(data);
         return { success: true, data: result.data };
     } catch (error: any) {
