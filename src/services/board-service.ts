@@ -10,6 +10,9 @@ import { boards, type Board } from '@/lib/boards';
 interface CreateBoardInput {
     name: string;
     description?: string;
+    companyId?: string;
+    divisionId?: string;
+    ownerId?: string;
 }
 
 /**
@@ -25,6 +28,9 @@ export async function createBoard(input: CreateBoardInput): Promise<Board> {
         name: input.name,
         description: input.description || '',
         statuses: ['To Do', 'In Progress', 'Done'],
+        companyId: input.companyId,
+        divisionId: input.divisionId,
+        ownerId: input.ownerId,
     };
 
     boards.push(newBoard);
